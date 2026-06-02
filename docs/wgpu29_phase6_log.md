@@ -24,14 +24,14 @@ PR は GitHub UI または認証済み GitHub CLI/API が必要。ローカル�
 
 ### wgpu runtime
 
-- run URL: https://github.com/ihasq/wgrab/actions/runs/26807049577
+- run URL: https://github.com/ihasq/wgrab/actions/runs/26808014483
 - Windows DX12: success
 - macOS arm64: success
 - macOS Intel: success
 
 ### wgpu linux vulkan smoke
 
-- run URL: https://github.com/ihasq/wgrab/actions/runs/26807049619
+- run URL: https://github.com/ihasq/wgrab/actions/runs/26808014492
 - Ubuntu Vulkan: success
 
 ## Capture marker summary

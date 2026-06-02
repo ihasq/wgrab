@@ -2,14 +2,14 @@
 
 ## 結論
 
-- annotated tag: pending
+- annotated tag: created
 - tag name: `wgrab-wgpu29-rc1`
-- tag target: pending docs commit
+- tag target: `67fabb6aa4cef10325fa4225e1a5689f4c9f7c71`
 - release draft: `docs/releases/wgrab-wgpu29-rc1.md`
 - crates.io publish: deferred
 - final safety check: passed
-- push tag: pending
-- ready for owner release draft: pending tag push
+- push tag: success
+- ready for owner release draft: yes
 
 ## Branch
 
@@ -21,13 +21,14 @@
 
 - name: `wgrab-wgpu29-rc1`
 - type: annotated
-- target: pending docs commit
-- pushed: pending
+- target: `67fabb6aa4cef10325fa4225e1a5689f4c9f7c71`
+- pushed: yes
 
 ## CI baseline
 
 - push CI: success before phase10A
 - pull_request CI: success before phase10A
+- docs commit push CI: success
 
 ## Release draft
 
@@ -41,6 +42,16 @@
 - Windows target check: success
 - macOS x86 target check: success
 - macOS arm target check: success
+
+## Final result
+
+- annotated tag: created
+- tag name: `wgrab-wgpu29-rc1`
+- tag target: `67fabb6aa4cef10325fa4225e1a5689f4c9f7c71`
+- pushed: yes
+- release draft file: `docs/releases/wgrab-wgpu29-rc1.md`
+- GitHub Release UI draft: owner action required
+- crates.io publish: deferred
 
 ## Deferred
 

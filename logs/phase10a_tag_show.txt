@@ -1,0 +1,21 @@
+tag wgrab-wgpu29-rc1
+Tagger: ihasq <gsd79d2mtizifb7cv8d119a9xpq3ja@gmail.com>
+Date:   Tue Jun 2 10:11:57 2026 +0000
+
+wgrab wgpu29 release candidate 1
+
+Successor baseline for ihasq/wgrab preserving CrabGrab API surface while modernizing internal wgpu interop.
+
+Highlights:
+- wgpu 29.0.3 integration
+- guard-style Device::as_hal usage
+- Windows DX12 interop via windows crate COM types
+- macOS Metal interop via objc2-metal
+- GitHub Actions backend smoke for Windows, macOS, and Ubuntu Vulkan
+- crates.io publishing deferred
+
+commit 67fabb6aa4cef10325fa4225e1a5689f4c9f7c71 (HEAD -> wgpu29-phase5c-marker-hardening, tag: wgrab-wgpu29-rc1, origin/wgpu29-phase5c-marker-hardening)
+Author: ihasq <gsd79d2mtizifb7cv8d119a9xpq3ja@gmail.com>
+Date:   Tue Jun 2 10:05:25 2026 +0000
+
+    docs: prepare wgrab wgpu29 rc1 release notes

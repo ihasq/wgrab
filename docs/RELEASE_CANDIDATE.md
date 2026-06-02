@@ -44,11 +44,39 @@ Manual-only:
 
 - package name: `crabgrab`
 - version: `0.4.0`
-- repository: `https://github.com/AugmendTech/CrabGrab`
+- repository: `https://github.com/ihasq/wgrab`
 - license: `MIT OR Apache-2.0`
 - crates.io publish: deferred
 
-The repository metadata still points to the original CrabGrab repository. This phase intentionally does not change package metadata; updating it is an owner release decision.
+The repository metadata now points to the successor repository.
+
+## Owner decisions
+
+### RC tag name
+
+Selected:
+
+- `wgrab-wgpu29-rc1`
+
+Not created in this phase.
+
+### Repository metadata
+
+`Cargo.toml` repository metadata now points to:
+
+- `https://github.com/ihasq/wgrab`
+
+### crates.io publishing
+
+Publishing is deferred.
+
+The package name remains `crabgrab` in this repository for compatibility, but no crates.io publish is performed in this phase.
+
+Future publishing options:
+
+1. Publish as `crabgrab` only if crates.io owner access is available.
+2. Use a successor package name such as `wgrab`.
+3. Use a compatibility dependency alias strategy for users who want to keep `crabgrab` imports.
 
 ## GitHub Actions gate
 
@@ -75,7 +103,6 @@ Not created in this phase.
 Candidate names:
 
 - `wgrab-wgpu29-rc1`
-- `successor-baseline-wgpu29-rc1`
 
 ## Deferred
 

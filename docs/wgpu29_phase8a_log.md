@@ -39,9 +39,15 @@
 
 - name: `crabgrab`
 - version: `0.4.0`
-- repository: `https://github.com/AugmendTech/CrabGrab`
+- repository: `https://github.com/ihasq/wgrab`
 - license: `MIT OR Apache-2.0`
 - publish decision: deferred
+
+## Owner decisions
+
+- RC tag name: `wgrab-wgpu29-rc1`
+- Cargo.toml repository: update to `https://github.com/ihasq/wgrab`
+- crates.io publish: deferred
 
 ## Deferred
 

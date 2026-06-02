@@ -24,6 +24,15 @@
 - Existing `objc2 = 0.5` wrapper.
 - Existing feature names where practical.
 
+### Metadata
+
+- Updated repository metadata to `https://github.com/ihasq/wgrab`.
+
+### Release
+
+- Selected RC tag candidate: `wgrab-wgpu29-rc1`.
+- crates.io publishing remains deferred.
+
 ### Deferred
 
 - Full `objc2` 0.6 migration.

@@ -1,0 +1,3 @@
+info: downloading component rust-std
+info: downloading component rust-std
+info: downloading component rust-std

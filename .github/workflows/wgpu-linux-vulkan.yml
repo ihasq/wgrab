@@ -1,0 +1,77 @@
+name: wgpu linux vulkan smoke
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+      - "wgpu29-*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wgpu-linux-vulkan-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ubuntu-vulkan:
+    name: Ubuntu Lavapipe Vulkan smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Vulkan tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y vulkan-tools mesa-vulkan-drivers
+
+      - name: Show Vulkan info
+        run: |
+          find /usr/share/vulkan/icd.d -maxdepth 1 -type f | sort | tee vulkan_icd_files.log
+          vulkaninfo --summary 2>&1 | tee vulkaninfo_summary.log
+
+      - name: Prepare standalone backend smoke
+        run: |
+          mkdir -p target/wgpu-backend-smoke-standalone/src
+          cp examples/wgpu_backend_smoke.rs target/wgpu-backend-smoke-standalone/src/main.rs
+          cat > target/wgpu-backend-smoke-standalone/Cargo.toml <<'EOF'
+          [package]
+          name = "wgpu-backend-smoke-standalone"
+          version = "0.1.0"
+          edition = "2021"
+
+          [dependencies]
+          pollster = "0.4"
+          wgpu = { version = "29.0.3", default-features = false, features = ["std", "wgsl", "vulkan"] }
+          EOF
+
+      - name: Check backend smoke example
+        run: cargo check --manifest-path target/wgpu-backend-smoke-standalone/Cargo.toml
+
+      - name: Run Vulkan backend smoke
+        run: |
+          set -o pipefail
+          export RUST_BACKTRACE=1
+          export WGPU_BACKEND=vulkan
+
+          LVP_ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f \( -iname '*lvp*.json' -o -iname '*lavapipe*.json' \) | sort | head -n 1)"
+          if [ -n "$LVP_ICD" ]; then
+            export VK_DRIVER_FILES="$LVP_ICD"
+            export VK_ICD_FILENAMES="$LVP_ICD"
+          fi
+
+          cargo run --manifest-path target/wgpu-backend-smoke-standalone/Cargo.toml -- --backend vulkan \
+            2>&1 | tee wgpu_backend_vulkan.log
+          grep "CI_BACKEND_SMOKE_OK" wgpu_backend_vulkan.log
+
+      - name: Upload Vulkan logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubuntu-vulkan-wgpu-logs
+          path: "*.log"

@@ -395,6 +395,7 @@ fn debug_macos_wgpu_descriptor(
     };
     let mapped_format = metal_pixel_format_to_wgpu(metal_texture.pixelFormat())?;
 
+    println!("CI_DESCRIPTOR_DUMP_BEGIN");
     println!("CrabGrab wgpu descriptor validation:");
     println!("  IOSurface:");
     println!("    width: {}", io_surface.get_width());
@@ -426,6 +427,7 @@ fn debug_macos_wgpu_descriptor(
     println!("    format: {:?}", descriptor.format);
     println!("    usage: {:?}", descriptor.usage);
     println!("    view_formats: {:?}", descriptor.view_formats);
+    println!("CI_DESCRIPTOR_DUMP_END");
 
     assert_eq!(metal_texture.width() as u32, descriptor.size.width);
     assert_eq!(metal_texture.height() as u32, descriptor.size.height);

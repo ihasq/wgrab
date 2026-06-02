@@ -1,0 +1,217 @@
+name: wgpu runtime
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+      - "wgpu29-*"
+  workflow_dispatch:
+    inputs:
+      strict_capture:
+        description: "Fail job if capture runtime is unavailable"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+      frames:
+        description: "Capture frames for strict/manual runtime test"
+        required: false
+        default: "30"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wgpu-runtime-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-dx12:
+    name: Windows DX12 wgpu runtime
+    runs-on: windows-2022
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show environment
+        shell: pwsh
+        run: |
+          rustc -Vv
+          cargo -V
+          git rev-parse HEAD
+          systeminfo | Select-String "OS Name","OS Version","System Type"
+
+      - name: Check crate
+        shell: pwsh
+        run: cargo check --features wgpu
+
+      - name: Check examples
+        shell: pwsh
+        run: |
+          cargo check --example wgpu_backend_smoke --features wgpu
+          cargo check --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor
+
+      - name: Run DX12 backend smoke
+        shell: pwsh
+        run: |
+          $env:RUST_BACKTRACE = "1"
+          cargo run --example wgpu_backend_smoke --features wgpu -- --backend dx12 --require-hal `
+            2>&1 | Tee-Object -FilePath wgpu_backend_dx12.log
+          Select-String -Path wgpu_backend_dx12.log -Pattern "CI_BACKEND_SMOKE_OK"
+
+      - name: Run Windows capture probe
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          $env:RUST_BACKTRACE = "1"
+          $env:CRABGRAB_WGPU_DEBUG_DESCRIPTOR = "1"
+          cargo run --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor -- --ci --frames 1 --allow-capture-unavailable `
+            2>&1 | Tee-Object -FilePath wgpu_capture_windows_probe.log
+
+      - name: Upload Windows logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-dx12-wgpu-logs
+          path: "*.log"
+
+  macos-metal:
+    name: macOS Metal wgpu runtime
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            label: macos-arm64
+          - runner: macos-15-intel
+            label: macos-intel
+
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show environment
+        shell: bash
+        run: |
+          rustc -Vv
+          cargo -V
+          git rev-parse HEAD
+          sw_vers
+          uname -a
+          system_profiler SPDisplaysDataType || true
+
+      - name: Check crate
+        shell: bash
+        run: cargo check --features wgpu
+
+      - name: Check examples
+        shell: bash
+        run: |
+          cargo check --example wgpu_backend_smoke --features wgpu
+          cargo check --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor
+
+      - name: Run Metal backend smoke
+        shell: bash
+        run: |
+          set -o pipefail
+          export RUST_BACKTRACE=1
+          cargo run --example wgpu_backend_smoke --features wgpu -- --backend metal --require-hal \
+            2>&1 | tee wgpu_backend_metal_${{ matrix.label }}.log
+          grep -E "CI_BACKEND_SMOKE_OK|CI_BACKEND_SMOKE_UNAVAILABLE" wgpu_backend_metal_${{ matrix.label }}.log
+          if grep -q "CI_BACKEND_SMOKE_FAILED" wgpu_backend_metal_${{ matrix.label }}.log; then
+            exit 1
+          fi
+
+      - name: Run macOS capture probe
+        shell: bash
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          export RUST_BACKTRACE=1
+          export CRABGRAB_WGPU_DEBUG_DESCRIPTOR=1
+          cargo run --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor -- --ci --frames 1 --allow-capture-unavailable \
+            2>&1 | tee wgpu_capture_macos_${{ matrix.label }}_probe.log
+
+      - name: Upload macOS logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-metal-${{ matrix.label }}-wgpu-logs
+          path: "*.log"
+
+  manual-strict-capture:
+    name: Manual strict capture runtime
+    if: github.event_name == 'workflow_dispatch' && inputs.strict_capture == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-2022
+            backend: dx12
+            label: windows
+          - os: macos-15
+            backend: metal
+            label: macos-arm64
+          - os: macos-15-intel
+            backend: metal
+            label: macos-intel
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Strict backend smoke
+        shell: bash
+        if: runner.os != 'Windows'
+        run: |
+          set -o pipefail
+          export RUST_BACKTRACE=1
+          cargo run --example wgpu_backend_smoke --features wgpu -- --backend ${{ matrix.backend }} --require-hal \
+            2>&1 | tee strict_backend_${{ matrix.label }}.log
+          grep "CI_BACKEND_SMOKE_OK" strict_backend_${{ matrix.label }}.log
+
+      - name: Strict backend smoke Windows
+        shell: pwsh
+        if: runner.os == 'Windows'
+        run: |
+          $env:RUST_BACKTRACE = "1"
+          cargo run --example wgpu_backend_smoke --features wgpu -- --backend ${{ matrix.backend }} --require-hal `
+            2>&1 | Tee-Object -FilePath strict_backend_${{ matrix.label }}.log
+          Select-String -Path strict_backend_${{ matrix.label }}.log -Pattern "CI_BACKEND_SMOKE_OK"
+
+      - name: Strict capture
+        shell: bash
+        if: runner.os != 'Windows'
+        run: |
+          set -o pipefail
+          export RUST_BACKTRACE=1
+          export CRABGRAB_WGPU_DEBUG_DESCRIPTOR=1
+          cargo run --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor -- --ci --frames "${{ inputs.frames }}" --strict-capture \
+            2>&1 | tee strict_capture_${{ matrix.label }}.log
+          grep "CI_CAPTURE_SMOKE_OK" strict_capture_${{ matrix.label }}.log
+
+      - name: Strict capture Windows
+        shell: pwsh
+        if: runner.os == 'Windows'
+        run: |
+          $env:RUST_BACKTRACE = "1"
+          $env:CRABGRAB_WGPU_DEBUG_DESCRIPTOR = "1"
+          cargo run --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor -- --ci --frames "${{ inputs.frames }}" --strict-capture `
+            2>&1 | Tee-Object -FilePath strict_capture_${{ matrix.label }}.log
+          Select-String -Path strict_capture_${{ matrix.label }}.log -Pattern "CI_CAPTURE_SMOKE_OK"
+
+      - name: Upload strict logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: strict-capture-${{ matrix.label }}-logs
+          path: "*.log"

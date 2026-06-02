@@ -1,0 +1,6 @@
+SKIPPED: `wgpu_capture_smoke` is a Windows/macOS capture runtime example.
+
+Reason:
+- CrabGrab has no Linux platform module in this branch.
+- The CI capture probe runs on Windows and macOS only.
+- Linux CI uses the standalone backend smoke path for Vulkan backend validation.

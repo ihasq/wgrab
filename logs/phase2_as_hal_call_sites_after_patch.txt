@@ -1,0 +1,2 @@
+src/feature/wgpu/mod.rs:195:            .as_hal::<wgpu::hal::api::Dx12>()
+src/feature/wgpu/mod.rs:218:            .as_hal::<wgpu::hal::api::Metal>()

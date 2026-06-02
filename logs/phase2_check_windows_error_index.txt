@@ -1,0 +1,5 @@
+46:error[E0599]: no method named `as_mut_ptr` found for reference `&windows::Win32::Graphics::Direct3D12::ID3D12Device` in the current scope
+52:error[E0599]: no method named `as_mut_ptr` found for reference `&windows::Win32::Graphics::Direct3D12::ID3D12CommandQueue` in the current scope
+58:error[E0599]: no method named `as_ptr` found for reference `&windows::Win32::Graphics::Direct3D12::ID3D12Device` in the current scope
+64:error[E0599]: no method named `as_ptr` found for reference `&windows::Win32::Graphics::Direct3D12::ID3D12CommandQueue` in the current scope
+70:error[E0308]: mismatched types

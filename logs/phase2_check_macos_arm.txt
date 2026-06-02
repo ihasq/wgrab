@@ -1,0 +1,134 @@
+    Blocking waiting for file lock on build directory
+    Checking crabgrab v0.4.0 (/home/ihasq/code/wgrab)
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1308:1
+     |
+1308 | extern fn sc_stream_output_did_output_sample_buffer_of_type(this: *mut AnyObject, _sel: Sel, stream: SCStream, buffer: CMSampleBuf...
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+     |
+     = note: `#[warn(missing_abi)]` on by default
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1322:1
+     |
+1322 | extern fn sc_stream_handler_did_stop_with_error(this: *mut AnyObject, _sel: Sel, stream: SCStream, error: NSError) -> () {
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1332:1
+     |
+1332 | extern fn sc_stream_handler_dealloc(this: *mut AnyObject, _sel: Sel) {
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1360:131
+     |
+1360 | ...id_output_sample_buffer_of_type as extern fn (*mut AnyObject, Sel, SCStream, CMSampleBufferRef, SCStreamOutputTypeEncoded));
+     |                                       ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1361:107
+     |
+1361 | ...eam_handler_did_stop_with_error as extern fn(*mut AnyObject, Sel, SCStream, NSError));
+     |                                       ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1362:78
+     |
+1362 |                 class.add_method(sel!(dealloc), sc_stream_handler_dealloc as extern fn(*mut AnyObject, Sel));
+     |                                                                              ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3027:1
+     |
+3027 | extern fn sc_content_sharing_picker_observer_did_cancel_for_stream(this: *mut AnyObject, _sel: Sel, picker: *mut AnyObject, stream...
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3031:1
+     |
+3031 | extern fn sc_content_sharing_picker_observer_did_update_filter_for_stream(this: *mut AnyObject, _sel: Sel, picker: *mut AnyObject,...
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3036:1
+     |
+3036 | extern fn sc_content_sharing_picker_observer_start_did_fail_with_error(this: *mut AnyObject, _sel: Sel, error: *mut AnyObject) {
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3040:1
+     |
+3040 | extern fn sc_content_sharing_picker_observer_dealloc(this: *mut AnyObject, _sel: Sel) {
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3052:142
+     |
+3052 | ..._observer_did_cancel_for_stream as extern fn (*mut AnyObject, Sel, *mut AnyObject, *mut AnyObject));
+     |                                       ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3053:160
+     |
+3053 | ...er_did_update_filter_for_stream as extern fn (*mut AnyObject, Sel, *mut AnyObject, *mut AnyObject, *mut AnyObject));
+     |                                       ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3054:148
+     |
+3054 | ...erver_start_did_fail_with_error as extern fn (*mut AnyObject, Sel, *mut AnyObject));
+     |                                       ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3055:95
+     |
+3055 |                 class.add_method(sel!(dealloc), sc_content_sharing_picker_observer_dealloc as extern fn (*mut AnyObject, Sel));
+     |                                                                                               ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+error[E0599]: no method named `lock` found for reference `&Retained<ProtocolObject<dyn MTLDevice>>` in the current scope
+  --> src/feature/wgpu/mod.rs:64:54
+   |
+64 |                 let device = hal_device.raw_device().lock().clone();
+   |                                                      ^^^^ method not found in `&Retained<ProtocolObject<dyn MTLDevice>>`
+   |
+   = note: the full name for the type has been written to '/home/ihasq/code/wgrab/target/aarch64-apple-darwin/debug/deps/crabgrab-3df6d01035048723.long-type-296408125554453408.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+
+error[E0308]: arguments to this function are incorrect
+   --> src/feature/wgpu/mod.rs:298:50
+    |
+298 |                         let wgpu_metal_texture = wgpu::hal::metal::Device::texture_from_raw(
+    |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+301 |                             metal_texture.texture_type(),
+    |                             ---------------------------- expected `MTLTextureType`, found a different `MTLTextureType`
+    |
+note: expected `Retained<ProtocolObject<dyn MTLTexture>>`, found `Texture`
+   --> src/feature/wgpu/mod.rs:299:29
+    |
+299 | ...                   metal_texture.clone(),
+    |                       ^^^^^^^^^^^^^^^^^^^^^
+    = note: expected struct `objc2::rc::retained::Retained<objc2::runtime::protocol_object::ProtocolObject<(dyn objc2_metal::generated::__MTLTexture::MTLTexture + 'static)>>`
+               found struct `metal::Texture`
+    = note: `MTLTextureType` and `MTLTextureType` have similar names, but are actually distinct types
+note: `MTLTextureType` is defined in crate `metal`
+   --> /home/ihasq/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/metal-0.28.0/src/texture.rs:16:1
+    |
+ 16 | pub enum MTLTextureType {
+    | ^^^^^^^^^^^^^^^^^^^^^^^
+note: `MTLTextureType` is defined in crate `objc2_metal`
+   --> /home/ihasq/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-metal-0.3.2/src/generated/MTLTexture.rs:18:1
+    |
+ 18 | pub struct MTLTextureType(pub NSUInteger);
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^
+note: associated function defined here
+   --> /home/ihasq/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wgpu-hal-29.0.3/src/metal/device.rs:358:19
+    |
+358 |     pub unsafe fn texture_from_raw(
+    |                   ^^^^^^^^^^^^^^^^
+
+Some errors have detailed explanations: E0308, E0599.
+For more information about an error, try `rustc --explain E0308`.
+warning: `crabgrab` (lib) generated 14 warnings
+error: could not compile `crabgrab` (lib) due to 2 previous errors; 14 warnings emitted

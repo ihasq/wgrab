@@ -58,13 +58,10 @@ impl WgpuCaptureConfigExt for CaptureConfig {
         #[cfg(target_os = "macos")]
         {
             unsafe {
-                let device = AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Metal, _, _>(move |device| {
-                    if let Some(device) = device {
-                        Some(device.raw_device().lock().clone())
-                    } else {
-                        None
-                    }
-                }).expect("Expected metal device underneath wgpu");
+                let wgpu_device_ref = AsRef::<wgpu::Device>::as_ref(&*wgpu_device);
+                let hal_device = get_metal_hal_device(wgpu_device_ref)
+                    .map_err(|error| error.to_string())?;
+                let device = hal_device.raw_device().lock().clone();
                 Ok(Self {
                     impl_capture_config: MacosCaptureConfig {
                         metal_device: device,
@@ -78,28 +75,20 @@ impl WgpuCaptureConfigExt for CaptureConfig {
         #[cfg(target_os = "windows")]
         {
             unsafe {
-                let mut dxgi_adapter_result = Err("Unimplemented for this wgpu backend".to_string());
-                AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|device| {
-                    device.map(|device| {
-                        //device.raw_device().AddRef();
-                        let raw_device_ptr = device.raw_device().as_mut_ptr() as *mut c_void;
-                        let raw_queue_ptr = device.raw_queue().as_mut_ptr() as *mut c_void;
-                        let d3d12_device = ID3D12Device::from_raw(raw_device_ptr);
-                        let d3d12_queue = ID3D12CommandQueue::from_raw(raw_queue_ptr);
-                        let adapter_luid = d3d12_device.GetAdapterLuid();
-                        let dxgi_factory: IDXGIFactory5 = match CreateDXGIFactory() {
-                            Err(error) => {
-                                dxgi_adapter_result = Err(format!("Failed to create dxgi factory: {}", error.to_string()));
-                                return;
-                            },
-                            Ok(factory) => factory,
-                        };
-                        dxgi_adapter_result = dxgi_factory.EnumAdapterByLuid(adapter_luid)
-                            .map_err(|error| format!("Failed to find matching dxgi adapter for wgpu device: {}", error.to_string()))
-                            .map(|dxgi_adapter: IDXGIAdapter4| (dxgi_adapter, d3d12_device, d3d12_queue));
-                    })
-                });
-                let (dxgi_adapter, _d3d12_device, _d3d12_queue) = dxgi_adapter_result?;
+                let wgpu_device_ref = AsRef::<wgpu::Device>::as_ref(&*wgpu_device);
+                let hal_device = get_dx12_hal_device(wgpu_device_ref)
+                    .map_err(|error| error.to_string())?;
+                //device.raw_device().AddRef();
+                let raw_device_ptr = hal_device.raw_device().as_mut_ptr() as *mut c_void;
+                let raw_queue_ptr = hal_device.raw_queue().as_mut_ptr() as *mut c_void;
+                let d3d12_device = ID3D12Device::from_raw(raw_device_ptr);
+                let d3d12_queue = ID3D12CommandQueue::from_raw(raw_queue_ptr);
+                let adapter_luid = d3d12_device.GetAdapterLuid();
+                let dxgi_factory: IDXGIFactory5 = CreateDXGIFactory()
+                    .map_err(|error| format!("Failed to create dxgi factory: {}", error.to_string()))?;
+                let (dxgi_adapter, _d3d12_device, _d3d12_queue) = dxgi_factory.EnumAdapterByLuid(adapter_luid)
+                    .map_err(|error| format!("Failed to find matching dxgi adapter for wgpu device: {}", error.to_string()))
+                    .map(|dxgi_adapter: IDXGIAdapter4| (dxgi_adapter, d3d12_device, d3d12_queue))?;
                 let dxgi_adapter = dxgi_adapter.cast::<IDXGIAdapter4>().unwrap();
                 let mut d3d11_device = None;
                 D3D11CreateDevice (
@@ -149,6 +138,11 @@ pub enum WgpuVideoFrameError {
     InvalidVideoPlaneTexture,
     /// No Wgpu device was supplied to the capture stream
     NoWgpuDevice,
+    /// The supplied Wgpu device is not using the required backend
+    WrongWgpuBackend {
+        expected: &'static str,
+        actual: wgpu::Backend,
+    },
     Other(String)
 }
 
@@ -159,6 +153,11 @@ impl Display for WgpuVideoFrameError {
             Self::NoBackendTexture => f.write_str("WgpuVideoFrameError::NoBackendTexture"),
             Self::InvalidVideoPlaneTexture => f.write_str("WgpuVideoFrameError::InvalidVideoPlaneTexture"),
             Self::NoWgpuDevice => f.write_str("WgpuVideoFrameError::NoWgpuDevice"),
+            Self::WrongWgpuBackend { expected, actual } => f.write_fmt(format_args!(
+                "wgpu device is not using the required backend: expected {}, actual {:?}",
+                expected,
+                actual
+            )),
             Self::Other(error) => f.write_fmt(format_args!("WgpuVideoFrameError::Other(\"{}\")", error)),
         }
     }
@@ -175,6 +174,52 @@ impl Error for WgpuVideoFrameError {
 
     fn cause(&self) -> Option<&dyn Error> {
         self.source()
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn get_dx12_hal_device(
+    device: &wgpu::Device,
+) -> Result<
+    impl std::ops::Deref<Target = wgpu::hal::dx12::Device> + '_,
+    WgpuVideoFrameError,
+> {
+    let actual = device.adapter_info().backend;
+
+    // SAFETY:
+    // We only borrow the underlying HAL device through wgpu's guard.
+    // We do not destroy the raw HAL device, and the guard is kept alive
+    // for the duration of all raw handle accesses in the caller's scope.
+    unsafe {
+        device
+            .as_hal::<wgpu::hal::api::Dx12>()
+            .ok_or(WgpuVideoFrameError::WrongWgpuBackend {
+                expected: "Dx12",
+                actual,
+            })
+    }
+}
+
+#[cfg(target_os = "macos")]
+fn get_metal_hal_device(
+    device: &wgpu::Device,
+) -> Result<
+    impl std::ops::Deref<Target = wgpu::hal::metal::Device> + '_,
+    WgpuVideoFrameError,
+> {
+    let actual = device.adapter_info().backend;
+
+    // SAFETY:
+    // We only borrow the underlying HAL device through wgpu's guard.
+    // We do not destroy the raw HAL device, and the guard is kept alive
+    // for the duration of all raw handle accesses in the caller's scope.
+    unsafe {
+        device
+            .as_hal::<wgpu::hal::api::Metal>()
+            .ok_or(WgpuVideoFrameError::WrongWgpuBackend {
+                expected: "Metal",
+                actual,
+            })
     }
 }
 
@@ -290,8 +335,8 @@ impl WgpuVideoFrameExt for VideoFrame {
                 _ => return Err(WgpuVideoFrameError::Other("Unsupported DirectXPixelFormat".to_string()))
             };
             unsafe {
-                AsRef::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|wgpu_dx12_device| {
-                    let wgpu_dx12_device = wgpu_dx12_device.unwrap();
+                {
+                    let wgpu_dx12_device = get_dx12_hal_device(AsRef::as_ref(&*wgpu_device))?;
                     let d3d12_device_ptr = wgpu_dx12_device.raw_device().as_ptr() as *mut c_void;
                     let d3d12_device = ID3D12Device::from_raw_borrowed(&d3d12_device_ptr).unwrap();
                     let d3d12_queue_ptr = wgpu_dx12_device.raw_queue().as_ptr() as *mut c_void;
@@ -428,7 +473,7 @@ impl WgpuVideoFrameExt for VideoFrame {
                     std::mem::drop(std::mem::transmute_copy::<_, ComPtr<winapi::um::d3d12::ID3D12Resource>>(&texture_ptr));
 
                     result
-                }).unwrap()
+                }
             }
         }
     }

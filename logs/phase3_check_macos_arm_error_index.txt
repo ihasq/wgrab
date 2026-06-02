@@ -1,0 +1,2 @@
+88:error[E0599]: no method named `lock` found for reference `&Retained<ProtocolObject<dyn MTLDevice>>` in the current scope
+97:error[E0308]: arguments to this function are incorrect

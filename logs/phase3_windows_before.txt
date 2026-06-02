@@ -1,0 +1,89 @@
+    Checking crabgrab v0.4.0 (/home/ihasq/code/wgrab)
+warning: unused import: `wgpu::hal::Device`
+  --> src/feature/wgpu/mod.rs:17:5
+   |
+17 | use wgpu::hal::Device;
+   |     ^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `windows::core::PCWSTR`
+  --> src/feature/wgpu/mod.rs:19:5
+   |
+19 | use windows::core::PCWSTR;
+   |     ^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `D3D12_FENCE_FLAG_NONE`
+  --> src/feature/wgpu/mod.rs:29:63
+   |
+29 | use windows::Win32::Graphics::Direct3D12::{D3D12_CLEAR_VALUE, D3D12_FENCE_FLAG_NONE, D3D12_FENCE_FLAG_SHARED};
+   |                                                               ^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `windows::Win32::Graphics::Dxgi::Common::DXGI_FORMAT_B8G8R8A8_TYPELESS`
+  --> src/feature/wgpu/mod.rs:33:5
+   |
+33 | use windows::Win32::Graphics::Dxgi::Common::DXGI_FORMAT_B8G8R8A8_TYPELESS;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `CREATE_EVENT`, `PROCESS_DELETE`, and `PROCESS_SYNCHRONIZE`
+  --> src/feature/wgpu/mod.rs:37:78
+   |
+37 | ...eateEventA, WaitForSingleObjectEx, CREATE_EVENT, INFINITE, PROCESS_DELETE, PROCESS_SYNCHRONIZE};
+   |                                       ^^^^^^^^^^^^            ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `CreateEventExW`, `THREAD_DELETE`, and `THREAD_SYNCHRONIZE`
+  --> src/feature/wgpu/mod.rs:39:41
+   |
+39 | use windows::Win32::System::Threading::{CreateEventExW, THREAD_DELETE, THREAD_SYNCHRONIZE};
+   |                                         ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE`
+  --> src/feature/wgpu/mod.rs:46:284
+   |
+46 | ...e, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE}}};
+   |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0599]: no method named `as_mut_ptr` found for reference `&windows::Win32::Graphics::Direct3D12::ID3D12Device` in the current scope
+  --> src/feature/wgpu/mod.rs:82:62
+   |
+82 |                 let raw_device_ptr = hal_device.raw_device().as_mut_ptr() as *mut c_void;
+   |                                                              ^^^^^^^^^^ method not found in `&windows::Win32::Graphics::Direct3D12::ID3D12Device`
+
+error[E0599]: no method named `as_mut_ptr` found for reference `&windows::Win32::Graphics::Direct3D12::ID3D12CommandQueue` in the current scope
+  --> src/feature/wgpu/mod.rs:83:60
+   |
+83 |                 let raw_queue_ptr = hal_device.raw_queue().as_mut_ptr() as *mut c_void;
+   |                                                            ^^^^^^^^^^ method not found in `&windows::Win32::Graphics::Direct3D12::ID3D12CommandQueue`
+
+error[E0599]: no method named `as_ptr` found for reference `&windows::Win32::Graphics::Direct3D12::ID3D12Device` in the current scope
+   --> src/feature/wgpu/mod.rs:340:74
+    |
+340 |                     let d3d12_device_ptr = wgpu_dx12_device.raw_device().as_ptr() as *mut c_void;
+    |                                                                          ^^^^^^ method not found in `&windows::Win32::Graphics::Direct3D12::ID3D12Device`
+
+error[E0599]: no method named `as_ptr` found for reference `&windows::Win32::Graphics::Direct3D12::ID3D12CommandQueue` in the current scope
+   --> src/feature/wgpu/mod.rs:342:72
+    |
+342 |                     let d3d12_queue_ptr = wgpu_dx12_device.raw_queue().as_ptr() as *mut c_void;
+    |                                                                        ^^^^^^ method not found in `&windows::Win32::Graphics::Direct3D12::ID3D12CommandQueue`
+
+error[E0308]: mismatched types
+   --> src/feature/wgpu/mod.rs:440:25
+    |
+439 |                     let hal_texture = wgpu::hal::dx12::Device::texture_from_raw(
+    |                                       ----------------------------------------- arguments to this function are incorrect
+440 |                         texture_ptr.clone(),
+    |                         ^^^^^^^^^^^^^^^^^^^ expected `ID3D12Resource`, found `ComPtr<ID3D12Resource>`
+    |
+    = note: expected struct `windows::Win32::Graphics::Direct3D12::ID3D12Resource`
+               found struct `ComPtr<winapi::um::d3d12::ID3D12Resource>`
+note: associated function defined here
+   --> /home/ihasq/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wgpu-hal-29.0.3/src/dx12/device.rs:448:19
+    |
+448 |     pub unsafe fn texture_from_raw(
+    |                   ^^^^^^^^^^^^^^^^
+
+Some errors have detailed explanations: E0308, E0599.
+For more information about an error, try `rustc --explain E0308`.
+warning: `crabgrab` (lib) generated 7 warnings
+error: could not compile `crabgrab` (lib) due to 5 previous errors; 7 warnings emitted

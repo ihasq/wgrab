@@ -12,13 +12,11 @@ use metal::MTLStorageMode;
 #[cfg(target_os = "macos")]
 use metal::MTLTextureUsage;
 #[cfg(target_os = "windows")]
-use d3d12::ComPtr;
-#[cfg(target_os = "windows")]
 use wgpu::hal::Device;
 #[cfg(target_os = "windows")]
 use windows::core::PCWSTR;
 #[cfg(target_os = "windows")]
-use windows::Win32::Foundation::WAIT_OBJECT_0;
+use windows::Win32::Foundation::{HMODULE, WAIT_OBJECT_0};
 #[cfg(target_os = "windows")]
 use windows::Win32::Foundation::{CloseHandle, GENERIC_ALL};
 #[cfg(target_os = "windows")]
@@ -43,9 +41,7 @@ use crate::platform::windows::capture_stream::WindowsCaptureConfig;
 #[cfg(target_os = "windows")]
 use crate::feature::dx11::*;
 #[cfg(target_os = "windows")]
-use windows::{core::{Interface, ComInterface}, Graphics::DirectX::DirectXPixelFormat, Win32::Graphics::{Direct3D11::ID3D11Texture2D, Direct3D11::D3D11_CREATE_DEVICE_BGRA_SUPPORT, Direct3D12::{ID3D12CommandQueue, ID3D12Device, ID3D12Resource, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE}}};
-#[cfg(target_os = "windows")]
-use std::ffi::c_void;
+use windows::{core::Interface, Graphics::DirectX::DirectXPixelFormat, Win32::Graphics::{Direct3D11::ID3D11Texture2D, Direct3D11::D3D11_CREATE_DEVICE_BGRA_SUPPORT, Direct3D12::{ID3D12Resource, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE}}};
 
 /// A capture config which can be supplied with a Wgpu device
 pub trait WgpuCaptureConfigExt: Sized {
@@ -78,23 +74,19 @@ impl WgpuCaptureConfigExt for CaptureConfig {
                 let wgpu_device_ref = AsRef::<wgpu::Device>::as_ref(&*wgpu_device);
                 let hal_device = get_dx12_hal_device(wgpu_device_ref)
                     .map_err(|error| error.to_string())?;
-                //device.raw_device().AddRef();
-                let raw_device_ptr = hal_device.raw_device().as_mut_ptr() as *mut c_void;
-                let raw_queue_ptr = hal_device.raw_queue().as_mut_ptr() as *mut c_void;
-                let d3d12_device = ID3D12Device::from_raw(raw_device_ptr);
-                let d3d12_queue = ID3D12CommandQueue::from_raw(raw_queue_ptr);
+                let d3d12_device = hal_device.raw_device();
                 let adapter_luid = d3d12_device.GetAdapterLuid();
                 let dxgi_factory: IDXGIFactory5 = CreateDXGIFactory()
                     .map_err(|error| format!("Failed to create dxgi factory: {}", error.to_string()))?;
-                let (dxgi_adapter, _d3d12_device, _d3d12_queue) = dxgi_factory.EnumAdapterByLuid(adapter_luid)
+                let dxgi_adapter = dxgi_factory.EnumAdapterByLuid(adapter_luid)
                     .map_err(|error| format!("Failed to find matching dxgi adapter for wgpu device: {}", error.to_string()))
-                    .map(|dxgi_adapter: IDXGIAdapter4| (dxgi_adapter, d3d12_device, d3d12_queue))?;
+                    .map(|dxgi_adapter: IDXGIAdapter4| dxgi_adapter)?;
                 let dxgi_adapter = dxgi_adapter.cast::<IDXGIAdapter4>().unwrap();
                 let mut d3d11_device = None;
                 D3D11CreateDevice (
                     &dxgi_adapter,
                     D3D_DRIVER_TYPE_UNKNOWN,
-                    None,
+                    HMODULE::default(),
                     D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_DEBUG,
                     Some(&[D3D_FEATURE_LEVEL_11_0]),
                     D3D11_SDK_VERSION,
@@ -103,6 +95,7 @@ impl WgpuCaptureConfigExt for CaptureConfig {
                     None
                 ).map_err(|error| format!("Failed to create d3d11 device from dxgi adapter: {}", error.to_string()))?;
                 let d3d11_device = d3d11_device.unwrap();
+                drop(hal_device);
                 Ok(Self {
                     impl_capture_config: WindowsCaptureConfig {
                         d3d11_device: Some(d3d11_device),
@@ -337,10 +330,8 @@ impl WgpuVideoFrameExt for VideoFrame {
             unsafe {
                 {
                     let wgpu_dx12_device = get_dx12_hal_device(AsRef::as_ref(&*wgpu_device))?;
-                    let d3d12_device_ptr = wgpu_dx12_device.raw_device().as_ptr() as *mut c_void;
-                    let d3d12_device = ID3D12Device::from_raw_borrowed(&d3d12_device_ptr).unwrap();
-                    let d3d12_queue_ptr = wgpu_dx12_device.raw_queue().as_ptr() as *mut c_void;
-                    let d3d12_queue = ID3D12CommandQueue::from_raw_borrowed(&d3d12_queue_ptr).unwrap();
+                    let d3d12_device = wgpu_dx12_device.raw_device();
+                    let d3d12_queue = wgpu_dx12_device.raw_queue();
 
                     let mut frame_desc = D3D11_TEXTURE2D_DESC::default();
                     frame_texture.GetDesc(&mut frame_desc as *mut _);
@@ -434,10 +425,8 @@ impl WgpuVideoFrameExt for VideoFrame {
                     CloseHandle(dxgi_shared_texture_handle)
                         .map_err(|error| WgpuVideoFrameError::Other(format!("Failed to close shared texture handle: {}", error.to_string())))?;
 
-                    let texture_ptr: ComPtr<winapi::um::d3d12::ID3D12Resource> = d3d12::ComPtr::from_raw(d3d12_texture.into_raw() as *mut _);
-
                     let hal_texture = wgpu::hal::dx12::Device::texture_from_raw(
-                        texture_ptr.clone(),
+                        d3d12_texture.clone(),
                         wgpu_format,
                         wgpu::TextureDimension::D2,
                         wgpu_size,
@@ -467,10 +456,14 @@ impl WgpuVideoFrameExt for VideoFrame {
                         usage: wgpu::TextureUsages::COPY_SRC | wgpu::TextureUsages::STORAGE_BINDING | wgpu::TextureUsages::TEXTURE_BINDING,
                         view_formats: &[wgpu_format]
                     };
+                    // SAFETY:
+                    // - `hal_texture` was created from a D3D12 resource opened on the same
+                    //   D3D12 device that backs this wgpu Device.
+                    // - `desc` matches the D3D12 resource size, mip count, sample count,
+                    //   dimension, and format.
+                    // - The D3D11 -> D3D12 copy and fence wait have completed before
+                    //   the resource is wrapped by wgpu.
                     let result = Ok((*wgpu_device).as_ref().create_texture_from_hal::<wgpu::hal::api::Dx12>(hal_texture, &desc));
-
-                    // dirty hack to reduce the refount
-                    std::mem::drop(std::mem::transmute_copy::<_, ComPtr<winapi::um::d3d12::ID3D12Resource>>(&texture_ptr));
 
                     result
                 }

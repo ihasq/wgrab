@@ -1,0 +1,13 @@
+46:error[E0599]: no method named `as_mut_ptr` found for reference `&windows::Win32::Graphics::Direct3D12::ID3D12Device` in the current scope
+49:82 |                 let raw_device_ptr = hal_device.raw_device().as_mut_ptr() as *mut c_void;
+52:error[E0599]: no method named `as_mut_ptr` found for reference `&windows::Win32::Graphics::Direct3D12::ID3D12CommandQueue` in the current scope
+55:83 |                 let raw_queue_ptr = hal_device.raw_queue().as_mut_ptr() as *mut c_void;
+58:error[E0599]: no method named `as_ptr` found for reference `&windows::Win32::Graphics::Direct3D12::ID3D12Device` in the current scope
+61:340 |                     let d3d12_device_ptr = wgpu_dx12_device.raw_device().as_ptr() as *mut c_void;
+64:error[E0599]: no method named `as_ptr` found for reference `&windows::Win32::Graphics::Direct3D12::ID3D12CommandQueue` in the current scope
+67:342 |                     let d3d12_queue_ptr = wgpu_dx12_device.raw_queue().as_ptr() as *mut c_void;
+73:439 |                     let hal_texture = wgpu::hal::dx12::Device::texture_from_raw(
+76:    |                         ^^^^^^^^^^^^^^^^^^^ expected `ID3D12Resource`, found `ComPtr<ID3D12Resource>`
+78:    = note: expected struct `windows::Win32::Graphics::Direct3D12::ID3D12Resource`
+79:               found struct `ComPtr<winapi::um::d3d12::ID3D12Resource>`
+83:448 |     pub unsafe fn texture_from_raw(

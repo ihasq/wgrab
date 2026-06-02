@@ -28,7 +28,7 @@ dxgi = []
 dx11 = ["dxgi"]
 bitmap = ["dep:bytemuck", "dep:half", "dx11"]
 screenshot = ["bitmap"]
-wgpu = ["dep:wgpu", "dep:winapi", "dx11", "dxgi", "metal"]
+wgpu = ["dep:wgpu", "dx11", "dxgi", "metal"]
 diagnostic = []
 
 [dependencies]
@@ -48,7 +48,7 @@ mach2 = "0.4"
 wgpu = { version = "29.0.3", optional = true, default-features = false, features = ["std", "wgsl", "metal"] }
 
 [target.'cfg(target_os = "windows")'.dependencies]
-windows = { version = "0.52", features = [
+windows = { version = "0.62", features = [
     "Win32_Foundation",
     "Win32_System_Threading",
     "Win32_UI_WindowsAndMessaging",

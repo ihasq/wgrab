@@ -37,22 +37,27 @@
 - [x] WebGPU / web_sys support documented as future roadmap
 - [x] WebGPU / web_sys support is not a `wgrab 0.1.0` publish blocker
 
+## Audio roadmap
+
+- [x] Audio capture documented as future roadmap
+- [x] Audio capture is not a `wgrab 0.1.0` publish blocker
+
 ## Owner approval
 
-- [ ] owner explicitly approves real publish
-- [ ] publish method selected
+- [x] owner explicitly approves real publish
+- [x] publish method selected
 
 ## Publish method
 
 Selected:
 
-- [ ] manual `cargo publish`
+- [x] manual `cargo publish`
 - [ ] trusted publishing later
 
 ## Post-publish
 
-- [ ] crates.io page visible
-- [ ] `cargo info wgrab` works
-- [ ] `cargo install` not applicable / not tested
-- [ ] README badge updated if needed
-- [ ] publish result documented
+- [x] crates.io page visible
+- [x] `cargo info wgrab` works
+- [x] `cargo install` not applicable / not tested
+- [x] README badge updated if needed
+- [x] publish result documented

@@ -43,6 +43,14 @@ A future goal is browser capture via
 `getDisplayMedia -> VideoFrame -> WebGPU`, while preserving wgrab's GPU-only
 design.
 
+## Future audio target
+
+wgrab may eventually support audio capture as an optional companion to GPU-only
+video capture.
+
+The current direction is to investigate a native audio context backed by CPAL and
+a web audio context backed by Web Audio APIs.
+
 [![Crates.io Version](https://img.shields.io/crates/v/wgrab)](https://crates.io/crates/wgrab)
 [![docs.rs](https://img.shields.io/docsrs/wgrab)](https://docs.rs/wgrab/)
 [MacOS Documentation](https://augmendtech.github.io/CrabGrab/macos_docs/crabgrab/index.html)

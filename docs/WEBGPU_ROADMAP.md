@@ -67,6 +67,22 @@ The public API may need a web-specific frame type that mirrors
 
 WebGPU / web_sys support is not a blocker for publishing `wgrab 0.1.0`.
 
+## Future audio integration
+
+The web roadmap may eventually include audio capture from the same `MediaStream`.
+
+Potential path:
+
+```text
+getDisplayMedia
+  -> MediaStream audio track
+  -> MediaStreamAudioSourceNode
+  -> AudioContext
+  -> AudioWorkletNode
+```
+
+This is not part of `wgrab 0.1.0`.
+
 ## Future feature names
 
 Candidate Cargo features:

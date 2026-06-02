@@ -45,3 +45,9 @@ It is not a blocker for publishing `wgrab 0.1.0`.
 - published: yes
 - crates.io: <https://crates.io/crates/wgrab>
 - publish method: manual `cargo publish`
+
+## Audio roadmap
+
+Audio capture is a future roadmap item.
+
+It is not a blocker for `wgrab 0.1.0`.

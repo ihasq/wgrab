@@ -102,3 +102,13 @@ should therefore focus on:
 - timestamps
 - backend/device compatibility
 - avoiding raw platform API exposure as the primary public output
+
+## Phase 27W decision
+
+CPAL remains the native backend.
+
+For web, CPAL AudioWorklet support is investigated but not assumed sufficient
+for capture input.
+
+wgrab's web audio backend should be designed around Web Audio / AudioWorklet
+directly, with CPAL integration only if it fits the capture pipeline.

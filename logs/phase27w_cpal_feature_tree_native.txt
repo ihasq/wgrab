@@ -1,0 +1,460 @@
+wgrab v0.1.0 (/home/ihasq/code/wgrab)
+├── cpal feature "default"
+│   └── cpal v0.17.3
+│       ├── alsa feature "default"
+│       │   ├── alsa v0.11.0
+│       │   │   ├── alsa-sys feature "default"
+│       │   │   │   └── alsa-sys v0.4.0
+│       │   │   │       └── libc feature "default"
+│       │   │   │           ├── libc v0.2.186
+│       │   │   │           └── libc feature "std"
+│       │   │   │               └── libc v0.2.186
+│       │   │   │       [build-dependencies]
+│       │   │   │       └── pkg-config feature "default"
+│       │   │   │           └── pkg-config v0.3.33
+│       │   │   ├── libc feature "default" (*)
+│       │   │   ├── bitflags feature "default"
+│       │   │   │   └── bitflags v2.11.1
+│       │   │   └── cfg-if feature "default"
+│       │   │       └── cfg-if v1.0.4
+│       │   └── alsa feature "std"
+│       │       └── alsa v0.11.0 (*)
+│       ├── libc feature "default" (*)
+│       └── dasp_sample feature "default"
+│           ├── dasp_sample v0.11.0
+│           └── dasp_sample feature "std"
+│               └── dasp_sample v0.11.0
+├── futures feature "default"
+│   ├── futures v0.3.32
+│   │   ├── futures-core v0.3.32
+│   │   ├── futures-executor v0.3.32
+│   │   │   ├── futures-core v0.3.32
+│   │   │   ├── futures-task v0.3.32
+│   │   │   └── futures-util v0.3.32
+│   │   │       ├── futures-core v0.3.32
+│   │   │       ├── futures-macro v0.3.32 (proc-macro)
+│   │   │       │   ├── proc-macro2 feature "default"
+│   │   │       │   │   ├── proc-macro2 v1.0.106
+│   │   │       │   │   │   └── unicode-ident feature "default"
+│   │   │       │   │   │       └── unicode-ident v1.0.24
+│   │   │       │   │   └── proc-macro2 feature "proc-macro"
+│   │   │       │   │       └── proc-macro2 v1.0.106 (*)
+│   │   │       │   ├── quote feature "default"
+│   │   │       │   │   ├── quote v1.0.45
+│   │   │       │   │   │   └── proc-macro2 v1.0.106 (*)
+│   │   │       │   │   └── quote feature "proc-macro"
+│   │   │       │   │       ├── quote v1.0.45 (*)
+│   │   │       │   │       └── proc-macro2 feature "proc-macro" (*)
+│   │   │       │   ├── syn feature "default"
+│   │   │       │   │   ├── syn v2.0.117
+│   │   │       │   │   │   ├── proc-macro2 v1.0.106 (*)
+│   │   │       │   │   │   ├── quote v1.0.45 (*)
+│   │   │       │   │   │   └── unicode-ident feature "default" (*)
+│   │   │       │   │   ├── syn feature "clone-impls"
+│   │   │       │   │   │   └── syn v2.0.117 (*)
+│   │   │       │   │   ├── syn feature "derive"
+│   │   │       │   │   │   └── syn v2.0.117 (*)
+│   │   │       │   │   ├── syn feature "parsing"
+│   │   │       │   │   │   └── syn v2.0.117 (*)
+│   │   │       │   │   ├── syn feature "printing"
+│   │   │       │   │   │   └── syn v2.0.117 (*)
+│   │   │       │   │   └── syn feature "proc-macro"
+│   │   │       │   │       ├── syn v2.0.117 (*)
+│   │   │       │   │       ├── proc-macro2 feature "proc-macro" (*)
+│   │   │       │   │       └── quote feature "proc-macro" (*)
+│   │   │       │   └── syn feature "full"
+│   │   │       │       └── syn v2.0.117 (*)
+│   │   │       ├── futures-sink v0.3.32
+│   │   │       ├── futures-task v0.3.32
+│   │   │       ├── slab v0.4.12
+│   │   │       ├── futures-channel feature "std"
+│   │   │       │   ├── futures-channel v0.3.32
+│   │   │       │   │   ├── futures-core v0.3.32
+│   │   │       │   │   └── futures-sink v0.3.32
+│   │   │       │   ├── futures-channel feature "alloc"
+│   │   │       │   │   ├── futures-channel v0.3.32 (*)
+│   │   │       │   │   └── futures-core feature "alloc"
+│   │   │       │   │       └── futures-core v0.3.32
+│   │   │       │   └── futures-core feature "std"
+│   │   │       │       ├── futures-core v0.3.32
+│   │   │       │       └── futures-core feature "alloc" (*)
+│   │   │       ├── futures-io feature "std"
+│   │   │       │   └── futures-io v0.3.32
+│   │   │       ├── memchr feature "default"
+│   │   │       │   ├── memchr v2.8.1
+│   │   │       │   └── memchr feature "std"
+│   │   │       │       ├── memchr v2.8.1
+│   │   │       │       └── memchr feature "alloc"
+│   │   │       │           └── memchr v2.8.1
+│   │   │       └── pin-project-lite feature "default"
+│   │   │           └── pin-project-lite v0.2.17
+│   │   ├── futures-io v0.3.32
+│   │   ├── futures-sink v0.3.32
+│   │   ├── futures-task v0.3.32
+│   │   ├── futures-channel feature "sink"
+│   │   │   ├── futures-channel v0.3.32 (*)
+│   │   │   └── futures-channel feature "futures-sink"
+│   │   │       └── futures-channel v0.3.32 (*)
+│   │   └── futures-util feature "sink"
+│   │       ├── futures-util v0.3.32 (*)
+│   │       └── futures-util feature "futures-sink"
+│   │           └── futures-util v0.3.32 (*)
+│   ├── futures feature "async-await"
+│   │   ├── futures v0.3.32 (*)
+│   │   ├── futures-util feature "async-await"
+│   │   │   └── futures-util v0.3.32 (*)
+│   │   └── futures-util feature "async-await-macro"
+│   │       ├── futures-util v0.3.32 (*)
+│   │       ├── futures-util feature "async-await" (*)
+│   │       └── futures-util feature "futures-macro"
+│   │           └── futures-util v0.3.32 (*)
+│   ├── futures feature "executor"
+│   │   ├── futures v0.3.32 (*)
+│   │   ├── futures feature "futures-executor"
+│   │   │   └── futures v0.3.32 (*)
+│   │   ├── futures feature "std"
+│   │   │   ├── futures v0.3.32 (*)
+│   │   │   ├── futures feature "alloc"
+│   │   │   │   ├── futures v0.3.32 (*)
+│   │   │   │   ├── futures-channel feature "alloc" (*)
+│   │   │   │   ├── futures-core feature "alloc" (*)
+│   │   │   │   ├── futures-sink feature "alloc"
+│   │   │   │   │   └── futures-sink v0.3.32
+│   │   │   │   ├── futures-task feature "alloc"
+│   │   │   │   │   └── futures-task v0.3.32
+│   │   │   │   └── futures-util feature "alloc"
+│   │   │   │       ├── futures-util v0.3.32 (*)
+│   │   │   │       ├── futures-core feature "alloc" (*)
+│   │   │   │       ├── futures-task feature "alloc" (*)
+│   │   │   │       └── futures-util feature "slab"
+│   │   │   │           └── futures-util v0.3.32 (*)
+│   │   │   ├── futures-core feature "std" (*)
+│   │   │   ├── futures-sink feature "std"
+│   │   │   │   ├── futures-sink v0.3.32
+│   │   │   │   └── futures-sink feature "alloc" (*)
+│   │   │   ├── futures-task feature "std"
+│   │   │   │   ├── futures-task v0.3.32
+│   │   │   │   └── futures-task feature "alloc" (*)
+│   │   │   ├── futures-util feature "channel"
+│   │   │   │   ├── futures-util v0.3.32 (*)
+│   │   │   │   ├── futures-util feature "futures-channel"
+│   │   │   │   │   └── futures-util v0.3.32 (*)
+│   │   │   │   └── futures-util feature "std"
+│   │   │   │       ├── futures-util v0.3.32 (*)
+│   │   │   │       ├── futures-core feature "std" (*)
+│   │   │   │       ├── futures-task feature "std" (*)
+│   │   │   │       ├── futures-util feature "alloc" (*)
+│   │   │   │       ├── futures-util feature "slab" (*)
+│   │   │   │       └── slab feature "std"
+│   │   │   │           └── slab v0.4.12
+│   │   │   ├── futures-util feature "io"
+│   │   │   │   ├── futures-util v0.3.32 (*)
+│   │   │   │   ├── futures-util feature "futures-io"
+│   │   │   │   │   └── futures-util v0.3.32 (*)
+│   │   │   │   ├── futures-util feature "memchr"
+│   │   │   │   │   └── futures-util v0.3.32 (*)
+│   │   │   │   └── futures-util feature "std" (*)
+│   │   │   ├── futures-util feature "std" (*)
+│   │   │   └── futures-io feature "std" (*)
+│   │   └── futures-executor feature "std"
+│   │       ├── futures-executor v0.3.32 (*)
+│   │       ├── futures-core feature "std" (*)
+│   │       ├── futures-task feature "std" (*)
+│   │       └── futures-util feature "std" (*)
+│   └── futures feature "std" (*)
+└── parking_lot feature "default"
+    └── parking_lot v0.12.5
+        ├── lock_api feature "default"
+        │   ├── lock_api v0.4.14
+        │   │   └── scopeguard v1.2.0
+        │   └── lock_api feature "atomic_usize"
+        │       └── lock_api v0.4.14 (*)
+        └── parking_lot_core feature "default"
+            └── parking_lot_core v0.9.12
+                ├── libc feature "default" (*)
+                ├── cfg-if feature "default" (*)
+                └── smallvec feature "default"
+                    └── smallvec v1.15.1
+[dev-dependencies]
+├── futures feature "default" (*)
+├── pollster feature "default"
+│   └── pollster v0.4.0
+├── tokio feature "default"
+│   └── tokio v1.52.3
+│       ├── pin-project-lite feature "default" (*)
+│       └── tokio-macros feature "default"
+│           └── tokio-macros v2.7.0 (proc-macro)
+│               ├── proc-macro2 feature "default" (*)
+│               ├── quote feature "default" (*)
+│               ├── syn feature "default" (*)
+│               └── syn feature "full" (*)
+├── tokio feature "macros"
+│   ├── tokio v1.52.3 (*)
+│   └── tokio feature "tokio-macros"
+│       └── tokio v1.52.3 (*)
+├── tokio feature "rt"
+│   └── tokio v1.52.3 (*)
+├── tokio feature "rt-multi-thread"
+│   ├── tokio v1.52.3 (*)
+│   └── tokio feature "rt" (*)
+├── wgpu feature "std"
+│   ├── wgpu v29.0.3
+│   │   ├── arrayvec v0.7.6
+│   │   ├── profiling v1.0.18
+│   │   ├── wgpu-types v29.0.3
+│   │   │   ├── raw-window-handle v0.6.2
+│   │   │   ├── bitflags feature "default" (*)
+│   │   │   ├── bytemuck feature "default"
+│   │   │   │   └── bytemuck v1.25.0
+│   │   │   │       └── bytemuck_derive feature "default"
+│   │   │   │           └── bytemuck_derive v1.10.2 (proc-macro)
+│   │   │   │               ├── proc-macro2 feature "default" (*)
+│   │   │   │               ├── quote feature "default" (*)
+│   │   │   │               └── syn feature "default" (*)
+│   │   │   ├── bytemuck feature "derive"
+│   │   │   │   ├── bytemuck v1.25.0 (*)
+│   │   │   │   └── bytemuck feature "bytemuck_derive"
+│   │   │   │       └── bytemuck v1.25.0 (*)
+│   │   │   ├── bytemuck feature "extern_crate_alloc"
+│   │   │   │   └── bytemuck v1.25.0 (*)
+│   │   │   ├── bytemuck feature "min_const_generics"
+│   │   │   │   └── bytemuck v1.25.0 (*)
+│   │   │   └── log feature "default"
+│   │   │       └── log v0.4.30
+│   │   ├── bitflags feature "default" (*)
+│   │   ├── cfg-if feature "default" (*)
+│   │   ├── smallvec feature "default" (*)
+│   │   ├── bytemuck feature "default" (*)
+│   │   ├── bytemuck feature "extern_crate_alloc" (*)
+│   │   ├── bytemuck feature "min_const_generics" (*)
+│   │   ├── document-features feature "default"
+│   │   │   └── document-features v0.2.12 (proc-macro)
+│   │   │       └── litrs feature "default"
+│   │   │           └── litrs v1.0.0
+│   │   ├── hashbrown feature "default-hasher"
+│   │   │   └── hashbrown v0.16.1
+│   │   │       ├── equivalent v1.0.2
+│   │   │       ├── foldhash v0.2.0
+│   │   │       └── allocator-api2 feature "alloc"
+│   │   │           └── allocator-api2 v0.2.21
+│   │   ├── hashbrown feature "inline-more"
+│   │   │   └── hashbrown v0.16.1 (*)
+│   │   ├── log feature "default" (*)
+│   │   ├── raw-window-handle feature "alloc"
+│   │   │   └── raw-window-handle v0.6.2
+│   │   ├── static_assertions feature "default"
+│   │   │   └── static_assertions v1.1.0
+│   │   ├── wgpu-core feature "default"
+│   │   │   ├── wgpu-core v29.0.3
+│   │   │   │   ├── arrayvec v0.7.6
+│   │   │   │   ├── bit-set v0.9.1
+│   │   │   │   │   └── bit-vec v0.9.1
+│   │   │   │   ├── bit-vec v0.9.1
+│   │   │   │   ├── indexmap v2.14.0
+│   │   │   │   │   ├── equivalent v1.0.2
+│   │   │   │   │   └── hashbrown v0.17.1
+│   │   │   │   ├── profiling v1.0.18
+│   │   │   │   ├── raw-window-handle v0.6.2
+│   │   │   │   ├── rustc-hash v1.1.0
+│   │   │   │   ├── thiserror v2.0.18
+│   │   │   │   │   └── thiserror-impl feature "default"
+│   │   │   │   │       └── thiserror-impl v2.0.18 (proc-macro)
+│   │   │   │   │           ├── proc-macro2 feature "default" (*)
+│   │   │   │   │           ├── quote feature "default" (*)
+│   │   │   │   │           └── syn feature "default" (*)
+│   │   │   │   ├── wgpu-types v29.0.3 (*)
+│   │   │   │   ├── bitflags feature "default" (*)
+│   │   │   │   ├── parking_lot feature "default" (*)
+│   │   │   │   ├── smallvec feature "default" (*)
+│   │   │   │   ├── bytemuck feature "default" (*)
+│   │   │   │   ├── bytemuck feature "extern_crate_alloc" (*)
+│   │   │   │   ├── bytemuck feature "min_const_generics" (*)
+│   │   │   │   ├── document-features feature "default" (*)
+│   │   │   │   ├── hashbrown feature "default-hasher" (*)
+│   │   │   │   ├── hashbrown feature "inline-more" (*)
+│   │   │   │   ├── log feature "default" (*)
+│   │   │   │   ├── naga feature "default"
+│   │   │   │   │   └── naga v29.0.3
+│   │   │   │   │       ├── arrayvec v0.7.6
+│   │   │   │   │       ├── bit-set v0.9.1 (*)
+│   │   │   │   │       ├── codespan-reporting v0.13.1
+│   │   │   │   │       │   └── unicode-width feature "default"
+│   │   │   │   │       │       ├── unicode-width v0.2.2
+│   │   │   │   │       │       └── unicode-width feature "cjk"
+│   │   │   │   │       │           └── unicode-width v0.2.2
+│   │   │   │   │       ├── indexmap v2.14.0 (*)
+│   │   │   │   │       ├── libm v0.2.16
+│   │   │   │   │       ├── num-traits v0.2.19
+│   │   │   │   │       │   └── libm feature "default"
+│   │   │   │   │       │       ├── libm v0.2.16
+│   │   │   │   │       │       └── libm feature "arch"
+│   │   │   │   │       │           └── libm v0.2.16
+│   │   │   │   │       │   [build-dependencies]
+│   │   │   │   │       │   └── autocfg feature "default"
+│   │   │   │   │       │       └── autocfg v1.5.1
+│   │   │   │   │       ├── rustc-hash v1.1.0
+│   │   │   │   │       ├── thiserror v2.0.18 (*)
+│   │   │   │   │       ├── bitflags feature "default" (*)
+│   │   │   │   │       ├── cfg-if feature "default" (*)
+│   │   │   │   │       ├── unicode-ident feature "default" (*)
+│   │   │   │   │       ├── hashbrown feature "default-hasher" (*)
+│   │   │   │   │       ├── hashbrown feature "inline-more" (*)
+│   │   │   │   │       ├── log feature "default" (*)
+│   │   │   │   │       ├── half feature "num-traits"
+│   │   │   │   │       │   └── half v2.7.1
+│   │   │   │   │       │       ├── cfg-if feature "default" (*)
+│   │   │   │   │       │       ├── num-traits feature "libm"
+│   │   │   │   │       │       │   └── num-traits v0.2.19 (*)
+│   │   │   │   │       │       ├── zerocopy feature "derive"
+│   │   │   │   │       │       │   ├── zerocopy v0.8.50
+│   │   │   │   │       │       │   │   └── zerocopy-derive feature "default"
+│   │   │   │   │       │       │   │       └── zerocopy-derive v0.8.50 (proc-macro)
+│   │   │   │   │       │       │   │           ├── proc-macro2 feature "default" (*)
+│   │   │   │   │       │       │   │           ├── quote feature "default" (*)
+│   │   │   │   │       │       │   │           ├── syn feature "default" (*)
+│   │   │   │   │       │       │   │           └── syn feature "full" (*)
+│   │   │   │   │       │       │   └── zerocopy feature "zerocopy-derive"
+│   │   │   │   │       │       │       └── zerocopy v0.8.50 (*)
+│   │   │   │   │       │       └── zerocopy feature "simd"
+│   │   │   │   │       │           └── zerocopy v0.8.50 (*)
+│   │   │   │   │       ├── hexf-parse feature "default"
+│   │   │   │   │       │   └── hexf-parse v0.2.1
+│   │   │   │   │       ├── once_cell feature "alloc"
+│   │   │   │   │       │   ├── once_cell v1.21.4
+│   │   │   │   │       │   └── once_cell feature "race"
+│   │   │   │   │       │       └── once_cell v1.21.4
+│   │   │   │   │       ├── once_cell feature "race" (*)
+│   │   │   │   │       └── spirv feature "default"
+│   │   │   │   │           └── spirv v0.4.0+sdk-1.4.341.0
+│   │   │   │   │               └── bitflags feature "default" (*)
+│   │   │   │   │       [build-dependencies]
+│   │   │   │   │       └── cfg_aliases feature "default"
+│   │   │   │   │           └── cfg_aliases v0.2.1
+│   │   │   │   ├── once_cell feature "std"
+│   │   │   │   │   ├── once_cell v1.21.4
+│   │   │   │   │   └── once_cell feature "alloc" (*)
+│   │   │   │   ├── wgpu-core-deps-windows-linux-android feature "default"
+│   │   │   │   │   └── wgpu-core-deps-windows-linux-android v29.0.3
+│   │   │   │   │       └── wgpu-hal feature "default"
+│   │   │   │   │           └── wgpu-hal v29.0.3
+│   │   │   │   │               ├── arrayvec v0.7.6
+│   │   │   │   │               ├── libc v0.2.186
+│   │   │   │   │               ├── ordered-float v5.3.0
+│   │   │   │   │               │   └── num-traits v0.2.19 (*)
+│   │   │   │   │               ├── profiling v1.0.18
+│   │   │   │   │               ├── raw-window-handle v0.6.2
+│   │   │   │   │               ├── thiserror v2.0.18 (*)
+│   │   │   │   │               ├── wgpu-types v29.0.3 (*)
+│   │   │   │   │               ├── bitflags feature "default" (*)
+│   │   │   │   │               ├── cfg-if feature "default" (*)
+│   │   │   │   │               ├── parking_lot feature "default" (*)
+│   │   │   │   │               ├── smallvec feature "default" (*)
+│   │   │   │   │               ├── smallvec feature "union"
+│   │   │   │   │               │   └── smallvec v1.15.1
+│   │   │   │   │               ├── bytemuck feature "default" (*)
+│   │   │   │   │               ├── bytemuck feature "derive" (*)
+│   │   │   │   │               ├── bytemuck feature "extern_crate_alloc" (*)
+│   │   │   │   │               ├── bytemuck feature "min_const_generics" (*)
+│   │   │   │   │               ├── hashbrown feature "default-hasher" (*)
+│   │   │   │   │               ├── hashbrown feature "inline-more" (*)
+│   │   │   │   │               ├── log feature "default" (*)
+│   │   │   │   │               ├── naga feature "default" (*)
+│   │   │   │   │               ├── ash feature "default"
+│   │   │   │   │               │   ├── ash v0.38.0+1.3.281
+│   │   │   │   │               │   │   └── libloading feature "default"
+│   │   │   │   │               │   │       └── libloading v0.8.9
+│   │   │   │   │               │   │           └── cfg-if feature "default" (*)
+│   │   │   │   │               │   ├── ash feature "debug"
+│   │   │   │   │               │   │   └── ash v0.38.0+1.3.281 (*)
+│   │   │   │   │               │   ├── ash feature "loaded"
+│   │   │   │   │               │   │   ├── ash v0.38.0+1.3.281 (*)
+│   │   │   │   │               │   │   ├── ash feature "libloading"
+│   │   │   │   │               │   │   │   └── ash v0.38.0+1.3.281 (*)
+│   │   │   │   │               │   │   └── ash feature "std"
+│   │   │   │   │               │   │       └── ash v0.38.0+1.3.281 (*)
+│   │   │   │   │               │   └── ash feature "std" (*)
+│   │   │   │   │               ├── libloading feature "default" (*)
+│   │   │   │   │               ├── gpu-allocator feature "hashbrown"
+│   │   │   │   │               │   └── gpu-allocator v0.28.0
+│   │   │   │   │               │       ├── log v0.4.30
+│   │   │   │   │               │       ├── presser v0.3.1
+│   │   │   │   │               │       ├── thiserror v2.0.18 (*)
+│   │   │   │   │               │       ├── hashbrown feature "default"
+│   │   │   │   │               │       │   ├── hashbrown v0.16.1 (*)
+│   │   │   │   │               │       │   ├── hashbrown feature "allocator-api2"
+│   │   │   │   │               │       │   │   └── hashbrown v0.16.1 (*)
+│   │   │   │   │               │       │   ├── hashbrown feature "default-hasher" (*)
+│   │   │   │   │               │       │   ├── hashbrown feature "equivalent"
+│   │   │   │   │               │       │   │   └── hashbrown v0.16.1 (*)
+│   │   │   │   │               │       │   ├── hashbrown feature "inline-more" (*)
+│   │   │   │   │               │       │   └── hashbrown feature "raw-entry"
+│   │   │   │   │               │       │       └── hashbrown v0.16.1 (*)
+│   │   │   │   │               │       └── ash feature "debug" (*)
+│   │   │   │   │               ├── gpu-descriptor feature "default"
+│   │   │   │   │               │   ├── gpu-descriptor v0.3.2
+│   │   │   │   │               │   │   ├── bitflags v2.11.1
+│   │   │   │   │               │   │   ├── gpu-descriptor-types feature "default"
+│   │   │   │   │               │   │   │   └── gpu-descriptor-types v0.2.0
+│   │   │   │   │               │   │   │       └── bitflags v2.11.1
+│   │   │   │   │               │   │   └── hashbrown feature "default-hasher"
+│   │   │   │   │               │   │       └── hashbrown v0.15.5
+│   │   │   │   │               │   │           └── foldhash v0.1.5
+│   │   │   │   │               │   └── gpu-descriptor feature "std"
+│   │   │   │   │               │       └── gpu-descriptor v0.3.2 (*)
+│   │   │   │   │               ├── renderdoc-sys feature "default"
+│   │   │   │   │               │   └── renderdoc-sys v1.1.0
+│   │   │   │   │               └── wgpu-naga-bridge feature "default"
+│   │   │   │   │                   └── wgpu-naga-bridge v29.0.3
+│   │   │   │   │                       ├── wgpu-types v29.0.3 (*)
+│   │   │   │   │                       └── naga feature "default" (*)
+│   │   │   │   │               [build-dependencies]
+│   │   │   │   │               └── cfg_aliases feature "default" (*)
+│   │   │   │   ├── wgpu-hal feature "default" (*)
+│   │   │   │   └── wgpu-naga-bridge feature "default" (*)
+│   │   │   │   [build-dependencies]
+│   │   │   │   └── cfg_aliases feature "default" (*)
+│   │   │   └── wgpu-core feature "std"
+│   │   │       └── wgpu-core v29.0.3 (*)
+│   │   ├── wgpu-core feature "portable-atomic"
+│   │   │   ├── wgpu-core v29.0.3 (*)
+│   │   │   └── wgpu-hal feature "portable-atomic"
+│   │   │       └── wgpu-hal v29.0.3 (*)
+│   │   ├── wgpu-core feature "renderdoc"
+│   │   │   ├── wgpu-core v29.0.3 (*)
+│   │   │   ├── wgpu-core feature "wgpu-core-deps-windows-linux-android"
+│   │   │   │   └── wgpu-core v29.0.3 (*)
+│   │   │   └── wgpu-core-deps-windows-linux-android feature "renderdoc"
+│   │   │       ├── wgpu-core-deps-windows-linux-android v29.0.3 (*)
+│   │   │       └── wgpu-hal feature "renderdoc"
+│   │   │           └── wgpu-hal v29.0.3 (*)
+│   │   ├── wgpu-core feature "wgsl"
+│   │   │   ├── wgpu-core v29.0.3 (*)
+│   │   │   └── naga feature "wgsl-in"
+│   │   │       └── naga v29.0.3 (*)
+│   │   └── wgpu-hal feature "default" (*)
+│   │   [build-dependencies]
+│   │   └── cfg_aliases feature "default" (*)
+│   ├── raw-window-handle feature "std"
+│   │   ├── raw-window-handle v0.6.2
+│   │   └── raw-window-handle feature "alloc" (*)
+│   ├── wgpu-core feature "std" (*)
+│   └── wgpu-types feature "std"
+│       └── wgpu-types v29.0.3 (*)
+├── wgpu feature "vulkan"
+│   ├── wgpu v29.0.3 (*)
+│   └── wgpu-core feature "vulkan"
+│       ├── wgpu-core v29.0.3 (*)
+│       ├── wgpu-core feature "wgpu-core-deps-windows-linux-android" (*)
+│       └── wgpu-core-deps-windows-linux-android feature "vulkan"
+│           ├── wgpu-core-deps-windows-linux-android v29.0.3 (*)
+│           └── wgpu-hal feature "vulkan"
+│               ├── wgpu-hal v29.0.3 (*)
+│               ├── naga feature "spv-out"
+│               │   └── naga v29.0.3 (*)
+│               ├── wgpu-hal feature "gpu-allocator"
+│               │   └── wgpu-hal v29.0.3 (*)
+│               └── gpu-allocator feature "vulkan"
+│                   └── gpu-allocator v0.28.0 (*)
+└── wgpu feature "wgsl"
+    ├── wgpu v29.0.3 (*)
+    └── wgpu-core feature "wgsl" (*)

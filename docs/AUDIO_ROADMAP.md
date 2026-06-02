@@ -101,3 +101,9 @@ getDisplayMedia / getUserMedia
 - MDN Web Audio API: <https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API>
 - MDN AudioContext: <https://developer.mozilla.org/en-US/docs/Web/API/AudioContext>
 - MDN AudioWorklet: <https://developer.mozilla.org/en-US/docs/Web/API/AudioWorklet>
+
+## Web CPAL boundary
+
+CPAL may be used on wasm for Web Audio / AudioWorklet processing, but wgrab's
+browser capture setup must remain web-specific because permissions and
+MediaStream setup are asynchronous browser APIs.

@@ -73,3 +73,15 @@ Deprecated raw platform APIs remain callable temporarily, but new code should
 not use them.
 
 Use `WgpuCaptureFrame` for capture output.
+
+## Primary runtime path
+
+The primary runtime path is now:
+
+1. create or provide a backend-compatible `wgpu::Device`
+2. capture a frame
+3. call `WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame`
+4. use `WgpuCaptureFrame::texture` or `WgpuCaptureFrame::create_view`
+
+The `wgpu_texture_only_capture` example demonstrates this path and does not
+read captured pixels back to CPU memory.

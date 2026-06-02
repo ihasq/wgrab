@@ -56,3 +56,20 @@ Internal boundary:
 - IOSurface bridge
 - Metal bridge
 - D3D/DXGI resource bridge
+
+## Phase 16R runtime boundary
+
+Runtime public output:
+
+- `WgpuCaptureFrame`
+
+Runtime public usage:
+
+- `WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame`
+- `WgpuCaptureFrame::texture`
+- `WgpuCaptureFrame::create_view`
+- `WgpuCaptureFrame::size`
+- `WgpuCaptureFrame::format`
+- `WgpuCaptureFrame::usage`
+
+Deprecated raw platform shims are not used by the GPU-only example.

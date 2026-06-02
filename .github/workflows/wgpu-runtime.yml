@@ -113,6 +113,41 @@ jobs:
           Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
           exit 1
 
+      - name: Run GPU-only texture probe
+        shell: pwsh
+        run: |
+          $env:RUST_BACKTRACE = "1"
+          $env:CRABGRAB_WGPU_DEBUG_DESCRIPTOR = "1"
+
+          $Log = "wgrab_texture_only_windows_probe.log"
+
+          cargo run --example wgpu_texture_only_capture --features wgpu,wgpu-debug-descriptor -- --ci --frames 1 --allow-capture-unavailable `
+            2>&1 | Tee-Object -FilePath $Log
+
+          "### GPU-only texture probe Windows" >> $env:GITHUB_STEP_SUMMARY
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_TEXTURE_ONLY_OK" -Quiet) {
+            "texture_only_marker=CI_WGRAB_TEXTURE_ONLY_OK" >> $env:GITHUB_STEP_SUMMARY
+            Select-String -Path $Log -Pattern "CI_WGRAB_TEXTURE_ONLY_OK|frame_count=|texture_width=|texture_height=|texture_format=|texture_usage=|view_created=" | ForEach-Object { $_.Line } >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_TEXTURE_ONLY_UNAVAILABLE" -Quiet) {
+            "texture_only_marker=CI_WGRAB_TEXTURE_ONLY_UNAVAILABLE" >> $env:GITHUB_STEP_SUMMARY
+            Select-String -Path $Log -Pattern "CI_WGRAB_TEXTURE_ONLY_UNAVAILABLE|reason=" | ForEach-Object { $_.Line } >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_TEXTURE_ONLY_FAILED" -Quiet) {
+            "texture_only_marker=CI_WGRAB_TEXTURE_ONLY_FAILED" >> $env:GITHUB_STEP_SUMMARY
+            Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+            exit 1
+          }
+
+          "texture_only_marker=MISSING" >> $env:GITHUB_STEP_SUMMARY
+          Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+          exit 1
+
       - name: Upload Windows logs
         if: always()
         uses: actions/upload-artifact@v7
@@ -215,6 +250,45 @@ jobs:
           tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
           exit 1
 
+      - name: Run GPU-only texture probe
+        shell: bash
+        run: |
+          set +e
+          export RUST_BACKTRACE=1
+          export CRABGRAB_WGPU_DEBUG_DESCRIPTOR=1
+
+          LOG="wgrab_texture_only_${{ matrix.label }}_probe.log"
+
+          cargo run --example wgpu_texture_only_capture --features wgpu,wgpu-debug-descriptor -- --ci --frames 1 --allow-capture-unavailable \
+            2>&1 | tee "$LOG"
+
+          STATUS=${PIPESTATUS[0]}
+
+          echo "### GPU-only texture probe ${{ matrix.label }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "exit_status=$STATUS" >> "$GITHUB_STEP_SUMMARY"
+
+          if grep -q "CI_WGRAB_TEXTURE_ONLY_OK" "$LOG"; then
+            echo "texture_only_marker=CI_WGRAB_TEXTURE_ONLY_OK" >> "$GITHUB_STEP_SUMMARY"
+            grep -E "CI_WGRAB_TEXTURE_ONLY_OK|frame_count=|texture_width=|texture_height=|texture_format=|texture_usage=|view_created=" "$LOG" >> "$GITHUB_STEP_SUMMARY" || true
+            exit 0
+          fi
+
+          if grep -q "CI_WGRAB_TEXTURE_ONLY_UNAVAILABLE" "$LOG"; then
+            echo "texture_only_marker=CI_WGRAB_TEXTURE_ONLY_UNAVAILABLE" >> "$GITHUB_STEP_SUMMARY"
+            grep -E "CI_WGRAB_TEXTURE_ONLY_UNAVAILABLE|reason=" "$LOG" >> "$GITHUB_STEP_SUMMARY" || true
+            exit 0
+          fi
+
+          if grep -q "CI_WGRAB_TEXTURE_ONLY_FAILED" "$LOG"; then
+            echo "texture_only_marker=CI_WGRAB_TEXTURE_ONLY_FAILED" >> "$GITHUB_STEP_SUMMARY"
+            tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+          echo "texture_only_marker=MISSING" >> "$GITHUB_STEP_SUMMARY"
+          tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
       - name: Upload macOS logs
         if: always()
         uses: actions/upload-artifact@v7
@@ -275,6 +349,17 @@ jobs:
             2>&1 | tee strict_capture_${{ matrix.label }}.log
           grep "CI_CAPTURE_SMOKE_OK" strict_capture_${{ matrix.label }}.log
 
+      - name: Strict GPU-only texture capture
+        shell: bash
+        if: runner.os != 'Windows'
+        run: |
+          set -o pipefail
+          export RUST_BACKTRACE=1
+          export CRABGRAB_WGPU_DEBUG_DESCRIPTOR=1
+          cargo run --example wgpu_texture_only_capture --features wgpu,wgpu-debug-descriptor -- --ci --frames "${{ inputs.frames }}" --strict-capture \
+            2>&1 | tee strict_texture_only_${{ matrix.label }}.log
+          grep "CI_WGRAB_TEXTURE_ONLY_OK" strict_texture_only_${{ matrix.label }}.log
+
       - name: Strict capture Windows
         shell: pwsh
         if: runner.os == 'Windows'
@@ -284,6 +369,16 @@ jobs:
           cargo run --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor -- --ci --frames "${{ inputs.frames }}" --strict-capture `
             2>&1 | Tee-Object -FilePath strict_capture_${{ matrix.label }}.log
           Select-String -Path strict_capture_${{ matrix.label }}.log -Pattern "CI_CAPTURE_SMOKE_OK"
+
+      - name: Strict GPU-only texture capture Windows
+        shell: pwsh
+        if: runner.os == 'Windows'
+        run: |
+          $env:RUST_BACKTRACE = "1"
+          $env:CRABGRAB_WGPU_DEBUG_DESCRIPTOR = "1"
+          cargo run --example wgpu_texture_only_capture --features wgpu,wgpu-debug-descriptor -- --ci --frames "${{ inputs.frames }}" --strict-capture `
+            2>&1 | Tee-Object -FilePath strict_texture_only_${{ matrix.label }}.log
+          Select-String -Path strict_texture_only_${{ matrix.label }}.log -Pattern "CI_WGRAB_TEXTURE_ONLY_OK"
 
       - name: Upload strict logs
         if: always()

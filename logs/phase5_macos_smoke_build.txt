@@ -1,0 +1,8 @@
+NOT RUN natively on macOS hardware from this Linux VPS.
+
+Cross-target smoke example builds were run instead:
+- logs/phase5_macos_smoke_build_x86_cross.txt
+- logs/phase5_macos_smoke_build_arm_cross.txt
+
+Required on macOS hardware:
+`cargo build --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor`

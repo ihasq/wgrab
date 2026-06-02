@@ -29,6 +29,7 @@ dx11 = ["dxgi"]
 bitmap = ["dep:bytemuck", "dep:half", "dx11"]
 screenshot = ["bitmap"]
 wgpu = ["dep:wgpu", "dx11", "dxgi", "iosurface", "metal"]
+wgpu-debug-descriptor = ["wgpu"]
 diagnostic = []
 
 [dependencies]

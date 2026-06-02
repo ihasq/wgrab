@@ -306,7 +306,7 @@ fn objc2_metal_texture_from_iosurface(
     device: &Objc2MetalDevice,
     io_surface: &IoSurface,
     plane: WgpuVideoFramePlaneTexture,
-) -> Result<Objc2MetalTexture, WgpuVideoFrameError> {
+) -> Result<(Objc2MetalTexture, usize), WgpuVideoFrameError> {
     let pixel_format = io_surface
         .get_pixel_format()
         .ok_or_else(|| WgpuVideoFrameError::Other("Unable to get pixel format from IOSurface".to_string()))?;
@@ -357,7 +357,85 @@ fn objc2_metal_texture_from_iosurface(
             objc2_iosurface_ref(io_surface),
             plane_index,
         )
+        .map(|texture| (texture, plane_index))
         .ok_or_else(|| WgpuVideoFrameError::Other("Failed to create Metal texture from IOSurface".to_string()))
+}
+
+#[cfg(target_os = "macos")]
+fn should_debug_macos_wgpu_descriptor() -> bool {
+    cfg!(feature = "wgpu-debug-descriptor")
+        || (cfg!(debug_assertions) && std::env::var_os("CRABGRAB_WGPU_DEBUG_DESCRIPTOR").is_some())
+}
+
+#[cfg(target_os = "macos")]
+fn debug_macos_wgpu_descriptor(
+    io_surface: &IoSurface,
+    plane_index: usize,
+    metal_texture: &Objc2MetalTexture,
+    descriptor: &wgpu::TextureDescriptor<'_>,
+) -> Result<(), WgpuVideoFrameError> {
+    if !should_debug_macos_wgpu_descriptor() {
+        return Ok(());
+    }
+
+    let io_surface_plane_width = if plane_index == 0 {
+        io_surface.get_width()
+    } else {
+        io_surface.get_width_of_plane(plane_index)
+    };
+    let io_surface_plane_height = if plane_index == 0 {
+        io_surface.get_height()
+    } else {
+        io_surface.get_height_of_plane(plane_index)
+    };
+    let io_surface_plane_bytes_per_row = if io_surface.get_plane_count() == 0 {
+        io_surface.get_bytes_per_row()
+    } else {
+        io_surface.get_bytes_per_row_of_plane(plane_index)
+    };
+    let mapped_format = metal_pixel_format_to_wgpu(metal_texture.pixelFormat())?;
+
+    println!("CrabGrab wgpu descriptor validation:");
+    println!("  IOSurface:");
+    println!("    width: {}", io_surface.get_width());
+    println!("    height: {}", io_surface.get_height());
+    println!("    pixel format: {:?}", io_surface.get_pixel_format());
+    println!("    plane count: {}", io_surface.get_plane_count());
+    println!("    selected plane: {plane_index}");
+    println!("    plane width: {io_surface_plane_width}");
+    println!("    plane height: {io_surface_plane_height}");
+    println!("    plane bytes per row: {io_surface_plane_bytes_per_row}");
+    println!("  Metal texture:");
+    println!("    width: {}", metal_texture.width());
+    println!("    height: {}", metal_texture.height());
+    println!("    depth: {}", metal_texture.depth());
+    println!("    array length: {}", metal_texture.arrayLength());
+    println!("    mipmap level count: {}", metal_texture.mipmapLevelCount());
+    println!("    sample count: {}", metal_texture.sampleCount());
+    println!("    texture type: {:?}", metal_texture.textureType());
+    println!("    pixel format: {:?}", metal_texture.pixelFormat());
+    println!("    usage: {:?}", metal_texture.usage());
+    println!("    storage mode: {:?}", metal_texture.storageMode());
+    println!("  wgpu descriptor:");
+    println!("    width: {}", descriptor.size.width);
+    println!("    height: {}", descriptor.size.height);
+    println!("    depth_or_array_layers: {}", descriptor.size.depth_or_array_layers);
+    println!("    mip_level_count: {}", descriptor.mip_level_count);
+    println!("    sample_count: {}", descriptor.sample_count);
+    println!("    dimension: {:?}", descriptor.dimension);
+    println!("    format: {:?}", descriptor.format);
+    println!("    usage: {:?}", descriptor.usage);
+    println!("    view_formats: {:?}", descriptor.view_formats);
+
+    assert_eq!(metal_texture.width() as u32, descriptor.size.width);
+    assert_eq!(metal_texture.height() as u32, descriptor.size.height);
+    assert_eq!(metal_texture.mipmapLevelCount().max(1) as u32, descriptor.mip_level_count);
+    assert_eq!(metal_texture.sampleCount().max(1) as u32, descriptor.sample_count);
+    assert_eq!(mapped_format, descriptor.format);
+    assert_eq!(io_surface_plane_width as u32, descriptor.size.width);
+    assert_eq!(io_surface_plane_height as u32, descriptor.size.height);
+
+    Ok(())
 }
 
 /// A video frame which can be used to create Wgpu textures
@@ -381,7 +459,7 @@ impl WgpuVideoFrameExt for VideoFrame {
                     }
                 })?;
             let hal_device = get_metal_hal_device((&*wgpu_device).as_ref())?;
-            let metal_texture = objc2_metal_texture_from_iosurface(
+            let (metal_texture, plane_index) = objc2_metal_texture_from_iosurface(
                 hal_device.raw_device(),
                 &io_surface,
                 plane,
@@ -402,6 +480,7 @@ impl WgpuVideoFrameExt for VideoFrame {
                 usage: metal_texture_usage_to_wgpu(metal_texture.usage(), metal_texture.storageMode()),
                 view_formats: &[],
             };
+            debug_macos_wgpu_descriptor(&io_surface, plane_index, &metal_texture, &descriptor)?;
             let wgpu_metal_texture = unsafe {
                 hal_mtl::Device::texture_from_raw(
                     metal_texture.clone(),

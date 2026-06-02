@@ -46,6 +46,18 @@ impl IoSurface {
         PlatformIoSurface(self.0).get_height_of_plane(plane)
     }
 
+    pub(crate) fn get_bytes_per_row(&self) -> usize {
+        PlatformIoSurface(self.0).get_bytes_per_row()
+    }
+
+    pub(crate) fn get_bytes_per_row_of_plane(&self, plane: usize) -> usize {
+        PlatformIoSurface(self.0).get_bytes_per_row_of_plane(plane)
+    }
+
+    pub(crate) fn get_plane_count(&self) -> usize {
+        PlatformIoSurface(self.0).get_plane_count()
+    }
+
     pub(crate) fn from_ref_unretained(r: IOSurfaceRef) -> Self {
         unsafe {
             IOSurfaceIncrementUseCount(r);

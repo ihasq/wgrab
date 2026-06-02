@@ -1,0 +1,149 @@
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1308:1
+     |
+1308 | extern fn sc_stream_output_did_output_sample_buffer_of_type(this: *mut AnyObject, _sel: Sel, stream: SCStream, buffer: CMSampleBuf...
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+     |
+     = note: `#[warn(missing_abi)]` on by default
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1322:1
+     |
+1322 | extern fn sc_stream_handler_did_stop_with_error(this: *mut AnyObject, _sel: Sel, stream: SCStream, error: NSError) -> () {
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1332:1
+     |
+1332 | extern fn sc_stream_handler_dealloc(this: *mut AnyObject, _sel: Sel) {
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1360:131
+     |
+1360 | ...id_output_sample_buffer_of_type as extern fn (*mut AnyObject, Sel, SCStream, CMSampleBufferRef, SCStreamOutputTypeEncoded));
+     |                                       ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1361:107
+     |
+1361 | ...eam_handler_did_stop_with_error as extern fn(*mut AnyObject, Sel, SCStream, NSError));
+     |                                       ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1362:78
+     |
+1362 |                 class.add_method(sel!(dealloc), sc_stream_handler_dealloc as extern fn(*mut AnyObject, Sel));
+     |                                                                              ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3027:1
+     |
+3027 | extern fn sc_content_sharing_picker_observer_did_cancel_for_stream(this: *mut AnyObject, _sel: Sel, picker: *mut AnyObject, stream...
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3031:1
+     |
+3031 | extern fn sc_content_sharing_picker_observer_did_update_filter_for_stream(this: *mut AnyObject, _sel: Sel, picker: *mut AnyObject,...
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3036:1
+     |
+3036 | extern fn sc_content_sharing_picker_observer_start_did_fail_with_error(this: *mut AnyObject, _sel: Sel, error: *mut AnyObject) {
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3040:1
+     |
+3040 | extern fn sc_content_sharing_picker_observer_dealloc(this: *mut AnyObject, _sel: Sel) {
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3052:142
+     |
+3052 | ..._observer_did_cancel_for_stream as extern fn (*mut AnyObject, Sel, *mut AnyObject, *mut AnyObject));
+     |                                       ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3053:160
+     |
+3053 | ...er_did_update_filter_for_stream as extern fn (*mut AnyObject, Sel, *mut AnyObject, *mut AnyObject, *mut AnyObject));
+     |                                       ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3054:148
+     |
+3054 | ...erver_start_did_fail_with_error as extern fn (*mut AnyObject, Sel, *mut AnyObject));
+     |                                       ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3055:95
+     |
+3055 |                 class.add_method(sel!(dealloc), sc_content_sharing_picker_observer_dealloc as extern fn (*mut AnyObject, Sel));
+     |                                                                                               ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: unnecessary transmute
+   --> src/platform/macos/objc_wrap.rs:799:18
+    |
+799 |         unsafe { std::mem::transmute(self.0) }
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: there's also `from_le_bytes` and `from_be_bytes` if you expect a particular byte order
+    = note: `#[warn(unnecessary_transmutes)]` on by default
+help: replace this with
+    |
+799 -         unsafe { std::mem::transmute(self.0) }
+799 +         unsafe { i32::from_ne_bytes(self.0) }
+    |
+
+warning: unnecessary transmute
+   --> src/platform/macos/objc_wrap.rs:803:18
+    |
+803 |         unsafe { std::mem::transmute(self.0) }
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: there's also `from_le_bytes` and `from_be_bytes` if you expect a particular byte order
+help: replace this with
+    |
+803 -         unsafe { std::mem::transmute(self.0) }
+803 +         unsafe { u32::from_ne_bytes(self.0) }
+    |
+
+warning: `crabgrab` (lib) generated 16 warnings (run `cargo fix --lib -p crabgrab` to apply 16 suggestions)
+   Compiling crabgrab v0.4.0 (/home/ihasq/code/wgrab)
+warning: invoking `"xcrun" "--sdk" "macosx" "--show-sdk-path"` to find MacOSX.sdk failed: No such file or directory (os error 2)
+  |
+  = note: the SDK is needed by the linker to know where to find symbols in system libraries and for embedding the SDK version in the final object file
+  = help: pass the path of an Xcode installation via the DEVELOPER_DIR environment variable, or an SDK with the SDKROOT environment variable
+
+error: linking with `cc` failed: exit status: 1
+  |
+  = note:  "cc" "/home/ihasq/code/wgrab/target/x86_64-apple-darwin/debug/examples/rustcGKOh8J/symbols.o" "<92 object files omitted>" "/home/ihasq/code/wgrab/target/x86_64-apple-darwin/debug/deps/{libcrabgrab-f813440841280e4b,libwgpu-6d25382a72a96686,libstatic_assertions-25769bbf24b3d3f6,libwgpu_core-a91a5016651ec77b,libonce_cell-687a62f3ee3874fb,libwgpu_hal-b97bb3f5353f4ff4,libraw_window_metal-4c26d73cfdf9dcc2,libprofiling-5baf40040ed9d0f5,libwgpu_naga_bridge-ea88308da21305d6,libobjc2_quartz_core-25279800ee50b651,libnaga-1b2c78ccc426e828,librustc_hash-bb9296042e5bcf97,libhexf_parse-504d21d0dc5b04c3,libunicode_ident-1e69ba9c26730ef3,libbit_set-5d5a74d027f08039,libbit_vec-35d3d8abe9ad205f,libarrayvec-1b2a0c67084196b6,libcodespan_reporting-1db261149acdf282,libunicode_width-5f7e93b775106899,libindexmap-b6588f378f767d53,libequivalent-e36cb7c7aad1b0dc,libhashbrown-5e9c273e8e64a37a,libthiserror-fb128ed7f521ca1a,libhashbrown-e13e16743bc37fba,libfoldhash-32072b1f000ee710,libhalf-b8fb8b6dd096d4ce,libzerocopy-f26b0b9346997544,libnum_traits-6fbe9eebed372fbd,liblibm-241a04c4d0e46194,libwgpu_types-d5820b4dc955a8df,libraw_window_handle-d246e4a782b3a319,libbytemuck-be64cbd915774bc5,libobjc2_metal-f040bd4eac9fc809,libobjc2_io_surface-23174b27127ce834,libdispatch2-1c1a727840475865,libobjc2_foundation-f11861a4ce57b922,libobjc2_core_foundation-612f4ade8bf0983c,libblock2-c9522651f3418cde,libobjc2-406518ac69d0ecf6,libmetal-b93d5b7f77d0648a,libblock-b5b56390af0ee369,libcore_graphics_types-0ef3cd8c1bce78fe,libcore_foundation-df63a4dbde248248,libcore_foundation_sys-0f7431ec2769a552,libforeign_types-6d1e23e2435e231b,libforeign_types_shared-56b11734c1ff0a0e,libobjc-488decff1feaa341,libmalloc_buf-1018608e43a4e105,liblog-974de29e2029e874,libbitflags-344b7e01a2a10654,liblazy_static-6623744374d2d70f,libmach2-3d8534a4696f5e8d,libblock2-1f9ed92a660bd0d8,libparking_lot-c54e3bf104538d8b,libparking_lot_core-0dcf9ded7a5ad5c3,liblibc-3fdfd886a34c36a4,libcfg_if-cf81f7e7ab183789,libsmallvec-b413afdaf174ba2d,liblock_api-496b803253c0d5b8,libscopeguard-135f17f1907db65f,libobjc2-e974f54e8d05a11c,libobjc2_encode-b66e1d6500e6f02e,libobjc_sys-b94c27c2a4b2dfbc,libfutures-43dd6adef00cfd31,libfutures_executor-e675b4c6dcc50b64,libfutures_util-767f22cb19010a45,libmemchr-a842cf674b86613d,libfutures_io-4de8611104ad54bc,libslab-9c6f9fb32d27c293,libfutures_channel-eed90927f98bdaa9,libpin_project_lite-58495eea742ddd35,libfutures_sink-a83e14c05f6649fc,libfutures_task-9d3e6044fb5ab42d,libfutures_core-ffe028b82de5b1f1}.rlib" "<sysroot>/lib/rustlib/x86_64-apple-darwin/lib/{libstd-*,libpanic_unwind-*,libobject-*,libmemchr-*,libaddr2line-*,libgimli-*,libcfg_if-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libminiz_oxide-*,libadler2-*,libunwind-*,liblibc-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib" "-framework" "ScreenCaptureKit" "-framework" "CoreGraphics" "-framework" "CoreMedia" "-framework" "CoreVideo" "-framework" "IOSurface" "-lSystem" "-framework" "Foundation" "-framework" "AppKit" "-framework" "ApplicationServices" "-framework" "AVFoundation" "-lSystem" "-framework" "QuartzCore" "-framework" "Metal" "-framework" "IOSurface" "-lSystem" "-framework" "Foundation" "-framework" "CoreFoundation" "-lobjc" "-framework" "Foundation" "-framework" "Metal" "-lSystem" "-lSystem" "-framework" "CoreGraphics" "-framework" "CoreFoundation" "-lobjc" "-liconv" "-framework" "Foundation" "-lobjc" "-lSystem" "-lc" "-lm" "-arch" "x86_64" "-mmacosx-version-min=10.12.0" "-o" "/home/ihasq/code/wgrab/target/x86_64-apple-darwin/debug/examples/wgpu_capture_smoke-6894856fd21ac82e" "-Wl,-dead_strip" "-nodefaultlibs"
+  = note: some arguments are omitted. use `--verbose` to show all linker arguments
+  = note: cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-framework'
+          cc: error: unrecognized command-line option '-arch'
+          cc: error: unrecognized command-line option '-mmacosx-version-min=10.12.0'
+          
+
+warning: `crabgrab` (example "wgpu_capture_smoke") generated 1 warning
+error: could not compile `crabgrab` (example "wgpu_capture_smoke") due to 1 previous error; 1 warning emitted

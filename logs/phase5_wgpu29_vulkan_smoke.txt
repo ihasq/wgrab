@@ -1,0 +1,10 @@
+SKIPPED: Linux CPU Vulkan smoke was not run.
+
+Reason:
+- `vulkaninfo` is not available on this VPS.
+- `/usr/share/vulkan/icd.d` does not exist.
+- No Lavapipe/lvp ICD file was found.
+- `/home/ihasq/work/wgpu29_vulkan_smoke` is not present.
+
+Required recovery:
+- Install `vulkan-tools` and `mesa-vulkan-drivers` without Mesa source builds or PPA additions.

@@ -9,14 +9,14 @@
 - GPU-only independence: deprecated public shim 直接呼び出しなし
 - negative grep: 既知 false positive のみ
 - target checks: 成功
-- push CI: 実行予定
-- ready for removal planning: push CI確認後に判断
+- push CI: 成功
+- ready for removal planning: yes
 
 ## Branch
 
 - branch: wgrab-gpu-only-api-design
-- commit: このログを含む commit
-- status: commit 前検証完了
+- implementation commit: aad1b30f1e1502b3564ac7f7194736208b766487
+- status: clean after commit
 
 ## Changed APIs
 
@@ -85,6 +85,13 @@ The wgpu path now calls internal helpers instead of deprecated public shims:
 `extern` ABI deprecation warnings from platform wrappers. The filtered
 GPU/raw-output deprecation check,
 `logs/phase15i_texture_only_gpu_deprecation_warning_index.txt`, is empty.
+
+## Push CI
+
+- wgpu runtime: 成功
+  - https://github.com/ihasq/wgrab/actions/runs/26817702570
+- wgpu linux vulkan smoke: 成功
+  - https://github.com/ihasq/wgrab/actions/runs/26817703071
 
 ## Deferred
 

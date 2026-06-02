@@ -1,0 +1,405 @@
+   Compiling proc-macro2 v1.0.106
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.45
+    Checking windows-link v0.2.1
+   Compiling cfg_aliases v0.2.1
+   Compiling libm v0.2.16
+   Compiling autocfg v1.5.1
+    Checking cfg-if v1.0.4
+    Checking windows-strings v0.5.1
+    Checking windows-result v0.4.1
+   Compiling thiserror v2.0.18
+   Compiling zerocopy v0.8.50
+    Checking equivalent v1.0.2
+    Checking allocator-api2 v0.2.21
+    Checking bitflags v2.11.1
+    Checking foldhash v0.2.0
+    Checking log v0.4.30
+   Compiling naga v29.0.3
+    Checking windows-threading v0.2.1
+    Checking hashbrown v0.17.1
+    Checking hashbrown v0.16.1
+   Compiling parking_lot_core v0.9.12
+    Checking unicode-width v0.2.2
+    Checking bit-vec v0.9.1
+   Compiling num-traits v0.2.19
+    Checking rustc-hash v1.1.0
+    Checking codespan-reporting v0.13.1
+    Checking bit-set v0.9.1
+    Checking smallvec v1.15.1
+    Checking arrayvec v0.7.6
+    Checking once_cell v1.21.4
+    Checking hexf-parse v0.2.1
+    Checking scopeguard v1.2.0
+    Checking indexmap v2.14.0
+    Checking raw-window-handle v0.6.2
+    Checking lock_api v0.4.14
+   Compiling wgpu-hal v29.0.3
+   Compiling syn v2.0.117
+   Compiling windows_x86_64_msvc v0.52.6
+    Checking presser v0.3.1
+    Checking parking_lot v0.12.5
+    Checking libloading v0.8.9
+    Checking renderdoc-sys v1.1.0
+    Checking futures-sink v0.3.32
+    Checking futures-core v0.3.32
+    Checking profiling v1.0.18
+    Checking range-alloc v0.1.5
+   Compiling wgpu-core v29.0.3
+   Compiling winapi v0.3.9
+    Checking futures-io v0.3.32
+    Checking futures-channel v0.3.32
+    Checking memchr v2.8.1
+   Compiling litrs v1.0.0
+    Checking slab v0.4.12
+    Checking futures-task v0.3.32
+    Checking pin-project-lite v0.2.17
+    Checking windows-targets v0.52.6
+   Compiling wgpu v29.0.3
+    Checking windows-core v0.52.0
+    Checking static_assertions v1.1.0
+    Checking ordered-float v5.3.0
+   Compiling document-features v0.2.12
+    Checking windows v0.52.0
+    Checking d3d12 v0.20.0
+   Compiling windows-interface v0.59.3
+   Compiling windows-implement v0.60.2
+   Compiling thiserror-impl v2.0.18
+   Compiling zerocopy-derive v0.8.50
+   Compiling bytemuck_derive v1.10.2
+   Compiling futures-macro v0.3.32
+    Checking futures-util v0.3.32
+    Checking windows-core v0.62.2
+    Checking bytemuck v1.25.0
+    Checking windows-collections v0.3.2
+    Checking windows-future v0.3.2
+    Checking windows-numerics v0.3.1
+    Checking wgpu-types v29.0.3
+    Checking windows v0.62.2
+    Checking futures-executor v0.3.32
+    Checking futures v0.3.32
+    Checking half v2.7.1
+    Checking gpu-allocator v0.28.0
+    Checking wgpu-naga-bridge v29.0.3
+    Checking wgpu-core-deps-windows-linux-android v29.0.3
+    Checking crabgrab v0.4.0 (/home/ihasq/code/wgrab)
+warning: unused import: `wgpu::hal::Device`
+  --> src/feature/wgpu/mod.rs:17:5
+   |
+17 | use wgpu::hal::Device;
+   |     ^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `windows::core::PCWSTR`
+  --> src/feature/wgpu/mod.rs:19:5
+   |
+19 | use windows::core::PCWSTR;
+   |     ^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `D3D12_FENCE_FLAG_NONE`
+  --> src/feature/wgpu/mod.rs:29:63
+   |
+29 | use windows::Win32::Graphics::Direct3D12::{D3D12_CLEAR_VALUE, D3D12_FENCE_FLAG_NONE, D3D12_FENCE_FLAG_SHARED};
+   |                                                               ^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `windows::Win32::Graphics::Dxgi::Common::DXGI_FORMAT_B8G8R8A8_TYPELESS`
+  --> src/feature/wgpu/mod.rs:33:5
+   |
+33 | use windows::Win32::Graphics::Dxgi::Common::DXGI_FORMAT_B8G8R8A8_TYPELESS;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `CREATE_EVENT`, `PROCESS_DELETE`, and `PROCESS_SYNCHRONIZE`
+  --> src/feature/wgpu/mod.rs:37:78
+   |
+37 | ...eateEventA, WaitForSingleObjectEx, CREATE_EVENT, INFINITE, PROCESS_DELETE, PROCESS_SYNCHRONIZE};
+   |                                       ^^^^^^^^^^^^            ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `CreateEventExW`, `THREAD_DELETE`, and `THREAD_SYNCHRONIZE`
+  --> src/feature/wgpu/mod.rs:39:41
+   |
+39 | use windows::Win32::System::Threading::{CreateEventExW, THREAD_DELETE, THREAD_SYNCHRONIZE};
+   |                                         ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE`
+  --> src/feature/wgpu/mod.rs:46:284
+   |
+46 | ...e, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE}}};
+   |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0107]: method takes 1 generic argument but 3 generic arguments were supplied
+   --> src/feature/wgpu/mod.rs:82:62
+    |
+ 82 |                 AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|device| {
+    |                                                              ^^^^^^                       ------ help: remove the unnecessary generic arguments
+    |                                                              |
+    |                                                              expected 1 generic argument
+    |
+note: method defined here, with 1 generic parameter: `A`
+   --> /home/ihasq/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wgpu-29.0.3/src/api/device.rs:578:19
+    |
+578 |     pub unsafe fn as_hal<A: hal::Api>(
+    |                   ^^^^^^ -
+
+error[E0061]: this method takes 0 arguments but 1 argument was supplied
+   --> src/feature/wgpu/mod.rs:82:62
+    |
+ 82 |                   AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|device| {
+    |  ______________________________________________________________^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^_-
+ 83 | |                     device.map(|device| {
+ 84 | |                         //device.raw_device().AddRef();
+ 85 | |                         let raw_device_ptr = device.raw_device().as_mut_ptr() as *mut c_void;
+...   |
+100 | |                     })
+101 | |                 });
+    | |_________________- unexpected argument
+    |
+note: method defined here
+   --> /home/ihasq/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wgpu-29.0.3/src/api/device.rs:578:19
+    |
+578 |     pub unsafe fn as_hal<A: hal::Api>(
+    |                   ^^^^^^
+help: remove the extra argument
+    |
+ 82 -                 AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|device| {
+ 83 -                     device.map(|device| {
+ 84 -                         //device.raw_device().AddRef();
+ 85 -                         let raw_device_ptr = device.raw_device().as_mut_ptr() as *mut c_void;
+ 86 -                         let raw_queue_ptr = device.raw_queue().as_mut_ptr() as *mut c_void;
+ 87 -                         let d3d12_device = ID3D12Device::from_raw(raw_device_ptr);
+ 88 -                         let d3d12_queue = ID3D12CommandQueue::from_raw(raw_queue_ptr);
+ 89 -                         let adapter_luid = d3d12_device.GetAdapterLuid();
+ 90 -                         let dxgi_factory: IDXGIFactory5 = match CreateDXGIFactory() {
+ 91 -                             Err(error) => {
+ 92 -                                 dxgi_adapter_result = Err(format!("Failed to create dxgi factory: {}", error.to_string()));
+ 93 -                                 return;
+ 94 -                             },
+ 95 -                             Ok(factory) => factory,
+ 96 -                         };
+ 97 -                         dxgi_adapter_result = dxgi_factory.EnumAdapterByLuid(adapter_luid)
+ 98 -                             .map_err(|error| format!("Failed to find matching dxgi adapter for wgpu device: {}", error.to_string()))
+ 99 -                             .map(|dxgi_adapter: IDXGIAdapter4| (dxgi_adapter, d3d12_device, d3d12_queue));
+100 -                     })
+101 -                 });
+ 82 +                 AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>();
+    |
+
+error[E0107]: method takes 1 generic argument but 3 generic arguments were supplied
+   --> src/feature/wgpu/mod.rs:293:46
+    |
+293 |                 AsRef::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|wgpu_dx12_device| {
+    |                                              ^^^^^^                       ------ help: remove the unnecessary generic arguments
+    |                                              |
+    |                                              expected 1 generic argument
+    |
+note: method defined here, with 1 generic parameter: `A`
+   --> /home/ihasq/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wgpu-29.0.3/src/api/device.rs:578:19
+    |
+578 |     pub unsafe fn as_hal<A: hal::Api>(
+    |                   ^^^^^^ -
+
+error[E0308]: mismatched types
+   --> src/feature/wgpu/mod.rs:395:25
+    |
+394 |                     let hal_texture = wgpu::hal::dx12::Device::texture_from_raw(
+    |                                       ----------------------------------------- arguments to this function are incorrect
+395 |                         texture_ptr.clone(),
+    |                         ^^^^^^^^^^^^^^^^^^^ expected `ID3D12Resource`, found `ComPtr<ID3D12Resource>`
+    |
+    = note: expected struct `windows::Win32::Graphics::Direct3D12::ID3D12Resource`
+               found struct `ComPtr<winapi::um::d3d12::ID3D12Resource>`
+note: associated function defined here
+   --> /home/ihasq/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wgpu-hal-29.0.3/src/dx12/device.rs:448:19
+    |
+448 |     pub unsafe fn texture_from_raw(
+    |                   ^^^^^^^^^^^^^^^^
+
+error[E0061]: this method takes 0 arguments but 1 argument was supplied
+   --> src/feature/wgpu/mod.rs:293:46
+    |
+293 |                   AsRef::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|wgpu_dx12_device| {
+    |  ______________________________________________^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^_-
+294 | |                     let wgpu_dx12_device = wgpu_dx12_device.unwrap();
+295 | |                     let d3d12_device_ptr = wgpu_dx12_device.raw_device().as_ptr() as *mut c_void;
+296 | |                     let d3d12_device = ID3D12Device::from_raw_borrowed(&d3d12_device_ptr).unwrap();
+...   |
+430 | |                     result
+431 | |                 }).unwrap()
+    | |_________________- unexpected argument
+    |
+note: method defined here
+   --> /home/ihasq/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wgpu-29.0.3/src/api/device.rs:578:19
+    |
+578 |     pub unsafe fn as_hal<A: hal::Api>(
+    |                   ^^^^^^
+help: remove the extra argument
+    |
+293 -                 AsRef::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|wgpu_dx12_device| {
+294 -                     let wgpu_dx12_device = wgpu_dx12_device.unwrap();
+295 -                     let d3d12_device_ptr = wgpu_dx12_device.raw_device().as_ptr() as *mut c_void;
+296 -                     let d3d12_device = ID3D12Device::from_raw_borrowed(&d3d12_device_ptr).unwrap();
+297 -                     let d3d12_queue_ptr = wgpu_dx12_device.raw_queue().as_ptr() as *mut c_void;
+298 -                     let d3d12_queue = ID3D12CommandQueue::from_raw_borrowed(&d3d12_queue_ptr).unwrap();
+299 - 
+300 -                     let mut frame_desc = D3D11_TEXTURE2D_DESC::default();
+301 -                     frame_texture.GetDesc(&mut frame_desc as *mut _);
+302 - 
+303 -                     let wgpu_size = wgpu::Extent3d {
+304 -                         width: frame_desc.Width,
+305 -                         height: frame_desc.Height,
+306 -                         depth_or_array_layers: frame_desc.ArraySize,
+307 -                     };
+308 - 
+309 -                     let d3d12_texture_desc = D3D12_RESOURCE_DESC {
+310 -                         Dimension: D3D12_RESOURCE_DIMENSION_TEXTURE2D,
+311 -                         Alignment: 0,
+312 -                         Width: frame_desc.Width as u64,
+313 -                         Height: frame_desc.Height,
+314 -                         DepthOrArraySize: frame_desc.ArraySize as u16,
+315 -                         MipLevels: frame_desc.MipLevels as u16,
+316 -                         Format: frame_desc.Format,
+317 -                         SampleDesc: frame_desc.SampleDesc,
+318 -                         Layout: D3D12_TEXTURE_LAYOUT_UNKNOWN,
+319 -                         Flags: D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_SIMULTANEOUS_ACCESS | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS
+320 -                     };
+321 -                     let d3d12_texture_heap_properties = D3D12_HEAP_PROPERTIES {
+322 -                         Type: D3D12_HEAP_TYPE_DEFAULT,
+323 -                         CPUPageProperty: D3D12_CPU_PAGE_PROPERTY_UNKNOWN,
+324 -                         MemoryPoolPreference: D3D12_MEMORY_POOL_UNKNOWN,
+325 -                         CreationNodeMask: 0,
+326 -                         VisibleNodeMask: 0,
+327 -                     };  
+328 -                     let d3d12_texture_clear_value = D3D12_CLEAR_VALUE {
+329 -                         Format: frame_desc.Format,
+330 -                         Anonymous: windows::Win32::Graphics::Direct3D12::D3D12_CLEAR_VALUE_0 {
+331 -                             Color: [0.0, 0.0, 0.0, 0.0]
+332 -                         }
+333 -                     };
+334 - 
+335 -                     let mut d3d12_texture = None;
+336 -                     d3d12_device.CreateCommittedResource(
+337 -                         &d3d12_texture_heap_properties as *const _,
+338 -                         D3D12_HEAP_FLAG_SHARED,
+339 -                         &d3d12_texture_desc as *const _,
+340 -                         D3D12_RESOURCE_STATE_COMMON,
+341 -                         Some(&d3d12_texture_clear_value),
+342 -                         &mut d3d12_texture as *mut _
+343 -                     ).map_err(|error| WgpuVideoFrameError::Other(format!("Failed to create d3d12 texture: {}", error.to_string())))?;
+344 -                     let d3d12_texture: ID3D12Resource = d3d12_texture.unwrap();
+345 - 
+346 -                     let dxgi_shared_texture_handle = d3d12_device.CreateSharedHandle(
+347 -                         &d3d12_texture,
+348 -                         None,
+349 -                         GENERIC_ALL.0,
+350 -                         None
+351 -                     ).map_err(|error| WgpuVideoFrameError::Other(format!("Failed to share d3d12 texture: {}", error.to_string())))?;
+352 - 
+353 -                     let d3d11_shared_texture: ID3D11Texture2D = d3d11_5_device.OpenSharedResource1(dxgi_shared_texture_handle)
+354 -                     .map_err(|error| WgpuVideoFrameError::Other(format!("Failed to use dxgi shared texture in d3d11: {}", error.to_string())))?;
+355 - 
+356 -                     let d3d12_fence: ID3D12Fence = d3d12_device.CreateFence(0, D3D12_FENCE_FLAG_SHARED)
+357 -                         .map_err(|error|  WgpuVideoFrameError::Other(format!("Failed to create fence: {}", error)))?;
+358 -                     let fence_event = CreateEventA(None, false, false, None)
+359 -                         .map_err(|error|  WgpuVideoFrameError::Other(format!("Failed to create fence event: {}", error)))?;
+360 -                     d3d12_fence.SetEventOnCompletion(1, fence_event)
+361 -                         .map_err(|error|  WgpuVideoFrameError::Other(format!("Failed to set fence completion event: {}", error.to_string())))?;
+362 - 
+363 -                     let dxgi_shared_fence_handle = d3d12_device.CreateSharedHandle(
+364 -                         &d3d12_fence,
+365 -                         None,
+366 -                         GENERIC_ALL.0,
+367 -                         None
+368 -                     ).map_err(|error| WgpuVideoFrameError::Other(format!("Failed to share fence with dxgi: {}", error.to_string())))?;
+369 - 
+370 -                     let mut d3d11_shared_fence = None;
+371 -                     d3d11_5_device.OpenSharedFence(dxgi_shared_fence_handle, &mut d3d11_shared_fence)
+372 -                         .map_err(|error| WgpuVideoFrameError::Other(format!("Failed to use dxgi shared fence: {}", error.to_string())))?;
+373 -                     let d3d11_shared_fence: ID3D11Fence = d3d11_shared_fence.unwrap();
+374 - 
+375 -                     {
+376 -                         let device_context: ID3D11DeviceContext4 = self.impl_video_frame.device.GetImmediateContext()
+377 -                             .map_err(|error| WgpuVideoFrameError::Other(format!("Failed to get d3d11 device context: {}", error.to_string())))?
+378 -                             .cast()
+379 -                             .map_err(|error| WgpuVideoFrameError::Other(format!("Failed to get d3d11 device context v4: {}", error.to_string())))?;
+380 -                         device_context.CopyResource(&d3d11_shared_texture, &frame_texture);
+381 -                         device_context.Signal(&d3d11_shared_fence, 1)
+382 -                             .map_err(|error| WgpuVideoFrameError::Other(format!("Failed to queue fence signal: {}", error.to_string())))?;
+383 -                         drop(frame_texture);
+384 -                         drop(d3d11_shared_texture);
+385 -                         drop(d3d11_shared_fence);
+386 -                         device_context.Flush();
+387 -                     }
+388 - 
+389 -                     CloseHandle(dxgi_shared_texture_handle)
+390 -                         .map_err(|error| WgpuVideoFrameError::Other(format!("Failed to close shared texture handle: {}", error.to_string())))?;
+391 - 
+392 -                     let texture_ptr: ComPtr<winapi::um::d3d12::ID3D12Resource> = d3d12::ComPtr::from_raw(d3d12_texture.into_raw() as *mut _);
+393 - 
+394 -                     let hal_texture = wgpu::hal::dx12::Device::texture_from_raw(
+395 -                         texture_ptr.clone(),
+396 -                         wgpu_format,
+397 -                         wgpu::TextureDimension::D2,
+398 -                         wgpu_size,
+399 -                         frame_desc.MipLevels.max(1),
+400 -                         frame_desc.SampleDesc.Count
+401 -                     );
+402 - 
+403 -                     d3d12_queue.Wait(&d3d12_fence, 1)
+404 -                         .map_err(|error| WgpuVideoFrameError::Other(format!("Failed to enqueue wait on fence: {}", error.to_string())))?;
+405 - 
+406 -                     if WaitForSingleObjectEx(fence_event, INFINITE, false) != WAIT_OBJECT_0 {
+407 -                         Err(WgpuVideoFrameError::Other(format!("Failed wait on completion fence")))?
+408 -                     }
+409 - 
+410 -                     CloseHandle(dxgi_shared_fence_handle)
+411 -                         .map_err(|error| WgpuVideoFrameError::Other(format!("Failed to close shared fence handle: {}", error.to_string())))?;
+412 -                     CloseHandle(fence_event)
+413 -                         .map_err(|error| WgpuVideoFrameError::Other(format!("Failed to close fence event handle: {}", error.to_string())))?;
+414 -                     
+415 -                     let desc = wgpu::TextureDescriptor {
+416 -                         label,
+417 -                         size: wgpu_size,
+418 -                         mip_level_count: frame_desc.MipLevels.max(1),
+419 -                         sample_count: frame_desc.SampleDesc.Count,
+420 -                         dimension: wgpu::TextureDimension::D2,
+421 -                         format: wgpu_format,
+422 -                         usage: wgpu::TextureUsages::COPY_SRC | wgpu::TextureUsages::STORAGE_BINDING | wgpu::TextureUsages::TEXTURE_BINDING,
+423 -                         view_formats: &[wgpu_format]
+424 -                     };
+425 -                     let result = Ok((*wgpu_device).as_ref().create_texture_from_hal::<wgpu::hal::api::Dx12>(hal_texture, &desc));
+426 - 
+427 -                     // dirty hack to reduce the refount
+428 -                     std::mem::drop(std::mem::transmute_copy::<_, ComPtr<winapi::um::d3d12::ID3D12Resource>>(&texture_ptr));
+429 - 
+430 -                     result
+431 -                 }).unwrap()
+293 +                 AsRef::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>().unwrap()
+    |
+
+error[E0308]: mismatched types
+   --> src/feature/wgpu/mod.rs:293:17
+    |
+188 |       fn get_wgpu_texture(&self, plane: WgpuVideoFramePlaneTexture, label: Option<&'static str>) -> Result<wgpu::Texture, WgpuVideoFrameError> {
+    |                                                                                                     ------------------------------------------ expected `std::result::Result<wgpu::Texture, WgpuVideoFrameError>` because of return type
+...
+293 | /                 AsRef::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|wgpu_dx12_device| {
+294 | |                     let wgpu_dx12_device = wgpu_dx12_device.unwrap();
+295 | |                     let d3d12_device_ptr = wgpu_dx12_device.raw_device().as_ptr() as *mut c_void;
+296 | |                     let d3d12_device = ID3D12Device::from_raw_borrowed(&d3d12_device_ptr).unwrap();
+...   |
+430 | |                     result
+431 | |                 }).unwrap()
+    | |___________________________^ expected `Result<Texture, WgpuVideoFrameError>`, found opaque type
+    |
+   ::: /home/ihasq/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wgpu-29.0.3/src/api/device.rs:580:17
+    |
+580 |       ) -> Option<impl Deref<Target = A::Device> + WasmNotSendSync> {
+    |                   ------------------------------------------------ the found opaque type
+    |
+    = note:     expected enum `std::result::Result<wgpu::Texture, WgpuVideoFrameError>`
+            found opaque type `impl Deref<Target = <wgpu::wgpu_core::api::Dx12 as wgpu::wgpu_hal::Api>::Device> + WasmNotSendSync`
+
+Some errors have detailed explanations: E0061, E0107, E0308.
+For more information about an error, try `rustc --explain E0061`.
+warning: `crabgrab` (lib) generated 7 warnings
+error: could not compile `crabgrab` (lib) due to 6 previous errors; 7 warnings emitted

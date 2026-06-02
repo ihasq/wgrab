@@ -1,0 +1,116 @@
+    Checking crabgrab v0.4.0 (/home/ihasq/code/wgrab)
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1308:1
+     |
+1308 | extern fn sc_stream_output_did_output_sample_buffer_of_type(this: *mut AnyObject, _sel: Sel, stream: SCStream, buffer: CMSampleBuf...
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+     |
+     = note: `#[warn(missing_abi)]` on by default
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1322:1
+     |
+1322 | extern fn sc_stream_handler_did_stop_with_error(this: *mut AnyObject, _sel: Sel, stream: SCStream, error: NSError) -> () {
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1332:1
+     |
+1332 | extern fn sc_stream_handler_dealloc(this: *mut AnyObject, _sel: Sel) {
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1360:131
+     |
+1360 | ...id_output_sample_buffer_of_type as extern fn (*mut AnyObject, Sel, SCStream, CMSampleBufferRef, SCStreamOutputTypeEncoded));
+     |                                       ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1361:107
+     |
+1361 | ...eam_handler_did_stop_with_error as extern fn(*mut AnyObject, Sel, SCStream, NSError));
+     |                                       ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:1362:78
+     |
+1362 |                 class.add_method(sel!(dealloc), sc_stream_handler_dealloc as extern fn(*mut AnyObject, Sel));
+     |                                                                              ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3027:1
+     |
+3027 | extern fn sc_content_sharing_picker_observer_did_cancel_for_stream(this: *mut AnyObject, _sel: Sel, picker: *mut AnyObject, stream...
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3031:1
+     |
+3031 | extern fn sc_content_sharing_picker_observer_did_update_filter_for_stream(this: *mut AnyObject, _sel: Sel, picker: *mut AnyObject,...
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3036:1
+     |
+3036 | extern fn sc_content_sharing_picker_observer_start_did_fail_with_error(this: *mut AnyObject, _sel: Sel, error: *mut AnyObject) {
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3040:1
+     |
+3040 | extern fn sc_content_sharing_picker_observer_dealloc(this: *mut AnyObject, _sel: Sel) {
+     | ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3052:142
+     |
+3052 | ..._observer_did_cancel_for_stream as extern fn (*mut AnyObject, Sel, *mut AnyObject, *mut AnyObject));
+     |                                       ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3053:160
+     |
+3053 | ...er_did_update_filter_for_stream as extern fn (*mut AnyObject, Sel, *mut AnyObject, *mut AnyObject, *mut AnyObject));
+     |                                       ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3054:148
+     |
+3054 | ...erver_start_did_fail_with_error as extern fn (*mut AnyObject, Sel, *mut AnyObject));
+     |                                       ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: `extern` declarations without an explicit ABI are deprecated
+    --> src/platform/macos/objc_wrap.rs:3055:95
+     |
+3055 |                 class.add_method(sel!(dealloc), sc_content_sharing_picker_observer_dealloc as extern fn (*mut AnyObject, Sel));
+     |                                                                                               ^^^^^^ help: explicitly specify the "C" ABI: `extern "C"`
+
+warning: unnecessary transmute
+   --> src/platform/macos/objc_wrap.rs:799:18
+    |
+799 |         unsafe { std::mem::transmute(self.0) }
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: there's also `from_le_bytes` and `from_be_bytes` if you expect a particular byte order
+    = note: `#[warn(unnecessary_transmutes)]` on by default
+help: replace this with
+    |
+799 -         unsafe { std::mem::transmute(self.0) }
+799 +         unsafe { i32::from_ne_bytes(self.0) }
+    |
+
+warning: unnecessary transmute
+   --> src/platform/macos/objc_wrap.rs:803:18
+    |
+803 |         unsafe { std::mem::transmute(self.0) }
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: there's also `from_le_bytes` and `from_be_bytes` if you expect a particular byte order
+help: replace this with
+    |
+803 -         unsafe { std::mem::transmute(self.0) }
+803 +         unsafe { u32::from_ne_bytes(self.0) }
+    |
+
+warning: `crabgrab` (lib) generated 16 warnings (run `cargo fix --lib -p crabgrab` to apply 16 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.38s

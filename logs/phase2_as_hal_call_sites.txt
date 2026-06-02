@@ -1,0 +1,3 @@
+src/feature/wgpu/mod.rs:61:                let device = AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Metal, _, _>(move |device| {
+src/feature/wgpu/mod.rs:82:                AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|device| {
+src/feature/wgpu/mod.rs:293:                AsRef::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|wgpu_dx12_device| {

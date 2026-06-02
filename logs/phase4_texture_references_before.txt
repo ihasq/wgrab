@@ -1,0 +1,14 @@
+src/feature/wgpu/mod.rs:13:use metal::MTLTextureUsage;
+src/feature/wgpu/mod.rs:251:                                metal::MTLTextureType::D2 |
+src/feature/wgpu/mod.rs:252:                                metal::MTLTextureType::D2Multisample=> wgpu::TextureDimension::D2,
+src/feature/wgpu/mod.rs:278:                                if metal_usage.contains(MTLTextureUsage::RenderTarget) { wgpu::TextureUsages::RENDER_ATTACHMENT } else { wgpu::TextureUsages::empty() }.union(
+src/feature/wgpu/mod.rs:279:                                    if metal_usage.contains(MTLTextureUsage::ShaderRead ) { wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::STORAGE_BINDING } else { wgpu::TextureUsages::empty() } ).union( 
+src/feature/wgpu/mod.rs:280:                                    if metal_usage.contains(MTLTextureUsage::ShaderWrite) { wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::STORAGE_BINDING } else { wgpu::TextureUsages::empty() } ).union(
+src/feature/metal/mod.rs:71:    fn get_metal_texture(&self, plane: MetalVideoFramePlaneTexture) -> Result<metal::Texture, MacosVideoFrameError>;
+src/feature/metal/mod.rs:83:    fn get_metal_texture(&self, plane: MetalVideoFramePlaneTexture) -> Result<metal::Texture, MacosVideoFrameError> {
+src/feature/metal/mod.rs:115:                    let texture_descriptor = metal::TextureDescriptor::new();
+src/feature/metal/mod.rs:116:                    texture_descriptor.set_texture_type(metal::MTLTextureType::D2);
+src/feature/metal/mod.rs:128:                        Ok((metal::Texture::from_ptr(texture_ptr as *mut metal::MTLTexture)).to_owned())
+src/feature/metal/mod.rs:140:                    let texture_descriptor = metal::TextureDescriptor::new();
+src/feature/metal/mod.rs:141:                    texture_descriptor.set_texture_type(metal::MTLTextureType::D2);
+src/feature/metal/mod.rs:153:                        Ok((metal::Texture::from_ptr(texture_ptr as *mut metal::MTLTexture)).to_owned())

@@ -1,0 +1,58 @@
+logs/check_macos_arm_after_wgpu29.txt:165: 61 |                 let device = AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Metal, _, _>(move |device| {
+logs/check_macos_arm_after_wgpu29.txt:173:578 |     pub unsafe fn as_hal<A: hal::Api>(
+logs/check_macos_arm_after_wgpu29.txt:179: 61 |                   let device = AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Metal, _, _>(move |device| {
+logs/check_macos_arm_after_wgpu29.txt:182: 63 | |                         Some(device.raw_device().lock().clone())
+logs/check_macos_arm_after_wgpu29.txt:191:578 |     pub unsafe fn as_hal<A: hal::Api>(
+logs/check_macos_arm_after_wgpu29.txt:195: 61 -                 let device = AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Metal, _, _>(move |device| {
+logs/check_macos_arm_after_wgpu29.txt:197: 63 -                         Some(device.raw_device().lock().clone())
+logs/check_macos_arm_after_wgpu29.txt:202: 61 +                 let device = AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Metal, _, _>().expect("Expected metal device underneath wgpu");
+logs/check_macos_arm_after_wgpu29.txt:216:    = note:     expected enum `Option<metal::Device>`
+logs/check_macos_arm_after_wgpu29.txt:222:253 |                         let wgpu_metal_texture = wgpu::hal::metal::Device::texture_from_raw(
+logs/check_macos_arm_after_wgpu29.txt:233:    = note: expected struct `objc2::rc::retained::Retained<objc2::runtime::protocol_object::ProtocolObject<(dyn objc2_metal::generated::__MTLTexture::MTLTexture + 'static)>>`
+logs/check_macos_arm_after_wgpu29.txt:234:               found struct `metal::Texture`
+logs/check_macos_arm_after_wgpu29.txt:249:358 |     pub unsafe fn texture_from_raw(
+logs/check_macos_x86_after_wgpu29.txt:170: 61 |                 let device = AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Metal, _, _>(move |device| {
+logs/check_macos_x86_after_wgpu29.txt:178:578 |     pub unsafe fn as_hal<A: hal::Api>(
+logs/check_macos_x86_after_wgpu29.txt:184: 61 |                   let device = AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Metal, _, _>(move |device| {
+logs/check_macos_x86_after_wgpu29.txt:187: 63 | |                         Some(device.raw_device().lock().clone())
+logs/check_macos_x86_after_wgpu29.txt:196:578 |     pub unsafe fn as_hal<A: hal::Api>(
+logs/check_macos_x86_after_wgpu29.txt:200: 61 -                 let device = AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Metal, _, _>(move |device| {
+logs/check_macos_x86_after_wgpu29.txt:202: 63 -                         Some(device.raw_device().lock().clone())
+logs/check_macos_x86_after_wgpu29.txt:207: 61 +                 let device = AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Metal, _, _>().expect("Expected metal device underneath wgpu");
+logs/check_macos_x86_after_wgpu29.txt:221:    = note:     expected enum `Option<metal::Device>`
+logs/check_macos_x86_after_wgpu29.txt:227:253 |                         let wgpu_metal_texture = wgpu::hal::metal::Device::texture_from_raw(
+logs/check_macos_x86_after_wgpu29.txt:238:    = note: expected struct `objc2::rc::retained::Retained<objc2::runtime::protocol_object::ProtocolObject<(dyn objc2_metal::generated::__MTLTexture::MTLTexture + 'static)>>`
+logs/check_macos_x86_after_wgpu29.txt:239:               found struct `metal::Texture`
+logs/check_macos_x86_after_wgpu29.txt:254:358 |     pub unsafe fn texture_from_raw(
+logs/check_windows_after_wgpu29.txt:133: 82 |                 AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|device| {
+logs/check_windows_after_wgpu29.txt:141:578 |     pub unsafe fn as_hal<A: hal::Api>(
+logs/check_windows_after_wgpu29.txt:147: 82 |                   AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|device| {
+logs/check_windows_after_wgpu29.txt:150: 84 | |                         //device.raw_device().AddRef();
+logs/check_windows_after_wgpu29.txt:151: 85 | |                         let raw_device_ptr = device.raw_device().as_mut_ptr() as *mut c_void;
+logs/check_windows_after_wgpu29.txt:160:578 |     pub unsafe fn as_hal<A: hal::Api>(
+logs/check_windows_after_wgpu29.txt:164: 82 -                 AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|device| {
+logs/check_windows_after_wgpu29.txt:166: 84 -                         //device.raw_device().AddRef();
+logs/check_windows_after_wgpu29.txt:167: 85 -                         let raw_device_ptr = device.raw_device().as_mut_ptr() as *mut c_void;
+logs/check_windows_after_wgpu29.txt:168: 86 -                         let raw_queue_ptr = device.raw_queue().as_mut_ptr() as *mut c_void;
+logs/check_windows_after_wgpu29.txt:169: 87 -                         let d3d12_device = ID3D12Device::from_raw(raw_device_ptr);
+logs/check_windows_after_wgpu29.txt:170: 88 -                         let d3d12_queue = ID3D12CommandQueue::from_raw(raw_queue_ptr);
+logs/check_windows_after_wgpu29.txt:184: 82 +                 AsRef::<wgpu::Device>::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>();
+logs/check_windows_after_wgpu29.txt:190:293 |                 AsRef::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|wgpu_dx12_device| {
+logs/check_windows_after_wgpu29.txt:198:578 |     pub unsafe fn as_hal<A: hal::Api>(
+logs/check_windows_after_wgpu29.txt:204:394 |                     let hal_texture = wgpu::hal::dx12::Device::texture_from_raw(
+logs/check_windows_after_wgpu29.txt:207:    |                         ^^^^^^^^^^^^^^^^^^^ expected `ID3D12Resource`, found `ComPtr<ID3D12Resource>`
+logs/check_windows_after_wgpu29.txt:210:               found struct `ComPtr<winapi::um::d3d12::ID3D12Resource>`
+logs/check_windows_after_wgpu29.txt:214:448 |     pub unsafe fn texture_from_raw(
+logs/check_windows_after_wgpu29.txt:220:293 |                   AsRef::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|wgpu_dx12_device| {
+logs/check_windows_after_wgpu29.txt:223:295 | |                     let d3d12_device_ptr = wgpu_dx12_device.raw_device().as_ptr() as *mut c_void;
+logs/check_windows_after_wgpu29.txt:233:578 |     pub unsafe fn as_hal<A: hal::Api>(
+logs/check_windows_after_wgpu29.txt:237:293 -                 AsRef::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|wgpu_dx12_device| {
+logs/check_windows_after_wgpu29.txt:239:295 -                     let d3d12_device_ptr = wgpu_dx12_device.raw_device().as_ptr() as *mut c_void;
+logs/check_windows_after_wgpu29.txt:241:297 -                     let d3d12_queue_ptr = wgpu_dx12_device.raw_queue().as_ptr() as *mut c_void;
+logs/check_windows_after_wgpu29.txt:336:392 -                     let texture_ptr: ComPtr<winapi::um::d3d12::ID3D12Resource> = d3d12::ComPtr::from_raw(d3d12_texture.into_raw() as *mut _);
+logs/check_windows_after_wgpu29.txt:338:394 -                     let hal_texture = wgpu::hal::dx12::Device::texture_from_raw(
+logs/check_windows_after_wgpu29.txt:369:425 -                     let result = Ok((*wgpu_device).as_ref().create_texture_from_hal::<wgpu::hal::api::Dx12>(hal_texture, &desc));
+logs/check_windows_after_wgpu29.txt:372:428 -                     std::mem::drop(std::mem::transmute_copy::<_, ComPtr<winapi::um::d3d12::ID3D12Resource>>(&texture_ptr));
+logs/check_windows_after_wgpu29.txt:376:293 +                 AsRef::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>().unwrap()
+logs/check_windows_after_wgpu29.txt:385:293 | /                 AsRef::as_ref(&*wgpu_device).as_hal::<wgpu::hal::api::Dx12, _, _>(|wgpu_dx12_device| {
+logs/check_windows_after_wgpu29.txt:387:295 | |                     let d3d12_device_ptr = wgpu_dx12_device.raw_device().as_ptr() as *mut c_void;

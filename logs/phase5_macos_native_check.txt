@@ -1,0 +1,8 @@
+NOT RUN on this Linux VPS.
+
+Required on macOS hardware:
+`cargo check --features wgpu`
+
+Cross-target checks were run on the VPS instead:
+- logs/phase5_check_macos_x86.txt
+- logs/phase5_check_macos_arm.txt

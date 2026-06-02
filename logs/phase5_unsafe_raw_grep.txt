@@ -1,0 +1,17 @@
+src/platform/macos/objc_wrap.rs:296:            let bytes = std::slice::from_raw_parts(c_str as *const u8, len);
+src/platform/macos/objc_wrap.rs:799:        unsafe { std::mem::transmute(self.0) }
+src/platform/macos/objc_wrap.rs:803:        unsafe { std::mem::transmute(self.0) }
+src/platform/macos/objc_wrap.rs:1336:        let callback_container: Box<SCStreamCallbackContainer> = Box::from_raw(callback_container);
+src/platform/macos/objc_wrap.rs:1794:            let all_channels_data = std::slice::from_raw_parts(all_channels_data_ptr, channel_count);
+src/platform/macos/objc_wrap.rs:1814:            let all_channels_data = std::slice::from_raw_parts(all_channels_data_ptr, channel_count);
+src/platform/macos/objc_wrap.rs:1834:            let all_channels_data = std::slice::from_raw_parts(all_channels_data_ptr, channel_count);
+src/platform/macos/objc_wrap.rs:2128:            let value = std::mem::transmute::<_, u32>(*ostype);
+src/platform/macos/objc_wrap.rs:3043:        let callback_container: Box<SCContentSharingPickerCallbackContainer> = Box::from_raw(*(&*this).class().instance_variable("callback_container_ptr").unwrap().load::<*mut c_void>(&*this) as *mut SCContentSharingPickerCallbackContainer);
+src/platform/windows/audio_capture_stream.rs:42:        SendCaptureClient(client.into_raw())
+src/platform/windows/audio_capture_stream.rs:46:        unsafe { IAudioCaptureClient::from_raw(self.0) }
+src/platform/windows/audio_capture_stream.rs:124:                                    data: std::slice::from_raw_parts(data_ptr as *const i16, num_frames as usize * 2),
+src/feature/bitmap/mod.rs:534:    let src_slice = unsafe { std::slice::from_raw_parts(plane_ptr.ptr as *const u8, plane_ptr.bytes_per_row * plane_ptr.height) };
+src/feature/bitmap/mod.rs:544:    let src_slice = unsafe { std::slice::from_raw_parts(plane_ptr.ptr as *const u8, plane_ptr.bytes_per_row * plane_ptr.height) };
+src/feature/bitmap/mod.rs:554:    let src_slice = unsafe { std::slice::from_raw_parts(plane_ptr.ptr as *const u8, plane_ptr.bytes_per_row * plane_ptr.height) };
+src/feature/wgpu/mod.rs:485:                hal_mtl::Device::texture_from_raw(
+src/feature/wgpu/mod.rs:631:                    let hal_texture = wgpu::hal::dx12::Device::texture_from_raw(

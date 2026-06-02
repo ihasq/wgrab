@@ -1,0 +1,12 @@
+NOT RUN on this Linux VPS.
+
+Required on macOS hardware:
+`RUST_BACKTRACE=1 CRABGRAB_WGPU_DEBUG_DESCRIPTOR=1 cargo run --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor`
+
+This run must verify:
+- capture permission state
+- at least one captured frame
+- `get_wgpu_texture(...)` success
+- texture view creation success
+- descriptor dump without assertion failure
+- no wgpu uncaptured validation error

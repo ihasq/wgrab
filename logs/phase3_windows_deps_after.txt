@@ -1,0 +1,12 @@
+18:features = ["iosurface", "metal", "dxgi", "dx11", "bitmap", "screenshot", "wgpu"]
+19:targets = ["x86_64-pc-windows-msvc"]
+27:dxgi = []
+28:dx11 = ["dxgi"]
+31:wgpu = ["dep:wgpu", "dx11", "dxgi", "metal"]
+48:wgpu = { version = "29.0.3", optional = true, default-features = false, features = ["std", "wgsl", "metal"] }
+50:[target.'cfg(target_os = "windows")'.dependencies]
+51:windows = { version = "0.62", features = [
+86:wgpu = { version = "29.0.3", optional = true, default-features = false, features = ["std", "wgsl", "dx12"] }
+87:d3d12 = "0.20"
+88:winapi = { version = "0.3", optional = true }
+93:wgpu = { version = "29.0.3", default-features = false, features = ["std", "wgsl", "vulkan"] }

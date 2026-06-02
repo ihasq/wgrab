@@ -1,0 +1,9 @@
+SKIPPED: `cargo check --example wgpu_backend_smoke --features wgpu` is not a valid Linux check for this crate.
+
+Reason:
+- Cargo checks the CrabGrab library before the example.
+- CrabGrab has no Linux platform module in this branch.
+- The backend smoke source is checked on Linux through a standalone temporary crate instead.
+
+Accepted Linux check log:
+- logs/phase5c_check_backend_smoke_linux_standalone.txt

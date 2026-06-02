@@ -1,0 +1,5 @@
+0122f242 build: update wgpu dependency for phase1 diagnosis
+17594b75 docs: record phase1 vulkan setup failure
+a535cfbb Merge pull request #36 from AugmendTech/liam/frame_pools
+6a8b1405 update macos docs
+0043924f update windows docs and make platform example cross-platform with cfgs

@@ -6,7 +6,7 @@ use crate::prelude::{CaptureStream, VideoFrame};
 use std::error::Error;
 use std::fmt::Display;
 
-use windows::core::ComInterface;
+use windows::core::Interface;
 use windows::Graphics::DirectX::DirectXPixelFormat;
 use windows::Win32::System::WinRT::Direct3D11::IDirect3DDxgiInterfaceAccess;
 use windows::Win32::Graphics::Direct3D11::ID3D11Texture2D;

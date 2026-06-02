@@ -1,0 +1,30 @@
+ Cargo.toml                                        |    7 +-
+ docs/wgpu29_phase1_log.md                         |  127 +
+ logs/apt_update.txt                               |    2 +
+ logs/check_macos_arm_after_wgpu29.txt             |  255 +
+ logs/check_macos_arm_after_wgpu29_error_index.txt |    4 +
+ logs/check_macos_x86_after_wgpu29.txt             |  260 +
+ logs/check_macos_x86_after_wgpu29_error_index.txt |    4 +
+ logs/check_windows_after_wgpu29.txt               |  405 +
+ logs/check_windows_after_wgpu29_error_index.txt   |    6 +
+ logs/env_baseline.txt                             |   31 +
+ logs/fmt_after_cargo_patch.txt                    | 9627 +++++++++++++++++++++
+ logs/git_diff_before_resume.patch                 |    0
+ logs/git_status_before_resume.txt                 |    1 +
+ logs/metadata_after_wgpu29.err                    |   49 +
+ logs/metadata_after_wgpu29.json                   |    1 +
+ logs/remaining_hal_references.txt                 |    0
+ logs/rust_target_add.txt                          |    3 +
+ logs/rust_targets.txt                             |    6 +
+ logs/rust_targets_before.txt                      |    3 +
+ logs/rustc_after.txt                              |    7 +
+ logs/rustc_before.txt                             |    7 +
+ logs/sudo_noninteractive_check.txt                |    3 +
+ logs/tree_after_wgpu29.txt                        |  175 +
+ logs/vulkan_env.txt                               |    0
+ logs/vulkan_icd_files.txt                         |    0
+ logs/vulkan_icd_ls.txt                            |    0
+ logs/vulkan_lavapipe_icd_files.txt                |    0
+ logs/vulkaninfo_summary.txt                       |    1 +
+ logs/wgpu_hal_related_errors.txt                  |   58 +
+ 29 files changed, 11039 insertions(+), 3 deletions(-)

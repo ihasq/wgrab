@@ -3,7 +3,7 @@ use std::{fmt::Debug, sync::{atomic::{self, AtomicBool, AtomicU64}, Arc}, time::
 use crate::prelude::{AudioFrame, Capturable, CaptureConfig, CapturePixelFormat, StreamCreateError, StreamError, StreamEvent, StreamStopError, VideoFrame};
 
 use parking_lot::Mutex;
-use windows::{core::{ComInterface, IInspectable, HSTRING}, Foundation::TypedEventHandler, Graphics::{Capture::{Direct3D11CaptureFramePool, GraphicsCaptureAccess, GraphicsCaptureAccessKind, GraphicsCaptureItem, GraphicsCaptureSession}, DirectX::{Direct3D11::IDirect3DDevice, DirectXPixelFormat}, SizeInt32}, Security::Authorization::AppCapabilityAccess::{AppCapability, AppCapabilityAccessStatus}, Win32::{Foundation::HWND, Graphics::{Direct3D::{D3D_DRIVER_TYPE_UNKNOWN, D3D_FEATURE_LEVEL_11_0}, Direct3D11::{D3D11CreateDevice, ID3D11Device, D3D11_CREATE_DEVICE_BGRA_SUPPORT, D3D11_SDK_VERSION}, Dxgi::{CreateDXGIFactory, IDXGIAdapter, IDXGIAdapter4, IDXGIDevice, IDXGIFactory5}}, System::{Com::COINIT_APARTMENTTHREADED, WinRT::{CreateDispatcherQueueController, Direct3D11::CreateDirect3D11DeviceFromDXGIDevice, DispatcherQueueOptions, Graphics::Capture::IGraphicsCaptureItemInterop, DQTAT_COM_NONE, DQTYPE_THREAD_CURRENT}}, UI::{HiDpi::{GetDpiForMonitor, GetDpiForWindow, MDT_RAW_DPI}, WindowsAndMessaging::{DispatchMessageW, GetMessageW, TranslateMessage, MSG}}}};
+use windows::{core::{Interface, IInspectable, HSTRING}, Foundation::TypedEventHandler, Graphics::{Capture::{Direct3D11CaptureFramePool, GraphicsCaptureAccess, GraphicsCaptureAccessKind, GraphicsCaptureItem, GraphicsCaptureSession}, DirectX::{Direct3D11::IDirect3DDevice, DirectXPixelFormat}, SizeInt32}, Security::Authorization::AppCapabilityAccess::{AppCapability, AppCapabilityAccessStatus}, Win32::{Foundation::{HMODULE, HWND}, Graphics::{Direct3D::{D3D_DRIVER_TYPE_UNKNOWN, D3D_FEATURE_LEVEL_11_0}, Direct3D11::{D3D11CreateDevice, ID3D11Device, D3D11_CREATE_DEVICE_BGRA_SUPPORT, D3D11_SDK_VERSION}, Dxgi::{CreateDXGIFactory, IDXGIAdapter, IDXGIAdapter4, IDXGIDevice, IDXGIFactory5}}, System::{Com::COINIT_APARTMENTTHREADED, WinRT::{CreateDispatcherQueueController, Direct3D11::CreateDirect3D11DeviceFromDXGIDevice, DispatcherQueueOptions, Graphics::Capture::IGraphicsCaptureItemInterop, DQTAT_COM_NONE, DQTYPE_THREAD_CURRENT}}, UI::{HiDpi::{GetDpiForMonitor, GetDpiForWindow, MDT_RAW_DPI}, WindowsAndMessaging::{DispatchMessageW, GetMessageW, TranslateMessage, MSG}}}};
 
 use super::{audio_capture_stream::{WindowsAudioCaptureStream, WindowsAudioCaptureStreamError, WindowsAudioCaptureStreamPacket}, frame::{WindowsAudioFrame, WindowsVideoFrame}, AutoCom};
 
@@ -199,7 +199,7 @@ impl WindowsCaptureStream {
             let d3d11_device_result = D3D11CreateDevice(
                 Some(&dxgi_adapter.cast().unwrap()),
                 D3D_DRIVER_TYPE_UNKNOWN,
-                None,
+                HMODULE::default(),
                 D3D11_CREATE_DEVICE_BGRA_SUPPORT,
                 Some(&[D3D_FEATURE_LEVEL_11_0]),
                 D3D11_SDK_VERSION,
@@ -312,35 +312,40 @@ impl WindowsCaptureStream {
             Ok(())
         });
 
-        let mut t_first_frame = None;
-        let mut t_last_frame = None;
+        let t_first_frame = Mutex::new(None);
+        let t_last_frame = Mutex::new(None);
 
         #[cfg(feature = "wgpu")]
         let callback_wgpu_device = config.impl_capture_config.wgpu_device.clone();
         #[cfg(feature = "wgpu")]
         let wgpu_device = config.impl_capture_config.wgpu_device.clone();
 
-        let frame_handler = TypedEventHandler::new(move |frame_pool: &Option<Direct3D11CaptureFramePool>, _: &Option<IInspectable>| {
-            if frame_pool.is_none() {
+        let frame_handler = TypedEventHandler::new(move |frame_pool: windows::core::Ref<Direct3D11CaptureFramePool>, _: windows::core::Ref<IInspectable>| {
+            let Some(frame_pool) = frame_pool.as_ref() else {
                 return Ok(());
-            }
-            let frame_pool = frame_pool.as_ref().unwrap();
+            };
             if frame_handler_data.closed.load(atomic::Ordering::Acquire) {
                 return Ok(());
             }
             let t_capture = Instant::now();
-            let t_origin = match t_first_frame {
-                Some(t_first_frame) => t_capture - t_first_frame,
-                None => {
-                    t_first_frame = Some(t_capture);
-                    Duration::ZERO
+            let t_origin = {
+                let mut t_first_frame = t_first_frame.lock();
+                match *t_first_frame {
+                    Some(t_first_frame) => t_capture - t_first_frame,
+                    None => {
+                        *t_first_frame = Some(t_capture);
+                        Duration::ZERO
+                    }
                 }
             };
-            let duration = match t_last_frame {
-                Some(t_last_frame) => t_capture - t_last_frame,
-                None => {
-                    t_last_frame = Some(t_capture);
-                    Duration::ZERO
+            let duration = {
+                let mut t_last_frame = t_last_frame.lock();
+                match *t_last_frame {
+                    Some(t_last_frame) => t_capture - t_last_frame,
+                    None => {
+                        *t_last_frame = Some(t_capture);
+                        Duration::ZERO
+                    }
                 }
             };
             let dpi = unsafe { 
@@ -498,9 +503,9 @@ impl WindowsCaptureStream {
                     _ = init_tx.send(Ok(stream));
 
                     let mut message = MSG::default();
-                    while unsafe { GetMessageW(&mut message as *mut _, HWND::default(), 0, 0) }.as_bool() && !thread_shared_handler_data.closed.load(atomic::Ordering::SeqCst) {
+                    while unsafe { GetMessageW(&mut message as *mut _, None, 0, 0) }.as_bool() && !thread_shared_handler_data.closed.load(atomic::Ordering::SeqCst) {
                         unsafe {
-                            TranslateMessage(&message as *const _);
+                            let _ = TranslateMessage(&message as *const _);
                             DispatchMessageW(&message as *const _);
                         }
                     }

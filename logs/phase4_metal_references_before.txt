@@ -1,0 +1,57 @@
+src/prelude.rs:17:pub use crate::feature::metal::*;
+src/platform/macos/frame.rs:15:    pub(crate) metal_device: Option<metal::Device>,
+src/platform/macos/frame.rs:29:    pub(crate) metal_device: metal::Device,
+src/platform/macos/capture_stream.rs:36:    pub(crate) metal_device: metal::Device,
+src/platform/macos/capture_stream.rs:59:    fn with_metal_device(self, metal_device: metal::Device) -> Self;
+src/platform/macos/capture_stream.rs:70:    pub(crate) metal_device: Option<metal::Device>,
+src/platform/macos/capture_stream.rs:117:    fn with_metal_device(self, metal_device: metal::Device) -> Self {
+src/platform/macos/capture_stream.rs:213:                match metal::Device::system_default() {
+src/feature/wgpu/mod.rs:9:use crate::feature::metal::*;
+src/feature/wgpu/mod.rs:11:use metal::MTLStorageMode;
+src/feature/wgpu/mod.rs:13:use metal::MTLTextureUsage;
+src/feature/wgpu/mod.rs:200:    impl std::ops::Deref<Target = wgpu::hal::metal::Device> + '_,
+src/feature/wgpu/mod.rs:251:                                metal::MTLTextureType::D2 |
+src/feature/wgpu/mod.rs:252:                                metal::MTLTextureType::D2Multisample=> wgpu::TextureDimension::D2,
+src/feature/wgpu/mod.rs:256:                                metal::MTLPixelFormat::BGRA8Unorm => wgpu::TextureFormat::Bgra8Unorm,
+src/feature/wgpu/mod.rs:257:                                metal::MTLPixelFormat::BGRA8Unorm_sRGB => wgpu::TextureFormat::Bgra8UnormSrgb,
+src/feature/wgpu/mod.rs:258:                                metal::MTLPixelFormat::RGBA8Sint => wgpu::TextureFormat::Rgba8Sint,
+src/feature/wgpu/mod.rs:259:                                metal::MTLPixelFormat::RGBA8Uint => wgpu::TextureFormat::Rgba8Uint,
+src/feature/wgpu/mod.rs:260:                                metal::MTLPixelFormat::RGBA8Unorm => wgpu::TextureFormat::Rgba8Unorm,
+src/feature/wgpu/mod.rs:261:                                metal::MTLPixelFormat::RGBA8Unorm_sRGB => wgpu::TextureFormat::Rgba8UnormSrgb,
+src/feature/wgpu/mod.rs:262:                                metal::MTLPixelFormat::RGBA8Snorm => wgpu::TextureFormat::Rgba8Snorm,
+src/feature/wgpu/mod.rs:263:                                metal::MTLPixelFormat::RGB10A2Uint => wgpu::TextureFormat::Rgb10a2Uint,
+src/feature/wgpu/mod.rs:264:                                metal::MTLPixelFormat::RGB10A2Unorm => wgpu::TextureFormat::Rgb10a2Unorm,
+src/feature/wgpu/mod.rs:265:                                metal::MTLPixelFormat::RG8Sint => wgpu::TextureFormat::Rg8Sint,
+src/feature/wgpu/mod.rs:266:                                metal::MTLPixelFormat::RG8Snorm => wgpu::TextureFormat::Rg8Snorm,
+src/feature/wgpu/mod.rs:267:                                metal::MTLPixelFormat::RG8Uint => wgpu::TextureFormat::Rg8Snorm,
+src/feature/wgpu/mod.rs:268:                                metal::MTLPixelFormat::RG8Unorm => wgpu::TextureFormat::Rg8Unorm,
+src/feature/wgpu/mod.rs:269:                                metal::MTLPixelFormat::R8Sint => wgpu::TextureFormat::R8Sint,
+src/feature/wgpu/mod.rs:270:                                metal::MTLPixelFormat::R8Snorm => wgpu::TextureFormat::R8Snorm,
+src/feature/wgpu/mod.rs:271:                                metal::MTLPixelFormat::R8Uint => wgpu::TextureFormat::R8Uint,
+src/feature/wgpu/mod.rs:272:                                metal::MTLPixelFormat::R8Unorm => wgpu::TextureFormat::R8Unorm,
+src/feature/wgpu/mod.rs:278:                                if metal_usage.contains(MTLTextureUsage::RenderTarget) { wgpu::TextureUsages::RENDER_ATTACHMENT } else { wgpu::TextureUsages::empty() }.union(
+src/feature/wgpu/mod.rs:279:                                    if metal_usage.contains(MTLTextureUsage::ShaderRead ) { wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::STORAGE_BINDING } else { wgpu::TextureUsages::empty() } ).union( 
+src/feature/wgpu/mod.rs:280:                                    if metal_usage.contains(MTLTextureUsage::ShaderWrite) { wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::STORAGE_BINDING } else { wgpu::TextureUsages::empty() } ).union(
+src/feature/wgpu/mod.rs:282:                                            MTLStorageMode::Managed |
+src/feature/wgpu/mod.rs:283:                                            MTLStorageMode::Private |
+src/feature/wgpu/mod.rs:284:                                            MTLStorageMode::Shared => wgpu::TextureUsages::COPY_DST | wgpu::TextureUsages::COPY_SRC,
+src/feature/wgpu/mod.rs:285:                                            MTLStorageMode::Memoryless => wgpu::TextureUsages::empty(),
+src/feature/wgpu/mod.rs:291:                        let wgpu_metal_texture = wgpu::hal::metal::Device::texture_from_raw(
+src/feature/metal/mod.rs:4:use metal::foreign_types::ForeignType;
+src/feature/metal/mod.rs:71:    fn get_metal_texture(&self, plane: MetalVideoFramePlaneTexture) -> Result<metal::Texture, MacosVideoFrameError>;
+src/feature/metal/mod.rs:83:    fn get_metal_texture(&self, plane: MetalVideoFramePlaneTexture) -> Result<metal::Texture, MacosVideoFrameError> {
+src/feature/metal/mod.rs:115:                    let texture_descriptor = metal::TextureDescriptor::new();
+src/feature/metal/mod.rs:116:                    texture_descriptor.set_texture_type(metal::MTLTextureType::D2);
+src/feature/metal/mod.rs:117:                    texture_descriptor.set_pixel_format(metal::MTLPixelFormat::BGRA8Unorm);
+src/feature/metal/mod.rs:122:                    texture_descriptor.set_storage_mode(metal::MTLStorageMode::Shared);
+src/feature/metal/mod.rs:123:                    texture_descriptor.set_cpu_cache_mode(metal::MTLCPUCacheMode::DefaultCache);
+src/feature/metal/mod.rs:128:                        Ok((metal::Texture::from_ptr(texture_ptr as *mut metal::MTLTexture)).to_owned())
+src/feature/metal/mod.rs:134:                    MetalVideoFramePlaneTexture::Luminance => (0, metal::MTLPixelFormat::R8Uint),
+src/feature/metal/mod.rs:135:                    MetalVideoFramePlaneTexture::Chroma => (1, metal::MTLPixelFormat::RG8Uint),
+src/feature/metal/mod.rs:140:                    let texture_descriptor = metal::TextureDescriptor::new();
+src/feature/metal/mod.rs:141:                    texture_descriptor.set_texture_type(metal::MTLTextureType::D2);
+src/feature/metal/mod.rs:147:                    texture_descriptor.set_storage_mode(metal::MTLStorageMode::Shared);
+src/feature/metal/mod.rs:148:                    texture_descriptor.set_cpu_cache_mode(metal::MTLCPUCacheMode::DefaultCache);
+src/feature/metal/mod.rs:153:                        Ok((metal::Texture::from_ptr(texture_ptr as *mut metal::MTLTexture)).to_owned())
+src/feature/metal/mod.rs:165:    fn get_metal_device(&self) -> metal::Device;
+src/feature/metal/mod.rs:169:    fn get_metal_device(&self) -> metal::Device {

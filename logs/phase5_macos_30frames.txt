@@ -1,0 +1,11 @@
+NOT RUN on this Linux VPS.
+
+Required on macOS hardware after the 1-frame smoke succeeds:
+`RUST_BACKTRACE=1 CRABGRAB_WGPU_DEBUG_DESCRIPTOR=1 cargo run --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor -- --frames 30`
+
+This run must verify:
+- 30 successful frames
+- stable descriptor fields across frames
+- no panic
+- no wgpu validation error
+- no obvious memory growth

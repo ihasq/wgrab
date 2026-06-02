@@ -1,0 +1,91 @@
+    Checking crabgrab v0.4.0 (/home/ihasq/code/wgrab)
+warning: unused import: `HWND`
+ --> src/platform/windows/capture_stream.rs:6:425
+  |
+6 | ...ity, AppCapabilityAccessStatus}, Win32::{Foundation::{HMODULE, HWND}, Graphics::{Direct3D::{D3D_DRIVER_TYPE_UNKNOWN, D3D_FEATURE_L...
+  |                                                                   ^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `wgpu::hal::Device`
+  --> src/feature/wgpu/mod.rs:19:5
+   |
+19 | use wgpu::hal::Device;
+   |     ^^^^^^^^^^^^^^^^^
+
+warning: unused import: `windows::core::PCWSTR`
+  --> src/feature/wgpu/mod.rs:21:5
+   |
+21 | use windows::core::PCWSTR;
+   |     ^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `D3D12_FENCE_FLAG_NONE`
+  --> src/feature/wgpu/mod.rs:31:63
+   |
+31 | use windows::Win32::Graphics::Direct3D12::{D3D12_CLEAR_VALUE, D3D12_FENCE_FLAG_NONE, D3D12_FENCE_FLAG_SHARED};
+   |                                                               ^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `windows::Win32::Graphics::Dxgi::Common::DXGI_FORMAT_B8G8R8A8_TYPELESS`
+  --> src/feature/wgpu/mod.rs:35:5
+   |
+35 | use windows::Win32::Graphics::Dxgi::Common::DXGI_FORMAT_B8G8R8A8_TYPELESS;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `CREATE_EVENT`, `PROCESS_DELETE`, and `PROCESS_SYNCHRONIZE`
+  --> src/feature/wgpu/mod.rs:39:78
+   |
+39 | ...eateEventA, WaitForSingleObjectEx, CREATE_EVENT, INFINITE, PROCESS_DELETE, PROCESS_SYNCHRONIZE};
+   |                                       ^^^^^^^^^^^^            ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `CreateEventExW`, `THREAD_DELETE`, and `THREAD_SYNCHRONIZE`
+  --> src/feature/wgpu/mod.rs:41:41
+   |
+41 | use windows::Win32::System::Threading::{CreateEventExW, THREAD_DELETE, THREAD_SYNCHRONIZE};
+   |                                         ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE`
+  --> src/feature/wgpu/mod.rs:48:234
+   |
+48 | ...e, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE}}};
+   |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `0` is never read
+  --> src/platform/windows/audio_capture_stream.rs:13:11
+   |
+13 |     Other(String),
+   |     ----- ^^^^^^
+   |     |
+   |     field in this variant
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+   |
+13 -     Other(String),
+13 +     Other(()),
+   |
+
+warning: field `0` is never read
+  --> src/platform/windows/audio_capture_stream.rs:22:11
+   |
+22 |     Other(String),
+   |     ----- ^^^^^^
+   |     |
+   |     field in this variant
+   |
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+   |
+22 -     Other(String),
+22 +     Other(()),
+   |
+
+warning: field `frame_size` is never read
+  --> src/platform/windows/frame.rs:10:16
+   |
+ 7 | pub struct WindowsVideoFrame {
+   |            ----------------- field in this struct
+...
+10 |     pub(crate) frame_size       : (usize, usize),
+   |                ^^^^^^^^^^
+
+warning: `crabgrab` (lib) generated 11 warnings (run `cargo fix --lib -p crabgrab` to apply 8 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.36s

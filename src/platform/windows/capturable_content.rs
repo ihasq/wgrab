@@ -1,6 +1,6 @@
 use std::{ffi::OsString, hash::Hash, os::{raw::c_void, windows::ffi::OsStringExt}, sync::Arc};
 
-use windows::Win32::{Foundation::{BOOL, LPARAM, RECT, TRUE}, Graphics::Gdi::{EnumDisplayMonitors, HDC, HMONITOR}, System::{ProcessStatus::GetModuleFileNameExW, Threading::{OpenProcess, PROCESS_QUERY_INFORMATION, PROCESS_VM_READ}}, UI::WindowsAndMessaging::{EnumWindows, GetWindowDisplayAffinity, GetWindowRect, GetWindowTextLengthW, GetWindowTextW, GetWindowThreadProcessId, IsWindow, IsWindowVisible, WDA_EXCLUDEFROMCAPTURE}};
+use windows::{core::BOOL, Win32::{Foundation::{LPARAM, RECT}, Graphics::Gdi::{EnumDisplayMonitors, HDC, HMONITOR}, System::{ProcessStatus::GetModuleFileNameExW, Threading::{OpenProcess, PROCESS_QUERY_INFORMATION, PROCESS_VM_READ}}, UI::WindowsAndMessaging::{EnumWindows, GetWindowDisplayAffinity, GetWindowRect, GetWindowTextLengthW, GetWindowTextW, GetWindowThreadProcessId, IsWindow, IsWindowVisible, WDA_EXCLUDEFROMCAPTURE}}};
 
 pub use windows::Win32::Foundation::HWND;
 
@@ -132,10 +132,10 @@ impl WindowsCapturableApplication {
             //       Alternatively, it might be better to use the accessibility APIs.
             let process = AutoHandle(process);
             let mut process_name = vec![0u16; 64];
-            let mut len = GetModuleFileNameExW (process.0, None, process_name.as_mut_slice()) as usize;
+            let mut len = GetModuleFileNameExW (Some(process.0), None, process_name.as_mut_slice()) as usize;
             while len == process_name.len() - 1 {
                 process_name = vec![0u16; process_name.len() * 2];
-                len = GetModuleFileNameExW (process.0, None, process_name.as_mut_slice()) as usize;
+                len = GetModuleFileNameExW (Some(process.0), None, process_name.as_mut_slice()) as usize;
             }
 
             if len == 0 {
@@ -174,13 +174,13 @@ pub struct WindowsCapturableContent {
 unsafe extern "system" fn enum_windows_callback(window: HWND, windows_ptr_raw: LPARAM) -> BOOL {
     let windows: &mut Vec<HWND> = &mut *(windows_ptr_raw.0 as *mut c_void as *mut _);
     windows.push(window);
-    TRUE
+    BOOL(1)
 }
 
 unsafe extern "system" fn enum_monitors_callback(monitor: HMONITOR, _: HDC, rect: *mut RECT, monitors_ptr_raw: LPARAM) -> BOOL {
     let monitors: &mut Vec<(HMONITOR, RECT)> = &mut *(monitors_ptr_raw.0 as *mut c_void as *mut _);
     monitors.push((monitor, *rect));
-    TRUE
+    BOOL(1)
 }
 
 impl WindowsCapturableContent {
@@ -189,12 +189,12 @@ impl WindowsCapturableContent {
         let mut windows = Vec::<HWND>::new();
         unsafe {
             if filter.displays {
-                EnumDisplayMonitors(HDC(0), None, Some(enum_monitors_callback), LPARAM(&mut displays as *mut _ as *mut c_void as isize));
+                let _ = EnumDisplayMonitors(None, None, Some(enum_monitors_callback), LPARAM(&mut displays as *mut _ as *mut c_void as isize));
             }
             if let Some(window_filter) = filter.windows {
                 let _ = EnumWindows(Some(enum_windows_callback), LPARAM(&mut windows as *mut _ as *mut c_void as isize));
                 windows = windows.iter().filter(|hwnd| {
-                    if !IsWindow(**hwnd).as_bool() {
+                    if !IsWindow(Some(**hwnd)).as_bool() {
                         return false;
                     }
                     if window_filter.onscreen_only && !IsWindowVisible(**hwnd).as_bool() {
@@ -235,13 +235,13 @@ impl WindowsCapturableWindowExt for CapturableWindow {
     }
 
     fn from_window_handle(window_handle: HWND) -> Result<Self, CapturableContentError> {
-        if !unsafe { IsWindow(window_handle).as_bool() } {
-            return Err(CapturableContentError::Other(format!("HWND {:016X} is not a window", window_handle.0)));
+        if !unsafe { IsWindow(Some(window_handle)).as_bool() } {
+            return Err(CapturableContentError::Other(format!("HWND {:p} is not a window", window_handle.0)));
         }
         let mut window_display_affinity = 0;
         if unsafe { GetWindowDisplayAffinity(window_handle, &mut window_display_affinity as *mut _).is_ok() } {
             if (window_display_affinity & WDA_EXCLUDEFROMCAPTURE.0) != 0 {
-                return Err(CapturableContentError::Other(format!("HWND {:016X} is not capturable a window", window_handle.0)));
+                return Err(CapturableContentError::Other(format!("HWND {:p} is not capturable a window", window_handle.0)));
             }
         }
         return Ok(CapturableWindow {
@@ -303,4 +303,3 @@ impl WindowsCapturableContentFilterExt for CapturableContentFilter {
         }
     }
 }
-

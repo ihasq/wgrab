@@ -1,0 +1,31 @@
+## Date
+2026-06-02T03:55:33+00:00
+
+## OS
+Linux debian-16gb-hel1-1 6.1.0-48-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.172-1 (2026-05-15) x86_64 GNU/Linux
+PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
+NAME="Debian GNU/Linux"
+VERSION_ID="12"
+VERSION="12 (bookworm)"
+VERSION_CODENAME=bookworm
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+
+## Git
+origin	git@github.com:ihasq/wgrab (fetch)
+origin	git@github.com:ihasq/wgrab (push)
+a535cfbbadb9ea5ba36aef9fa61a5da15021815b
+?? logs/
+
+## Rust
+rustup 1.29.0 (28d1352db 2026-03-05)
+rustc 1.95.0 (59807616e 2026-04-14)
+binary: rustc
+commit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860
+commit-date: 2026-04-14
+host: x86_64-unknown-linux-gnu
+release: 1.95.0
+LLVM version: 22.1.2
+cargo 1.95.0 (f2d3ce0bd 2026-03-21)

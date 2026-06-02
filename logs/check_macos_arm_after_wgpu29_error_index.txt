@@ -1,0 +1,4 @@
+162:error[E0107]: method takes 1 generic argument but 3 generic arguments were supplied
+176:error[E0061]: this method takes 0 arguments but 1 argument was supplied
+205:error[E0308]: mismatched types
+219:error[E0308]: arguments to this function are incorrect

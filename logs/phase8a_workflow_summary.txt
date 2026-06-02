@@ -1,0 +1,45 @@
+.github/workflows/wgpu-runtime.yml:1:name: wgpu runtime
+.github/workflows/wgpu-runtime.yml:11:  workflow_dispatch:
+.github/workflows/wgpu-runtime.yml:13:      strict_capture:
+.github/workflows/wgpu-runtime.yml:35:    name: Windows DX12 wgpu runtime
+.github/workflows/wgpu-runtime.yml:36:    runs-on: windows-2022
+.github/workflows/wgpu-runtime.yml:42:      - name: Show environment
+.github/workflows/wgpu-runtime.yml:50:      - name: Check crate
+.github/workflows/wgpu-runtime.yml:54:      - name: Check examples
+.github/workflows/wgpu-runtime.yml:60:      - name: Run DX12 backend smoke
+.github/workflows/wgpu-runtime.yml:77:      - name: Run Windows capture probe
+.github/workflows/wgpu-runtime.yml:114:      - name: Upload Windows logs
+.github/workflows/wgpu-runtime.yml:118:          name: windows-dx12-wgpu-logs
+.github/workflows/wgpu-runtime.yml:122:    name: macOS Metal wgpu runtime
+.github/workflows/wgpu-runtime.yml:132:    runs-on: ${{ matrix.runner }}
+.github/workflows/wgpu-runtime.yml:138:      - name: Show environment
+.github/workflows/wgpu-runtime.yml:148:      - name: Check crate
+.github/workflows/wgpu-runtime.yml:152:      - name: Check examples
+.github/workflows/wgpu-runtime.yml:158:      - name: Run Metal backend smoke
+.github/workflows/wgpu-runtime.yml:178:      - name: Run macOS capture probe
+.github/workflows/wgpu-runtime.yml:215:      - name: Upload macOS logs
+.github/workflows/wgpu-runtime.yml:219:          name: macos-metal-${{ matrix.label }}-wgpu-logs
+.github/workflows/wgpu-runtime.yml:223:    name: Manual strict capture runtime
+.github/workflows/wgpu-runtime.yml:224:    if: github.event_name == 'workflow_dispatch' && inputs.strict_capture == 'true'
+.github/workflows/wgpu-runtime.yml:239:    runs-on: ${{ matrix.os }}
+.github/workflows/wgpu-runtime.yml:245:      - name: Strict backend smoke
+.github/workflows/wgpu-runtime.yml:255:      - name: Strict backend smoke Windows
+.github/workflows/wgpu-runtime.yml:264:      - name: Strict capture
+.github/workflows/wgpu-runtime.yml:272:            2>&1 | tee strict_capture_${{ matrix.label }}.log
+.github/workflows/wgpu-runtime.yml:273:          grep "CI_CAPTURE_SMOKE_OK" strict_capture_${{ matrix.label }}.log
+.github/workflows/wgpu-runtime.yml:275:      - name: Strict capture Windows
+.github/workflows/wgpu-runtime.yml:282:            2>&1 | Tee-Object -FilePath strict_capture_${{ matrix.label }}.log
+.github/workflows/wgpu-runtime.yml:283:          Select-String -Path strict_capture_${{ matrix.label }}.log -Pattern "CI_CAPTURE_SMOKE_OK"
+.github/workflows/wgpu-runtime.yml:285:      - name: Upload strict logs
+.github/workflows/wgpu-runtime.yml:289:          name: strict-capture-${{ matrix.label }}-logs
+.github/workflows/wgpu-linux-vulkan.yml:1:name: wgpu linux vulkan smoke
+.github/workflows/wgpu-linux-vulkan.yml:11:  workflow_dispatch:
+.github/workflows/wgpu-linux-vulkan.yml:22:    name: Ubuntu Lavapipe Vulkan smoke
+.github/workflows/wgpu-linux-vulkan.yml:23:    runs-on: ubuntu-24.04
+.github/workflows/wgpu-linux-vulkan.yml:29:      - name: Install Vulkan tools
+.github/workflows/wgpu-linux-vulkan.yml:34:      - name: Show Vulkan info
+.github/workflows/wgpu-linux-vulkan.yml:39:      - name: Prepare standalone backend smoke
+.github/workflows/wgpu-linux-vulkan.yml:54:      - name: Check backend smoke example
+.github/workflows/wgpu-linux-vulkan.yml:57:      - name: Run Vulkan backend smoke
+.github/workflows/wgpu-linux-vulkan.yml:83:      - name: Upload Vulkan logs
+.github/workflows/wgpu-linux-vulkan.yml:87:          name: ubuntu-vulkan-wgpu-logs

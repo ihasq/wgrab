@@ -76,6 +76,19 @@ Web:
 - investigate Web Audio + AudioWorklet
 - keep web frame type separate from native audio frame if necessary
 
+## Phase 26A owner decision
+
+CPAL is adopted as the native audio backend for wgrab.
+
+It plays the same architectural role for native audio that wgpu plays for
+video/GPU interop: a cross-platform backend abstraction layer.
+
+Limitations:
+
+- CPAL does not by itself guarantee system audio loopback capture on every platform.
+- System audio capture may still need platform-specific integration.
+- CPAL is the first public backend abstraction, not the entire audio capture solution.
+
 ## Relationship to video
 
 Video has a clear cross-backend GPU output shape through `WgpuCaptureFrame` and

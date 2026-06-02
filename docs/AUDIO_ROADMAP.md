@@ -52,6 +52,17 @@ pub struct WgrabAudioFrame {
 }
 ```
 
+## Native backend decision
+
+Native audio starts with CPAL.
+
+Future work:
+
+- input device capture
+- system audio capture investigation
+- timestamp model
+- synchronization with `WgpuCaptureFrame`
+
 ## Web target
 
 Candidate pipeline:

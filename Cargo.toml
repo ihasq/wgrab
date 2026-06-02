@@ -40,12 +40,15 @@ screenshot = ["bitmap"]
 wgpu = ["dep:wgpu", "dx11", "dxgi", "iosurface", "metal"]
 wgpu-debug-descriptor = ["wgpu"]
 diagnostic = []
+audio = ["audio-cpal"]
+audio-cpal = ["dep:cpal"]
 
 [dependencies]
 futures = "0.3"
 parking_lot = "0.12"
 half = { version = "2.4", features = ["bytemuck"], optional = true }
 bytemuck = { version = "1.15", optional = true }
+cpal = { version = "0.17", optional = true }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 block2 = "0.5"

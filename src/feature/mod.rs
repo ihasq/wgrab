@@ -35,3 +35,8 @@ pub mod screenshot;
 
 #[cfg(feature = "diagnostic")]
 pub mod diagnostic;
+
+#[cfg(feature = "audio")]
+/// Audio capture backend abstractions
+/// (requires `audio` feature)
+pub mod audio;

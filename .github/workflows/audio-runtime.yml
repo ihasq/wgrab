@@ -1,0 +1,110 @@
+name: audio runtime
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+      - "wgrab-*"
+      - "wgpu29-*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audio-runtime-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audio-cpal-check:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-2022
+          - macos-15
+          - ubuntu-24.04
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Linux audio dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev pkg-config
+
+      - name: Check audio feature
+        run: cargo check --features audio
+
+      - name: Check audio CPAL probe example
+        run: cargo check --example audio_cpal_probe --features audio
+
+      - name: Run audio CPAL probe
+        shell: bash
+        if: runner.os != 'Windows'
+        run: |
+          set +e
+          LOG="audio_cpal_probe.log"
+          cargo run --example audio_cpal_probe --features audio -- --ci 2>&1 | tee "$LOG"
+
+          if grep -q "CI_WGRAB_AUDIO_CPAL_OK" "$LOG"; then
+            echo "audio_marker=CI_WGRAB_AUDIO_CPAL_OK" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if grep -q "CI_WGRAB_AUDIO_CPAL_UNAVAILABLE" "$LOG"; then
+            echo "audio_marker=CI_WGRAB_AUDIO_CPAL_UNAVAILABLE" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if grep -q "CI_WGRAB_AUDIO_CPAL_FAILED" "$LOG"; then
+            echo "audio_marker=CI_WGRAB_AUDIO_CPAL_FAILED" >> "$GITHUB_STEP_SUMMARY"
+            tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+          echo "audio_marker=MISSING" >> "$GITHUB_STEP_SUMMARY"
+          tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+      - name: Run audio CPAL probe Windows
+        shell: pwsh
+        if: runner.os == 'Windows'
+        run: |
+          $Log = "audio_cpal_probe.log"
+          cargo run --example audio_cpal_probe --features audio -- --ci `
+            2>&1 | Tee-Object -FilePath $Log
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_AUDIO_CPAL_OK" -Quiet) {
+            "audio_marker=CI_WGRAB_AUDIO_CPAL_OK" >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_AUDIO_CPAL_UNAVAILABLE" -Quiet) {
+            "audio_marker=CI_WGRAB_AUDIO_CPAL_UNAVAILABLE" >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_AUDIO_CPAL_FAILED" -Quiet) {
+            "audio_marker=CI_WGRAB_AUDIO_CPAL_FAILED" >> $env:GITHUB_STEP_SUMMARY
+            Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+            exit 1
+          }
+
+          "audio_marker=MISSING" >> $env:GITHUB_STEP_SUMMARY
+          Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+          exit 1
+
+      - name: Upload audio logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: audio-cpal-${{ matrix.os }}-logs
+          path: |
+            *.log

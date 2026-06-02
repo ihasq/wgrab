@@ -170,3 +170,9 @@ backend-smoke-only checks.
 Diagnostic APIs remain public because they are not primary capture output APIs.
 
 No diagnostic API is deprecated in Phase 15I.
+
+## Phase 17X result
+
+Removal planning is documented in `docs/GPU_ONLY_REMOVAL_PLAN.md`.
+
+No public API is removed in this phase.

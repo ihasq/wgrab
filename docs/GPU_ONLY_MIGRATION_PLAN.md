@@ -51,3 +51,9 @@ No API is removed in this phase.
 Raw platform output internalization planning has started.
 
 No public APIs are removed in this phase.
+
+## Phase 17X status
+
+Deprecated legacy API removal planning has started.
+
+No APIs are removed in this phase.

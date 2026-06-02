@@ -85,3 +85,25 @@ The primary runtime path is now:
 
 The `wgpu_texture_only_capture` example demonstrates this path and does not
 read captured pixels back to CPU memory.
+
+## Future removal warning
+
+Deprecated CPU-readable and raw platform output APIs are planned for removal in
+a future breaking-change release.
+
+New code should migrate to:
+
+- `WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame`
+- `WgpuCaptureFrame`
+- `WgpuCaptureFrame::texture`
+- `WgpuCaptureFrame::create_view`
+
+## Migration table
+
+| Legacy API | Replacement |
+|---|---|
+| `get_bitmap` | `get_wgpu_capture_frame` |
+| `get_iosurface` | `WgpuCaptureFrame` |
+| `get_metal_texture` | `WgpuCaptureFrame` |
+| `get_dx11_texture` | `WgpuCaptureFrame` |
+| `get_dxgi_surface` | `WgpuCaptureFrame` |

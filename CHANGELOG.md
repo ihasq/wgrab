@@ -1,5 +1,30 @@
 # Changelog
 
+## wgrab 0.1.0
+
+Initial GPU-only successor release.
+
+### Added
+
+- Primary GPU-only capture output via `WgpuCaptureFrame`.
+- `WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame`.
+- Texture-only capture example.
+- Windows DX12, macOS Metal, and Ubuntu Vulkan CI smoke tests.
+- Future WebGPU roadmap documentation.
+
+### Changed
+
+- Package identity changed to `wgrab`.
+- Captured frames are exposed as `wgpu::Texture`-backed GPU resources.
+
+### Removed
+
+- CPU-readable bitmap public output APIs.
+- Raw IOSurface public output APIs.
+- Raw Metal public output APIs.
+- Raw D3D11 public output APIs.
+- Raw DXGI frame surface public output API.
+
 ## Unreleased - wgpu29 successor baseline
 
 ### Added

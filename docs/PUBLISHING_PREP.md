@@ -9,7 +9,7 @@ Publish `wgrab` to crates.io.
 - package: `wgrab`
 - version candidate: `0.1.0`
 - repository: `https://github.com/ihasq/wgrab`
-- publish status: not published in Phase 21P
+- publish status: published in Phase 24P-FINAL
 
 ## Preflight
 
@@ -37,3 +37,11 @@ approval.
 WebGPU / web_sys support is a future roadmap item.
 
 It is not a blocker for publishing `wgrab 0.1.0`.
+
+## Publish result
+
+- package: `wgrab`
+- version: `0.1.0`
+- published: yes
+- crates.io: <https://crates.io/crates/wgrab>
+- publish method: manual `cargo publish`

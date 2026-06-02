@@ -19,23 +19,20 @@ from the GPU-only branch. Use
 
 ### Current distribution
 
-The GPU-only branch is being prepared for crates.io publication as `wgrab`.
-Real publishing still requires explicit owner approval.
+`wgrab 0.1.0` is published on crates.io.
 
 ## Installation
 
-`wgrab` is being prepared for crates.io publication.
-
-Until publication, use Git:
-
-```toml
-wgrab = { git = "https://github.com/ihasq/wgrab", branch = "wgrab-crates-io-prep" }
-```
-
-After registry publication:
+Use the registry package:
 
 ```toml
 wgrab = "0.1"
+```
+
+For development snapshots:
+
+```toml
+wgrab = { git = "https://github.com/ihasq/wgrab", branch = "wgrab-crates-io-prep" }
 ```
 
 The primary API is GPU-only and centered on `WgpuCaptureFrame`.

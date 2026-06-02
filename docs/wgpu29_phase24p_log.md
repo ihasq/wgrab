@@ -2,28 +2,29 @@
 
 ## 結論
 
-- crates.io availability: `cargo search wgrab` returned no results; owner UI confirmation still required
+- crates.io availability: confirmed unused by owner before publish
 - cargo package: success
 - publish dry-run: success
-- owner approval: pending
-- cargo publish: not executed
-- post-publish verification: not applicable
-- docs update: deferred until publish succeeds
-- ready for post-publish release docs: no
+- owner approval: yes
+- cargo publish: success
+- post-publish verification: success
+- docs update: completed after publish
+- ready for post-publish release docs: yes
 
 ## Branch
 
 - branch: `wgrab-crates-io-prep`
-- commit: `63f6db4849337b09073c7ce2137b6fe0d12af202`
-- status: dirty only with Phase 24P preflight logs before this commit
+- publish commit: `e72ee2fcd1b0d3412d106ddc9f4baaab8888d9ce`
+- docs commit: pending
+- status: dirty with post-publish docs/logs before result commit
 
 ## Publish
 
 - package: `wgrab`
 - version: `0.1.0`
-- commit: `63f6db4849337b09073c7ce2137b6fe0d12af202`
-- method: manual `cargo publish` after owner approval
-- result: not executed
+- commit: `e72ee2fcd1b0d3412d106ddc9f4baaab8888d9ce`
+- method: manual `cargo publish`
+- result: success
 
 ## Preflight
 
@@ -44,27 +45,46 @@
 
 ## Publish approval checkpoint
 
-Real publish was not executed because the required explicit approval text was
-not provided after final package and dry-run verification.
+Real publish was executed only after the owner provided the required approval
+text for commit `e72ee2fcd1b0d3412d106ddc9f4baaab8888d9ce`.
 
-Required approval text:
+Approval text:
 
 ```text
-I approve publishing wgrab 0.1.0 to crates.io from commit 63f6db4849337b09073c7ce2137b6fe0d12af202.
+I approve publishing wgrab 0.1.0 to crates.io from commit e72ee2fcd1b0d3412d106ddc9f4baaab8888d9ce.
 ```
 
 ## Post-publish
 
-- crates.io: not checked after publish
-- cargo search: not checked after publish
-- cargo info: not checked after publish
+- crates.io: <https://crates.io/crates/wgrab>
+- cargo search: `wgrab = "0.1.0"`
+- cargo info: `wgrab 0.1.0` downloaded and verified from crates.io
+
+## Final publish result
+
+- crates.io availability: confirmed unused by owner
+- cargo package: success
+- publish dry-run: success
+- owner approval: yes
+- cargo publish: success
+- package: `wgrab`
+- version: `0.1.0`
+- crates.io: <https://crates.io/crates/wgrab>
+
+## Post-publish metadata note
+
+The published crate has the correct package name, version, description, license,
+and repository. `cargo info wgrab` still reports the old `documentation` and
+`homepage` metadata inherited from the original CrabGrab manifest. That metadata
+cannot be changed for `0.1.0` after publication and should be fixed in a follow-up
+release.
 
 ## Deferred
 
-- real `cargo publish`
 - trusted publishing
 - GitHub Release
 - tag
 - generated docs cleanup
 - macOS extern ABI cleanup
 - WebGPU implementation
+- `documentation` / `homepage` metadata repair for a future release

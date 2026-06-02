@@ -1,0 +1,23 @@
+    Updating crates.io index
+ Downloading crates ...
+  Downloaded wgrab v0.1.0
+wgrab #capture #graphics #window #screen #media
+GPU-only screen capture library exposing captured frames as wgpu textures
+version: 0.1.0
+license: MIT OR Apache-2.0
+rust-version: 1.87
+documentation: https://docs.rs/crabgrab
+homepage: https://github.com/AugmendTech/CrabGrab
+repository: https://github.com/ihasq/wgrab
+crates.io: https://crates.io/crates/wgrab/0.1.0
+features:
+  bitmap                = [dep:bytemuck, dep:half, dx11]
+  diagnostic            = []
+  dx11                  = [dxgi]
+  dxgi                  = []
+  iosurface             = []
+  metal                 = [dep:metal]
+  screenshot            = [bitmap]
+  wgpu                  = [dep:wgpu, dx11, dxgi, iosurface, metal]
+  wgpu-debug-descriptor = [wgpu]
+  winapi                = [dep:winapi]

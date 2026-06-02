@@ -1,6 +1,14 @@
 # CrabGrab 🦀 🖥️ 🦀 
 A cross-platform screen-capturing crate for rust
 
+## Project status
+
+`ihasq/wgrab` is maintained as a successor fork of CrabGrab.
+
+The current direction is to preserve the CrabGrab API surface while modernizing
+the internal platform and GPU interop implementation, including current `wgpu`
+support.
+
 [![Crates.io Version](https://img.shields.io/crates/v/crabgrab)](https://crates.io/crates/crabgrab)
 [![docs.rs](https://img.shields.io/docsrs/crabgrab)](https://docs.rs/crabgrab/)
 [MacOS Documentation](https://augmendtech.github.io/CrabGrab/macos_docs/crabgrab/index.html)

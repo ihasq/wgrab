@@ -32,6 +32,11 @@
 - [x] Ubuntu Lavapipe Vulkan smoke success
 - [x] GPU-only texture probe marker gate success
 
+## WebGPU roadmap
+
+- [x] WebGPU / web_sys support documented as future roadmap
+- [x] WebGPU / web_sys support is not a `wgrab 0.1.0` publish blocker
+
 ## Owner approval
 
 - [ ] owner explicitly approves real publish

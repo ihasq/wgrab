@@ -31,3 +31,9 @@ Publish `wgrab` to crates.io.
 
 Real publishing is irreversible as a registry action and requires explicit owner
 approval.
+
+## WebGPU roadmap
+
+WebGPU / web_sys support is a future roadmap item.
+
+It is not a blocker for publishing `wgrab 0.1.0`.

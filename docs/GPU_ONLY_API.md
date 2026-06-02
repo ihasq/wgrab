@@ -94,3 +94,20 @@ It does not expose CPU-readable capture output and therefore does not violate th
 
 - CPU-readable bitmap APIs
 - raw platform output APIs
+
+## Future web target
+
+wgrab may support browser capture in the future.
+
+The intended web direction is:
+
+```text
+getDisplayMedia -> VideoFrame -> WebGPU
+```
+
+This future web path must preserve the GPU-only principle.
+
+It should not expose CPU-readable capture bytes.
+
+WebGPU / web_sys support is a roadmap item and is not a blocker for publishing
+`wgrab 0.1.0`.

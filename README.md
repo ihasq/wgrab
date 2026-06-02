@@ -40,6 +40,12 @@ wgrab = "0.1"
 
 The primary API is GPU-only and centered on `WgpuCaptureFrame`.
 
+## Future web target
+
+A future goal is browser capture via
+`getDisplayMedia -> VideoFrame -> WebGPU`, while preserving wgrab's GPU-only
+design.
+
 [![Crates.io Version](https://img.shields.io/crates/v/wgrab)](https://crates.io/crates/wgrab)
 [![docs.rs](https://img.shields.io/docsrs/wgrab)](https://docs.rs/wgrab/)
 [MacOS Documentation](https://augmendtech.github.io/CrabGrab/macos_docs/crabgrab/index.html)

@@ -1,0 +1,28 @@
+src/feature/wgpu/mod.rs:15:use objc2_metal::{
+src/prelude.rs:19:pub use crate::feature::metal::*;
+src/platform/macos/frame.rs:34:    pub(crate) metal_device: Option<metal::Device>,
+src/platform/macos/frame.rs:48:    pub(crate) metal_device: metal::Device,
+src/platform/macos/capture_stream.rs:65:    pub(crate) metal_device: metal::Device,
+src/platform/macos/capture_stream.rs:88:    fn with_metal_device(self, metal_device: metal::Device) -> Self;
+src/platform/macos/capture_stream.rs:99:    pub(crate) metal_device: Option<metal::Device>,
+src/platform/macos/capture_stream.rs:149:    fn with_metal_device(self, metal_device: metal::Device) -> Self {
+src/platform/macos/capture_stream.rs:250:            None => match metal::Device::system_default() {
+src/feature/wgpu/mod.rs:15:use objc2_metal::{
+src/feature/metal/mod.rs:4:use metal::foreign_types::ForeignType;
+src/feature/metal/mod.rs:77:    ) -> Result<metal::Texture, MacosVideoFrameError>;
+src/feature/metal/mod.rs:92:    ) -> Result<metal::Texture, MacosVideoFrameError> {
+src/feature/metal/mod.rs:122:                    let texture_descriptor = metal::TextureDescriptor::new();
+src/feature/metal/mod.rs:123:                    texture_descriptor.set_texture_type(metal::MTLTextureType::D2);
+src/feature/metal/mod.rs:124:                    texture_descriptor.set_pixel_format(metal::MTLPixelFormat::BGRA8Unorm);
+src/feature/metal/mod.rs:129:                    texture_descriptor.set_storage_mode(metal::MTLStorageMode::Shared);
+src/feature/metal/mod.rs:130:                    texture_descriptor.set_cpu_cache_mode(metal::MTLCPUCacheMode::DefaultCache);
+src/feature/metal/mod.rs:138:                            (metal::Texture::from_ptr(texture_ptr as *mut metal::MTLTexture))
+src/feature/metal/mod.rs:146:                    MetalVideoFramePlaneTexture::Luminance => (0, metal::MTLPixelFormat::R8Uint),
+src/feature/metal/mod.rs:147:                    MetalVideoFramePlaneTexture::Chroma => (1, metal::MTLPixelFormat::RG8Uint),
+src/feature/metal/mod.rs:152:                    let texture_descriptor = metal::TextureDescriptor::new();
+src/feature/metal/mod.rs:153:                    texture_descriptor.set_texture_type(metal::MTLTextureType::D2);
+src/feature/metal/mod.rs:159:                    texture_descriptor.set_storage_mode(metal::MTLStorageMode::Shared);
+src/feature/metal/mod.rs:160:                    texture_descriptor.set_cpu_cache_mode(metal::MTLCPUCacheMode::DefaultCache);
+src/feature/metal/mod.rs:168:                            (metal::Texture::from_ptr(texture_ptr as *mut metal::MTLTexture))
+src/feature/metal/mod.rs:184:    fn get_metal_device(&self) -> metal::Device;
+src/feature/metal/mod.rs:188:    fn get_metal_device(&self) -> metal::Device {

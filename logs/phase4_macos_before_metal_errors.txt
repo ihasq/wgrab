@@ -1,0 +1,29 @@
+logs/phase4_macos_arm_before.txt:1:    Blocking waiting for file lock on build directory
+logs/phase4_macos_arm_before.txt:89:error[E0599]: no method named `lock` found for reference `&Retained<ProtocolObject<dyn MTLDevice>>` in the current scope
+logs/phase4_macos_arm_before.txt:92:60 |                 let device = hal_device.raw_device().lock().clone();
+logs/phase4_macos_arm_before.txt:93:   |                                                      ^^^^ method not found in `&Retained<ProtocolObject<dyn MTLDevice>>`
+logs/phase4_macos_arm_before.txt:101:291 |                         let wgpu_metal_texture = wgpu::hal::metal::Device::texture_from_raw(
+logs/phase4_macos_arm_before.txt:105:    |                             ---------------------------- expected `MTLTextureType`, found a different `MTLTextureType`
+logs/phase4_macos_arm_before.txt:107:note: expected `Retained<ProtocolObject<dyn MTLTexture>>`, found `Texture`
+logs/phase4_macos_arm_before.txt:112:    = note: expected struct `objc2::rc::retained::Retained<objc2::runtime::protocol_object::ProtocolObject<(dyn objc2_metal::generated::__MTLTexture::MTLTexture + 'static)>>`
+logs/phase4_macos_arm_before.txt:113:               found struct `metal::Texture`
+logs/phase4_macos_arm_before.txt:114:    = note: `MTLTextureType` and `MTLTextureType` have similar names, but are actually distinct types
+logs/phase4_macos_arm_before.txt:115:note: `MTLTextureType` is defined in crate `metal`
+logs/phase4_macos_arm_before.txt:118: 16 | pub enum MTLTextureType {
+logs/phase4_macos_arm_before.txt:120:note: `MTLTextureType` is defined in crate `objc2_metal`
+logs/phase4_macos_arm_before.txt:121:   --> /home/ihasq/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-metal-0.3.2/src/generated/MTLTexture.rs:18:1
+logs/phase4_macos_arm_before.txt:123: 18 | pub struct MTLTextureType(pub NSUInteger);
+logs/phase4_macos_x86_before.txt:88:error[E0599]: no method named `lock` found for reference `&Retained<ProtocolObject<dyn MTLDevice>>` in the current scope
+logs/phase4_macos_x86_before.txt:91:60 |                 let device = hal_device.raw_device().lock().clone();
+logs/phase4_macos_x86_before.txt:92:   |                                                      ^^^^ method not found in `&Retained<ProtocolObject<dyn MTLDevice>>`
+logs/phase4_macos_x86_before.txt:100:291 |                         let wgpu_metal_texture = wgpu::hal::metal::Device::texture_from_raw(
+logs/phase4_macos_x86_before.txt:104:    |                             ---------------------------- expected `MTLTextureType`, found a different `MTLTextureType`
+logs/phase4_macos_x86_before.txt:106:note: expected `Retained<ProtocolObject<dyn MTLTexture>>`, found `Texture`
+logs/phase4_macos_x86_before.txt:111:    = note: expected struct `objc2::rc::retained::Retained<objc2::runtime::protocol_object::ProtocolObject<(dyn objc2_metal::generated::__MTLTexture::MTLTexture + 'static)>>`
+logs/phase4_macos_x86_before.txt:112:               found struct `metal::Texture`
+logs/phase4_macos_x86_before.txt:113:    = note: `MTLTextureType` and `MTLTextureType` have similar names, but are actually distinct types
+logs/phase4_macos_x86_before.txt:114:note: `MTLTextureType` is defined in crate `metal`
+logs/phase4_macos_x86_before.txt:117: 16 | pub enum MTLTextureType {
+logs/phase4_macos_x86_before.txt:119:note: `MTLTextureType` is defined in crate `objc2_metal`
+logs/phase4_macos_x86_before.txt:120:   --> /home/ihasq/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-metal-0.3.2/src/generated/MTLTexture.rs:18:1
+logs/phase4_macos_x86_before.txt:122: 18 | pub struct MTLTextureType(pub NSUInteger);

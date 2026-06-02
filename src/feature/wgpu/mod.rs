@@ -4,13 +4,17 @@ use std::{error::Error, fmt::Display};
 use crate::prelude::{CaptureConfig, CaptureStream, VideoFrame};
 
 #[cfg(target_os = "macos")]
+use crate::feature::iosurface::{GetIoSurfaceError, IoSurface, MacosIoSurfaceVideoFrameExt};
+#[cfg(target_os = "macos")]
 use crate::platform::macos::{capture_stream::MacosCaptureConfig, frame::MacosVideoFrame};
 #[cfg(target_os = "macos")]
-use crate::feature::metal::*;
+use crate::platform::platform_impl::objc_wrap::CVPixelFormat;
 #[cfg(target_os = "macos")]
-use metal::MTLStorageMode;
+use objc2_06::{rc::Retained, runtime::ProtocolObject};
 #[cfg(target_os = "macos")]
-use metal::MTLTextureUsage;
+use objc2_metal::{MTLCPUCacheMode, MTLDevice, MTLPixelFormat, MTLResource, MTLStorageMode, MTLTexture, MTLTextureDescriptor, MTLTextureType, MTLTextureUsage};
+#[cfg(target_os = "macos")]
+use wgpu::hal::metal as hal_mtl;
 #[cfg(target_os = "windows")]
 use wgpu::hal::Device;
 #[cfg(target_os = "windows")]
@@ -43,6 +47,12 @@ use crate::feature::dx11::*;
 #[cfg(target_os = "windows")]
 use windows::{core::Interface, Graphics::DirectX::DirectXPixelFormat, Win32::Graphics::{Direct3D11::ID3D11Texture2D, Direct3D11::D3D11_CREATE_DEVICE_BGRA_SUPPORT, Direct3D12::{ID3D12Resource, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE}}};
 
+#[cfg(target_os = "macos")]
+type Objc2MetalDevice = Retained<ProtocolObject<dyn MTLDevice>>;
+
+#[cfg(target_os = "macos")]
+type Objc2MetalTexture = Retained<ProtocolObject<dyn MTLTexture>>;
+
 /// A capture config which can be supplied with a Wgpu device
 pub trait WgpuCaptureConfigExt: Sized {
     fn with_wgpu_device(self, device: Arc<dyn AsRef<wgpu::Device> + Send + Sync + 'static>) -> Result<Self, String>;
@@ -53,20 +63,17 @@ impl WgpuCaptureConfigExt for CaptureConfig {
     fn with_wgpu_device(self, wgpu_device: Arc<dyn AsRef<wgpu::Device> + Send + Sync + 'static>) -> Result<Self, String> {
         #[cfg(target_os = "macos")]
         {
-            unsafe {
-                let wgpu_device_ref = AsRef::<wgpu::Device>::as_ref(&*wgpu_device);
-                let hal_device = get_metal_hal_device(wgpu_device_ref)
-                    .map_err(|error| error.to_string())?;
-                let device = hal_device.raw_device().lock().clone();
-                Ok(Self {
-                    impl_capture_config: MacosCaptureConfig {
-                        metal_device: device,
-                        wgpu_device: Some(wgpu_device.clone()),
-                        ..self.impl_capture_config
-                    },
-                    ..self
-                })
-            }
+            let wgpu_device_ref = AsRef::<wgpu::Device>::as_ref(&*wgpu_device);
+            let hal_device = get_metal_hal_device(wgpu_device_ref)
+                .map_err(|error| error.to_string())?;
+            drop(hal_device);
+            Ok(Self {
+                impl_capture_config: MacosCaptureConfig {
+                    wgpu_device: Some(wgpu_device.clone()),
+                    ..self.impl_capture_config
+                },
+                ..self
+            })
         }
         #[cfg(target_os = "windows")]
         {
@@ -197,7 +204,7 @@ fn get_dx12_hal_device(
 fn get_metal_hal_device(
     device: &wgpu::Device,
 ) -> Result<
-    impl std::ops::Deref<Target = wgpu::hal::metal::Device> + '_,
+    impl std::ops::Deref<Target = hal_mtl::Device> + '_,
     WgpuVideoFrameError,
 > {
     let actual = device.adapter_info().backend;
@@ -216,6 +223,143 @@ fn get_metal_hal_device(
     }
 }
 
+#[cfg(target_os = "macos")]
+fn metal_pixel_format_to_wgpu(
+    pixel_format: MTLPixelFormat,
+) -> Result<wgpu::TextureFormat, WgpuVideoFrameError> {
+    match pixel_format {
+        MTLPixelFormat::BGRA8Unorm => Ok(wgpu::TextureFormat::Bgra8Unorm),
+        MTLPixelFormat::BGRA8Unorm_sRGB => Ok(wgpu::TextureFormat::Bgra8UnormSrgb),
+        MTLPixelFormat::RGBA8Sint => Ok(wgpu::TextureFormat::Rgba8Sint),
+        MTLPixelFormat::RGBA8Uint => Ok(wgpu::TextureFormat::Rgba8Uint),
+        MTLPixelFormat::RGBA8Unorm => Ok(wgpu::TextureFormat::Rgba8Unorm),
+        MTLPixelFormat::RGBA8Unorm_sRGB => Ok(wgpu::TextureFormat::Rgba8UnormSrgb),
+        MTLPixelFormat::RGBA8Snorm => Ok(wgpu::TextureFormat::Rgba8Snorm),
+        MTLPixelFormat::RGB10A2Uint => Ok(wgpu::TextureFormat::Rgb10a2Uint),
+        MTLPixelFormat::RGB10A2Unorm => Ok(wgpu::TextureFormat::Rgb10a2Unorm),
+        MTLPixelFormat::RG8Sint => Ok(wgpu::TextureFormat::Rg8Sint),
+        MTLPixelFormat::RG8Snorm => Ok(wgpu::TextureFormat::Rg8Snorm),
+        MTLPixelFormat::RG8Uint => Ok(wgpu::TextureFormat::Rg8Uint),
+        MTLPixelFormat::RG8Unorm => Ok(wgpu::TextureFormat::Rg8Unorm),
+        MTLPixelFormat::R8Sint => Ok(wgpu::TextureFormat::R8Sint),
+        MTLPixelFormat::R8Snorm => Ok(wgpu::TextureFormat::R8Snorm),
+        MTLPixelFormat::R8Uint => Ok(wgpu::TextureFormat::R8Uint),
+        MTLPixelFormat::R8Unorm => Ok(wgpu::TextureFormat::R8Unorm),
+        _ => Err(WgpuVideoFrameError::Other(format!(
+            "Unsupported Metal pixel format: {pixel_format:?}"
+        ))),
+    }
+}
+
+#[cfg(target_os = "macos")]
+fn metal_texture_dimension(
+    texture_type: MTLTextureType,
+) -> Result<wgpu::TextureDimension, WgpuVideoFrameError> {
+    match texture_type {
+        MTLTextureType::Type2D | MTLTextureType::Type2DMultisample => Ok(wgpu::TextureDimension::D2),
+        _ => Err(WgpuVideoFrameError::Other(format!(
+            "Unsupported Metal texture type: {texture_type:?}"
+        ))),
+    }
+}
+
+#[cfg(target_os = "macos")]
+fn metal_texture_usage_to_wgpu(
+    usage: MTLTextureUsage,
+    storage_mode: MTLStorageMode,
+) -> wgpu::TextureUsages {
+    let render_usage = if usage.contains(MTLTextureUsage::RenderTarget) {
+        wgpu::TextureUsages::RENDER_ATTACHMENT
+    } else {
+        wgpu::TextureUsages::empty()
+    };
+    let shader_read_usage = if usage.contains(MTLTextureUsage::ShaderRead) {
+        wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::STORAGE_BINDING
+    } else {
+        wgpu::TextureUsages::empty()
+    };
+    let shader_write_usage = if usage.contains(MTLTextureUsage::ShaderWrite) {
+        wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::STORAGE_BINDING
+    } else {
+        wgpu::TextureUsages::empty()
+    };
+    let copy_usage = match storage_mode {
+        MTLStorageMode::Managed | MTLStorageMode::Private | MTLStorageMode::Shared => {
+            wgpu::TextureUsages::COPY_DST | wgpu::TextureUsages::COPY_SRC
+        }
+        MTLStorageMode::Memoryless => wgpu::TextureUsages::empty(),
+        _ => wgpu::TextureUsages::empty(),
+    };
+    render_usage | shader_read_usage | shader_write_usage | copy_usage
+}
+
+#[cfg(target_os = "macos")]
+fn objc2_iosurface_ref(io_surface: &IoSurface) -> &objc2_io_surface::IOSurfaceRef {
+    // SAFETY:
+    // `IoSurface` stores a valid IOSurfaceRef and holds an IOSurface use-count
+    // for the duration of this borrow. This does not transfer ownership.
+    unsafe { &*(io_surface.get_raw() as *const objc2_io_surface::IOSurfaceRef) }
+}
+
+#[cfg(target_os = "macos")]
+fn objc2_metal_texture_from_iosurface(
+    device: &Objc2MetalDevice,
+    io_surface: &IoSurface,
+    plane: WgpuVideoFramePlaneTexture,
+) -> Result<Objc2MetalTexture, WgpuVideoFrameError> {
+    let pixel_format = io_surface
+        .get_pixel_format()
+        .ok_or_else(|| WgpuVideoFrameError::Other("Unable to get pixel format from IOSurface".to_string()))?;
+
+    let (plane_index, metal_pixel_format) = match pixel_format {
+        CVPixelFormat::BGRA8888 => match plane {
+            WgpuVideoFramePlaneTexture::Rgba => (0, MTLPixelFormat::BGRA8Unorm),
+            _ => return Err(WgpuVideoFrameError::InvalidVideoPlaneTexture),
+        },
+        CVPixelFormat::V420 | CVPixelFormat::F420 => match plane {
+            WgpuVideoFramePlaneTexture::Luminance => (0, MTLPixelFormat::R8Uint),
+            WgpuVideoFramePlaneTexture::Chroma => (1, MTLPixelFormat::RG8Uint),
+            _ => return Err(WgpuVideoFrameError::InvalidVideoPlaneTexture),
+        },
+        _ => {
+            return Err(WgpuVideoFrameError::Other(format!(
+                "Unsupported IOSurface pixel format: {pixel_format:?}"
+            )))
+        }
+    };
+
+    let width = if plane_index == 0 {
+        io_surface.get_width()
+    } else {
+        io_surface.get_width_of_plane(plane_index)
+    };
+    let height = if plane_index == 0 {
+        io_surface.get_height()
+    } else {
+        io_surface.get_height_of_plane(plane_index)
+    };
+
+    let descriptor = MTLTextureDescriptor::new();
+    descriptor.setTextureType(MTLTextureType::Type2D);
+    descriptor.setPixelFormat(metal_pixel_format);
+    unsafe {
+        descriptor.setWidth(width);
+        descriptor.setHeight(height);
+        descriptor.setSampleCount(1);
+        descriptor.setMipmapLevelCount(1);
+    }
+    descriptor.setStorageMode(MTLStorageMode::Shared);
+    descriptor.setCpuCacheMode(MTLCPUCacheMode::DefaultCache);
+
+    device
+        .newTextureWithDescriptor_iosurface_plane(
+            &descriptor,
+            objc2_iosurface_ref(io_surface),
+            plane_index,
+        )
+        .ok_or_else(|| WgpuVideoFrameError::Other("Failed to create Metal texture from IOSurface".to_string()))
+}
+
 /// A video frame which can be used to create Wgpu textures
 pub trait WgpuVideoFrameExt {
     /// Get the texture for the given plane of the video frame
@@ -230,80 +374,60 @@ impl WgpuVideoFrameExt for VideoFrame {
                 MacosVideoFrame::SCStream(sc_stream_frame) => sc_stream_frame.wgpu_device.clone(),
                 MacosVideoFrame::CGDisplayStream(cg_display_stream_frame) => cg_display_stream_frame.wgpu_device.clone(),
             }.ok_or(WgpuVideoFrameError::NoWgpuDevice)?;
-            let metal_plane = match plane {
-                WgpuVideoFramePlaneTexture::Rgba => MetalVideoFramePlaneTexture::Rgba,
-                WgpuVideoFramePlaneTexture::Chroma => MetalVideoFramePlaneTexture::Chroma,
-                WgpuVideoFramePlaneTexture::Luminance => MetalVideoFramePlaneTexture::Luminance,
-            };
-            match MetalVideoFrameExt::get_metal_texture(self, metal_plane) {
-                Ok(metal_texture) => {
-                    unsafe {
-                        let descriptor = wgpu::TextureDescriptor {
-                            label,
-                            size: wgpu::Extent3d {
-                                width: metal_texture.width() as u32,
-                                height: metal_texture.height() as u32,
-                                depth_or_array_layers: metal_texture.depth() as u32,
-                            },
-                            mip_level_count: metal_texture.mipmap_level_count() as u32,
-                            sample_count: metal_texture.sample_count() as u32,
-                            dimension: match metal_texture.texture_type() {
-                                metal::MTLTextureType::D2 |
-                                metal::MTLTextureType::D2Multisample=> wgpu::TextureDimension::D2,
-                                _ => return Err(WgpuVideoFrameError::Other("Unsupported metal texture type".to_string()))
-                            },
-                            format: match metal_texture.pixel_format() {
-                                metal::MTLPixelFormat::BGRA8Unorm => wgpu::TextureFormat::Bgra8Unorm,
-                                metal::MTLPixelFormat::BGRA8Unorm_sRGB => wgpu::TextureFormat::Bgra8UnormSrgb,
-                                metal::MTLPixelFormat::RGBA8Sint => wgpu::TextureFormat::Rgba8Sint,
-                                metal::MTLPixelFormat::RGBA8Uint => wgpu::TextureFormat::Rgba8Uint,
-                                metal::MTLPixelFormat::RGBA8Unorm => wgpu::TextureFormat::Rgba8Unorm,
-                                metal::MTLPixelFormat::RGBA8Unorm_sRGB => wgpu::TextureFormat::Rgba8UnormSrgb,
-                                metal::MTLPixelFormat::RGBA8Snorm => wgpu::TextureFormat::Rgba8Snorm,
-                                metal::MTLPixelFormat::RGB10A2Uint => wgpu::TextureFormat::Rgb10a2Uint,
-                                metal::MTLPixelFormat::RGB10A2Unorm => wgpu::TextureFormat::Rgb10a2Unorm,
-                                metal::MTLPixelFormat::RG8Sint => wgpu::TextureFormat::Rg8Sint,
-                                metal::MTLPixelFormat::RG8Snorm => wgpu::TextureFormat::Rg8Snorm,
-                                metal::MTLPixelFormat::RG8Uint => wgpu::TextureFormat::Rg8Snorm,
-                                metal::MTLPixelFormat::RG8Unorm => wgpu::TextureFormat::Rg8Unorm,
-                                metal::MTLPixelFormat::R8Sint => wgpu::TextureFormat::R8Sint,
-                                metal::MTLPixelFormat::R8Snorm => wgpu::TextureFormat::R8Snorm,
-                                metal::MTLPixelFormat::R8Uint => wgpu::TextureFormat::R8Uint,
-                                metal::MTLPixelFormat::R8Unorm => wgpu::TextureFormat::R8Unorm,
-                                _ => return Err(WgpuVideoFrameError::Other(format!("Unsupported metal texture format: {:?}", metal_texture.pixel_format()))),
-                            },
-                            usage: {
-                                let metal_usage = metal_texture.usage();
-                                let storage_mode = metal_texture.storage_mode();
-                                if metal_usage.contains(MTLTextureUsage::RenderTarget) { wgpu::TextureUsages::RENDER_ATTACHMENT } else { wgpu::TextureUsages::empty() }.union(
-                                    if metal_usage.contains(MTLTextureUsage::ShaderRead ) { wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::STORAGE_BINDING } else { wgpu::TextureUsages::empty() } ).union( 
-                                    if metal_usage.contains(MTLTextureUsage::ShaderWrite) { wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::STORAGE_BINDING } else { wgpu::TextureUsages::empty() } ).union(
-                                        match storage_mode {
-                                            MTLStorageMode::Managed |
-                                            MTLStorageMode::Private |
-                                            MTLStorageMode::Shared => wgpu::TextureUsages::COPY_DST | wgpu::TextureUsages::COPY_SRC,
-                                            MTLStorageMode::Memoryless => wgpu::TextureUsages::empty(),
-                                        }
-                                    )
-                            },
-                            view_formats: &[],
-                        };
-                        let wgpu_metal_texture = wgpu::hal::metal::Device::texture_from_raw(
-                            metal_texture.clone(),
-                            descriptor.format,
-                            metal_texture.texture_type(),
-                            metal_texture.array_length() as u32,
-                            metal_texture.mipmap_level_count() as u32,
-                            wgpu::hal::CopyExtent { width: metal_texture.width() as u32, height: metal_texture.height() as u32, depth: metal_texture.depth() as u32 }
-                        );
-                        Ok((&*wgpu_device).as_ref().create_texture_from_hal::<wgpu::hal::api::Metal>(wgpu_metal_texture, &descriptor))
+            let io_surface = MacosIoSurfaceVideoFrameExt::get_iosurface(self)
+                .map_err(|error| match error {
+                    GetIoSurfaceError::NoImageBuffer | GetIoSurfaceError::NoIoSurface => {
+                        WgpuVideoFrameError::NoBackendTexture
                     }
+                })?;
+            let hal_device = get_metal_hal_device((&*wgpu_device).as_ref())?;
+            let metal_texture = objc2_metal_texture_from_iosurface(
+                hal_device.raw_device(),
+                &io_surface,
+                plane,
+            )?;
+            let texture_type = metal_texture.textureType();
+            let format = metal_pixel_format_to_wgpu(metal_texture.pixelFormat())?;
+            let descriptor = wgpu::TextureDescriptor {
+                label,
+                size: wgpu::Extent3d {
+                    width: metal_texture.width() as u32,
+                    height: metal_texture.height() as u32,
+                    depth_or_array_layers: metal_texture.arrayLength().max(1) as u32,
                 },
-                Err(MacosVideoFrameError::InvalidVideoPlaneTexture) => Err(WgpuVideoFrameError::InvalidVideoPlaneTexture),
-                Err(MacosVideoFrameError::NoImageBuffer) |
-                Err(MacosVideoFrameError::NoIoSurface) => Err(WgpuVideoFrameError::NoBackendTexture),
-                Err(MacosVideoFrameError::Other(e)) => Err(WgpuVideoFrameError::Other(e)),
-            }
+                mip_level_count: metal_texture.mipmapLevelCount().max(1) as u32,
+                sample_count: metal_texture.sampleCount().max(1) as u32,
+                dimension: metal_texture_dimension(texture_type)?,
+                format,
+                usage: metal_texture_usage_to_wgpu(metal_texture.usage(), metal_texture.storageMode()),
+                view_formats: &[],
+            };
+            let wgpu_metal_texture = unsafe {
+                hal_mtl::Device::texture_from_raw(
+                    metal_texture.clone(),
+                    descriptor.format,
+                    texture_type,
+                    metal_texture.arrayLength().max(1) as u32,
+                    metal_texture.mipmapLevelCount().max(1) as u32,
+                    wgpu::hal::CopyExtent {
+                        width: metal_texture.width() as u32,
+                        height: metal_texture.height() as u32,
+                        depth: metal_texture.depth() as u32,
+                    },
+                )
+            };
+            // SAFETY:
+            // - `wgpu_metal_texture` was created from a Metal texture associated with the
+            //   same Metal device that backs this wgpu Device.
+            // - `descriptor` matches the raw Metal texture's size, mip count,
+            //   sample count, dimension, and format.
+            // - The underlying capture pipeline has fully initialized the texture
+            //   before it is wrapped by wgpu.
+            Ok(unsafe {
+                (&*wgpu_device)
+                    .as_ref()
+                    .create_texture_from_hal::<wgpu::hal::api::Metal>(wgpu_metal_texture, &descriptor)
+            })
         }
         #[cfg(target_os = "windows")]
         {

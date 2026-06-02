@@ -28,7 +28,7 @@ dxgi = []
 dx11 = ["dxgi"]
 bitmap = ["dep:bytemuck", "dep:half", "dx11"]
 screenshot = ["bitmap"]
-wgpu = ["dep:wgpu", "dx11", "dxgi", "metal"]
+wgpu = ["dep:wgpu", "dx11", "dxgi", "iosurface", "metal"]
 diagnostic = []
 
 [dependencies]
@@ -41,6 +41,10 @@ bytemuck = { version = "1.15", optional = true }
 block2 = "0.5"
 libc = "~0.2.33"
 objc2 = "0.5"
+objc2_06 = { package = "objc2", version = "0.6.3" }
+objc2-foundation = "0.3.2"
+objc2-io-surface = "0.3.2"
+objc2-metal = { version = "0.3.2", features = ["objc2-io-surface"] }
 metal = { version = "0.28", optional = true }
 lazy_static = "1.4"
 core-graphics-types = "0.1"

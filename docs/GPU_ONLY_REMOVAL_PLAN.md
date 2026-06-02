@@ -80,7 +80,7 @@ Planned removal version:
 |---|---|
 | public platform wrapper types reachable through feature modules | whether downstream users depend on them directly |
 | generated docs under `docs/*_docs` | whether they should be regenerated or removed before a breaking release |
-| `WgpuVideoFrameExt::get_wgpu_texture` | whether it remains as a lower-level GPU API or becomes an internal helper after `WgpuCaptureFrame` is fully primary |
+| generated docs release handling | whether generated docs are regenerated, removed, or kept temporarily |
 
 ## Diagnostic APIs
 
@@ -97,3 +97,14 @@ Reason:
 macOS extern ABI warnings are deferred to a cleanup phase.
 
 They are not part of the GPU-only removal plan.
+
+## Decisions required before removal implementation
+
+Before removing deprecated APIs, decide:
+
+1. package name
+2. version
+3. release channel
+4. whether removal happens before or after first GPU-only registry release
+5. generated docs policy
+6. compatibility alias strategy

@@ -1,0 +1,13 @@
+docs/macos_docs
+docs/macos_docs/crates.js
+docs/macos_docs/help.html
+docs/macos_docs/search-index.js
+docs/macos_docs/settings.html
+docs/macos_docs/src-files.js
+docs/windows_docs
+docs/windows_docs/.lock
+docs/windows_docs/crates.js
+docs/windows_docs/help.html
+docs/windows_docs/search-index.js
+docs/windows_docs/settings.html
+docs/windows_docs/src-files.js

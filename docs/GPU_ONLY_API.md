@@ -72,3 +72,25 @@ Required negative checks:
 Capability probe:
 
 - capture runtime may be `CI_CAPTURE_SMOKE_OK` or `CI_CAPTURE_UNAVAILABLE`
+
+## API layers
+
+### Primary API
+
+- `WgpuCaptureFrame`
+- `WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame`
+
+This is the preferred GPU-only capture output.
+
+### Advanced lower-level GPU API
+
+- `WgpuVideoFrameExt::get_wgpu_texture`
+
+This remains public as a lower-level GPU API.
+
+It does not expose CPU-readable capture output and therefore does not violate the GPU-only direction.
+
+### Deprecated legacy APIs
+
+- CPU-readable bitmap APIs
+- raw platform output APIs

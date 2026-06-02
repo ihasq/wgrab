@@ -1,0 +1,6 @@
+2:name = "crabgrab"
+3:description = "A cross-platform screen/window capture crate"
+4:version = "0.4.0"
+7:authors = ["Augmend, Inc. <https://github.com/AugmendTech>", "Liam Taylor <https://github.com/OutOfTheVoid>", "Tim Misiak <https://github.com/TimMisiak>"]
+11:repository = "https://github.com/ihasq/wgrab"
+12:license = "MIT OR Apache-2.0"

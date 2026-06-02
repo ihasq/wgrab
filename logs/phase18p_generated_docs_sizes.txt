@@ -1,0 +1,2 @@
+5.3M	docs/macos_docs
+4.8M	docs/windows_docs

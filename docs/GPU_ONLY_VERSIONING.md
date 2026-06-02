@@ -51,3 +51,43 @@ Cons:
 ## Owner decision
 
 No package or version change in Phase 17X.
+
+## Owner decision needed before removal
+
+Removal of deprecated APIs is a breaking change.
+
+Versioning candidates:
+
+### Candidate 1: `0.5.0`
+
+Use if staying on `crabgrab` package lineage.
+
+Meaning:
+
+- first GPU-only breaking release
+- deprecated CPU/raw APIs removed
+- wgpu 29 baseline retained
+
+### Candidate 2: `0.1.0` under `wgrab`
+
+Use if publishing as a new successor crate.
+
+Meaning:
+
+- new crate identity
+- GPU-only API from the start
+- CrabGrab compatibility only through migration docs
+
+### Candidate 3: Git-only pre-release
+
+Use if package name remains undecided.
+
+Meaning:
+
+- no registry publish
+- removal can proceed on branch
+- downstream users pin Git revision
+
+## Phase 18P decision
+
+No package or version change is made in Phase 18P.

@@ -79,3 +79,10 @@ Before removal implementation:
 - do not publish
 - document Git dependency usage
 - choose final package name before first GPU-only release
+
+## Phase 19X decision
+
+The owner selected Option C: Git dependency only.
+
+No package name, version, crates.io publishing, tag, GitHub Release, or generated
+docs change is made in Phase 19X.

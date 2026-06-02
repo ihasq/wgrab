@@ -52,27 +52,26 @@ let format = gpu_frame.format();
 The GPU-only API avoids exposing captured regions as CPU-readable bytes and
 keeps the capture output in a form directly usable by a wgpu renderer.
 
-## What remains temporarily available
+## Removed legacy APIs
 
-Legacy APIs remain available during the deprecation window, but they are no
-longer the preferred path.
+The deprecated CPU-readable bitmap and raw platform output APIs have been
+removed in the GPU-only branch.
 
-## Deferred removals
+Use:
 
-Actual removal is deferred to a later breaking-change phase.
+- `WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame`
+- `WgpuCaptureFrame`
+- `WgpuCaptureFrame::texture`
+- `WgpuCaptureFrame::create_view`
+
+Advanced users may use:
+
+- `WgpuVideoFrameExt::get_wgpu_texture`
 
 ## Raw platform API note
 
-Raw platform APIs are deprecated or under review for future internalization.
-
-Use `WgpuCaptureFrame` unless you are maintaining legacy interop code.
-
-## Deprecated raw output shims
-
-Deprecated raw platform APIs remain callable temporarily, but new code should
-not use them.
-
-Use `WgpuCaptureFrame` for capture output.
+Raw platform capture output APIs are no longer part of the GPU-only public
+capture output surface.
 
 ## Primary runtime path
 
@@ -86,10 +85,10 @@ The primary runtime path is now:
 The `wgpu_texture_only_capture` example demonstrates this path and does not
 read captured pixels back to CPU memory.
 
-## Future removal warning
+## Removed legacy API warning
 
-Deprecated CPU-readable and raw platform output APIs are planned for removal in
-a future breaking-change release.
+Deprecated CPU-readable and raw platform output APIs have been removed on the
+GPU-only branch.
 
 New code should migrate to:
 

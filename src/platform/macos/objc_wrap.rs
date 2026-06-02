@@ -2631,7 +2631,7 @@ impl CVPixelBuffer {
         Self(r)
     }
 
-    pub fn get_iosurface_ptr(&self) -> Option<*const c_void> {
+    pub fn iosurface_ptr(&self) -> Option<*const c_void> {
         unsafe {
             let iosurface_ptr = CVPixelBufferGetIOSurface(self.0);
             if iosurface_ptr.is_null() {
@@ -2642,7 +2642,7 @@ impl CVPixelBuffer {
         }
     }
 
-    pub fn get_iosurface(&self) -> Option<IOSurface> {
+    pub fn iosurface(&self) -> Option<IOSurface> {
         unsafe {
             let iosurface_ptr = CVPixelBufferGetIOSurface(self.0);
             if iosurface_ptr.is_null() {
@@ -2793,7 +2793,7 @@ impl CGImage {
         unsafe { CGImageGetBytesPerRow(self.0) }
     }
 
-    pub fn get_bitmap_info(&self) -> CGBitmapInfo {
+    pub fn bitmap_info(&self) -> CGBitmapInfo {
         unsafe {
             let bitmap_info_raw = CGImageGetBitmapInfo(self.0);
             CGBitmapInfo {

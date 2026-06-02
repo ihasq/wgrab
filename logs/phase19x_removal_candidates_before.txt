@@ -1,0 +1,117 @@
+src/platform/macos/objc_wrap.rs:2634:    pub fn get_iosurface_ptr(&self) -> Option<*const c_void> {
+src/platform/macos/objc_wrap.rs:2645:    pub fn get_iosurface(&self) -> Option<IOSurface> {
+src/platform/macos/objc_wrap.rs:2796:    pub fn get_bitmap_info(&self) -> CGBitmapInfo {
+src/feature/iosurface/mod.rs:106:    fn get_iosurface(&self) -> Result<IoSurface, GetIoSurfaceError>;
+src/feature/iosurface/mod.rs:144:            Some(image_buffer) => match image_buffer.get_iosurface_ptr() {
+src/feature/iosurface/mod.rs:157:    fn get_iosurface(&self) -> Result<IoSurface, GetIoSurfaceError> {
+src/feature/bitmap/mod.rs:62:    fn make_new_bitmap(self: &Arc<Self>, resolution: (usize, usize)) -> Option<PooledBitmap<T>> {
+src/feature/bitmap/mod.rs:63:        Some(PooledBitmap {
+src/feature/bitmap/mod.rs:64:            data: PooledBitmapData {
+src/feature/bitmap/mod.rs:73:    pub fn try_get_bitmap(self: &Arc<Self>, resolution: (usize, usize)) -> Option<PooledBitmap<T>> {
+src/feature/bitmap/mod.rs:75:        self.try_get_bitmap_internal(resolution, &mut free_bitmaps_and_count)
+src/feature/bitmap/mod.rs:78:    pub fn get_bitmap(self: &Arc<Self>, resolution: (usize, usize)) -> PooledBitmap<T> {
+src/feature/bitmap/mod.rs:81:            if let Some(pooled_bitmap) = self.try_get_bitmap_internal(resolution, &mut free_bitmaps_and_count) {
+src/feature/bitmap/mod.rs:89:    fn try_get_bitmap_internal(self: &Arc<Self>, resolution: (usize, usize), free_bitmaps_and_count: &mut (Vec<Box<[T]>>, usize)) -> Option<PooledBitmap<T>> {
+src/feature/bitmap/mod.rs:93:                    PooledBitmap {
+src/feature/bitmap/mod.rs:94:                        data: PooledBitmapData {
+src/feature/bitmap/mod.rs:119:struct PooledBitmapData<T: Sized + Zeroable + Copy> {
+src/feature/bitmap/mod.rs:124:impl<T: Sized + Zeroable + Copy> Drop for PooledBitmapData<T> {
+src/feature/bitmap/mod.rs:142:pub struct PooledBitmap<T: Sized + Copy + Zeroable> {
+src/feature/bitmap/mod.rs:143:    data: PooledBitmapData<T>,
+src/feature/bitmap/mod.rs:148:impl<T: Sized + Zeroable + Copy> AsRef<[T]> for PooledBitmap<T> {
+src/feature/bitmap/mod.rs:154:impl<T: Sized + Zeroable + Copy> AsMut<[T]> for PooledBitmap<T> {
+src/feature/bitmap/mod.rs:165:pub trait BitmapDataBgra8x4: Sized + AsRef<[[u8; 4]]> + AsMut<[[u8; 4]]> {}
+src/feature/bitmap/mod.rs:166:impl<T: Sized + AsRef<[[u8; 4]]> + AsMut<[[u8; 4]]>> BitmapDataBgra8x4 for T {}
+src/feature/bitmap/mod.rs:173:pub struct FrameBitmapBgraUnorm8x4<Data: BitmapDataBgra8x4> {
+src/feature/bitmap/mod.rs:184:pub trait BitmapDataArgbUnormPacked2101010: Sized + AsRef<[u32]> {}
+src/feature/bitmap/mod.rs:185:impl<T: Sized + AsRef<[u32]> + AsMut<[u32]>> BitmapDataArgbUnormPacked2101010 for T {}
+src/feature/bitmap/mod.rs:192:pub struct FrameBitmapArgbUnormPacked2101010<Data: BitmapDataArgbUnormPacked2101010> {
+src/feature/bitmap/mod.rs:203:pub trait BitmapDataRgbaF16x4: Sized + AsRef<[[f16; 4]]> {}
+src/feature/bitmap/mod.rs:204:impl<T: Sized + AsRef<[[f16; 4]]> + AsMut<[[f16; 4]]>> BitmapDataRgbaF16x4 for T {}
+src/feature/bitmap/mod.rs:211:pub struct FrameBitmapRgbaF16x4<Data: BitmapDataRgbaF16x4> {
+src/feature/bitmap/mod.rs:230:pub trait BitmapDataLuma: Sized + AsRef<[u8]> {}
+src/feature/bitmap/mod.rs:231:impl<T: Sized + AsRef<[u8]> + AsMut<[u8]>> BitmapDataLuma for T {}
+src/feature/bitmap/mod.rs:238:pub trait BitmapDataChroma: Sized + AsRef<[[u8; 2]]> {}
+src/feature/bitmap/mod.rs:239:impl<T: Sized + AsRef<[[u8; 2]]> + AsMut<[[u8; 2]]>> BitmapDataChroma for T {}
+src/feature/bitmap/mod.rs:250:pub struct FrameBitmapYCbCr<LumaData: BitmapDataLuma, ChromaData: BitmapDataChroma> {
+src/feature/bitmap/mod.rs:265:pub enum FrameBitmap<DataBgra: BitmapDataBgra8x4, DataArgbPacked: BitmapDataArgbUnormPacked2101010, DataRgbaF16: BitmapDataRgbaF16x4, DataLuma: BitmapDataLuma, DataChroma: BitmapDataChroma> {
+src/feature/bitmap/mod.rs:266:    BgraUnorm8x4(FrameBitmapBgraUnorm8x4<DataBgra>),
+src/feature/bitmap/mod.rs:267:    ArgbUnormPacked2101010(FrameBitmapArgbUnormPacked2101010<DataArgbPacked>),
+src/feature/bitmap/mod.rs:268:    RgbaF16x4(FrameBitmapRgbaF16x4<DataRgbaF16>),
+src/feature/bitmap/mod.rs:269:    YCbCr(FrameBitmapYCbCr<DataLuma, DataChroma>),
+src/feature/bitmap/mod.rs:277:pub type BoxedSliceFrameBitmap = FrameBitmap<
+src/feature/bitmap/mod.rs:295:pub type PooledFrameBitmap = FrameBitmap<
+src/feature/bitmap/mod.rs:297:    PooledBitmap<[u8; 4]>,
+src/feature/bitmap/mod.rs:299:    PooledBitmap<u32>,
+src/feature/bitmap/mod.rs:301:    PooledBitmap<[f16; 4]>,
+src/feature/bitmap/mod.rs:303:    PooledBitmap<u8>,
+src/feature/bitmap/mod.rs:305:    PooledBitmap<[u8; 2]>,
+src/feature/bitmap/mod.rs:316:pub struct FrameBitmapPool {
+src/feature/bitmap/mod.rs:324:impl FrameBitmapPool {
+src/feature/bitmap/mod.rs:385:pub trait VideoFrameBitmap {
+src/feature/bitmap/mod.rs:392:    fn get_bitmap(&self) -> Result<BoxedSliceFrameBitmap, VideoFrameBitmapError>;
+src/feature/bitmap/mod.rs:400:    fn try_get_pooled_bitmap(&self, bitmap_pool: &FrameBitmapPool) -> Result<Option<PooledFrameBitmap>, VideoFrameBitmapError>;
+src/feature/bitmap/mod.rs:407:    fn get_pooled_bitmap(&self, bitmap_pool: &FrameBitmapPool) -> Result<PooledFrameBitmap, VideoFrameBitmapError>;
+src/feature/bitmap/mod.rs:412:pub enum VideoFrameBitmapError {
+src/feature/bitmap/mod.rs:416:impl Display for VideoFrameBitmapError {
+src/feature/bitmap/mod.rs:419:            Self::Other(error) => f.write_fmt(format_args!("VideoFrameBitmapError::Other(\"{}\")", error)),
+src/feature/bitmap/mod.rs:424:impl Error for VideoFrameBitmapError {
+src/feature/bitmap/mod.rs:454:trait VideoFrameBitmapInternal {
+src/feature/bitmap/mod.rs:455:    fn get_bitmap_internal<T>(&self, output_mapping: &impl Fn(VideoFrameDataCopyPtrs) -> Result<T, VideoFrameBitmapError>) -> Result<T, VideoFrameBitmapError>; 
+src/feature/bitmap/mod.rs:458:impl VideoFrameBitmapInternal for VideoFrame {
+src/feature/bitmap/mod.rs:459:    fn get_bitmap_internal<T>(&self, output_mapping: &impl Fn(VideoFrameDataCopyPtrs) -> Result<T, VideoFrameBitmapError>) -> Result<T, VideoFrameBitmapError> {
+src/feature/bitmap/mod.rs:463:            match self.get_dx11_surface() {
+src/feature/bitmap/mod.rs:464:                Err(WindowsDx11VideoFrameError::Other(x)) => Err(VideoFrameBitmapError::Other(x)),
+src/feature/bitmap/mod.rs:469:                        _ => return Err(VideoFrameBitmapError::Other("Unknown or unsupported pixel format on DXGISurface".to_string())),
+src/feature/bitmap/mod.rs:474:                            .map_err(|_| VideoFrameBitmapError::Other("Couldn't get description of frame surface".to_string()))?;
+src/feature/bitmap/mod.rs:488:                        staging_tex_result.map_err(|error| VideoFrameBitmapError::Other(format!("Failed to create texture: {}", error.to_string())))?;
+src/feature/bitmap/mod.rs:490:                            .map_err(|_| VideoFrameBitmapError::Other("Couldn't create surface interface access".to_string()))?;
+src/feature/bitmap/mod.rs:492:                            .map_err(|_| VideoFrameBitmapError::Other("Couldn't create surface texture from surface IDirect3DDxgiInterfaceAccess".to_string()))?;
+src/feature/bitmap/mod.rs:494:                            .map_err(|_| VideoFrameBitmapError::Other("Couldn't get immediate d3d11 context".to_string()))?;
+src/feature/bitmap/mod.rs:499:                        map_result.map_err(|_| VideoFrameBitmapError::Other("Couldn't map staging texture".to_string()))?;
+src/feature/bitmap/mod.rs:534:                                Err(VideoFrameBitmapError::Other("Unknown or unsupported pixel format on DXGISurface".to_string()))
+src/feature/bitmap/mod.rs:545:                    match sc_frame.sample_buffer.get_image_buffer().map(|image_buffer| image_buffer.get_iosurface()).flatten() {
+src/feature/bitmap/mod.rs:547:                        None => return Err(VideoFrameBitmapError::Other("Failed to get iosurface".to_string())),
+src/feature/bitmap/mod.rs:561:                        let base_address = lock_gaurd.get_base_address().ok_or(VideoFrameBitmapError::Other("Failed to get base address of iosurface".into()))?;
+src/feature/bitmap/mod.rs:578:                        let luma_base_address = lock_gaurd.get_base_address_of_plane(0).ok_or(VideoFrameBitmapError::Other("Failed to get base address of iosurface".into()))?;
+src/feature/bitmap/mod.rs:590:                        let chroma_base_address = lock_gaurd.get_base_address_of_plane(1).ok_or(VideoFrameBitmapError::Other("Failed to get base address of iosurface".into()))?;
+src/feature/bitmap/mod.rs:605:                    _ => Err(VideoFrameBitmapError::Other("Unknown pixel format on iosurface".to_string()))
+src/feature/bitmap/mod.rs:608:                Err(VideoFrameBitmapError::Other("Failed to lock iosurface".to_string()))
+src/feature/bitmap/mod.rs:624:fn copy_pooled_plane<T: Sized + Copy + Pod + Zeroable>(plane_ptr: VideoFramePlanePtr, pool: &Arc<BitmapPool<T>>) -> PooledBitmap<T> {
+src/feature/bitmap/mod.rs:625:    let mut bitmap = pool.get_bitmap((plane_ptr.width, plane_ptr.height));
+src/feature/bitmap/mod.rs:634:fn try_copy_pooled_plane<T: Sized + Copy + Pod + Zeroable>(plane_ptr: VideoFramePlanePtr, pool: &Arc<BitmapPool<T>>) -> Option<PooledBitmap<T>> {
+src/feature/bitmap/mod.rs:635:    let mut bitmap = pool.try_get_bitmap((plane_ptr.width, plane_ptr.height))?;
+src/feature/bitmap/mod.rs:644:impl VideoFrameBitmap for VideoFrame {
+src/feature/bitmap/mod.rs:645:    fn get_bitmap(&self) -> Result<BoxedSliceFrameBitmap, VideoFrameBitmapError> {
+src/feature/bitmap/mod.rs:646:        self.get_bitmap_internal::<BoxedSliceFrameBitmap>(&|copy_ptrs| {
+src/feature/bitmap/mod.rs:649:                    Ok(BoxedSliceFrameBitmap::BgraUnorm8x4(FrameBitmapBgraUnorm8x4 {
+src/feature/bitmap/mod.rs:656:                    Ok(BoxedSliceFrameBitmap::ArgbUnormPacked2101010(FrameBitmapArgbUnormPacked2101010 {
+src/feature/bitmap/mod.rs:663:                    Ok(BoxedSliceFrameBitmap::YCbCr(FrameBitmapYCbCr {
+src/feature/bitmap/mod.rs:674:                    Ok(BoxedSliceFrameBitmap::YCbCr(FrameBitmapYCbCr {
+src/feature/bitmap/mod.rs:685:                    Ok(BoxedSliceFrameBitmap::RgbaF16x4(FrameBitmapRgbaF16x4 {
+src/feature/bitmap/mod.rs:695:    fn get_pooled_bitmap(&self, bitmap_pool: &FrameBitmapPool) -> Result<PooledFrameBitmap, VideoFrameBitmapError> {
+src/feature/bitmap/mod.rs:696:        self.get_bitmap_internal::<PooledFrameBitmap>(&|copy_ptrs| {
+src/feature/bitmap/mod.rs:699:                    Ok(PooledFrameBitmap::BgraUnorm8x4(FrameBitmapBgraUnorm8x4 {
+src/feature/bitmap/mod.rs:706:                    Ok(PooledFrameBitmap::ArgbUnormPacked2101010(FrameBitmapArgbUnormPacked2101010 {
+src/feature/bitmap/mod.rs:713:                    Ok(PooledFrameBitmap::YCbCr(FrameBitmapYCbCr {
+src/feature/bitmap/mod.rs:724:                    Ok(PooledFrameBitmap::YCbCr(FrameBitmapYCbCr {
+src/feature/bitmap/mod.rs:735:                    Ok(PooledFrameBitmap::RgbaF16x4(FrameBitmapRgbaF16x4 {
+src/feature/bitmap/mod.rs:745:    fn try_get_pooled_bitmap(&self, bitmap_pool: &FrameBitmapPool) -> Result<Option<PooledFrameBitmap>, VideoFrameBitmapError> {
+src/feature/bitmap/mod.rs:746:        self.get_bitmap_internal::<Option<PooledFrameBitmap>>(&|copy_ptrs| {
+src/feature/bitmap/mod.rs:750:                        Ok(Some(PooledFrameBitmap::BgraUnorm8x4(FrameBitmapBgraUnorm8x4 {
+src/feature/bitmap/mod.rs:761:                        Ok(Some(PooledFrameBitmap::ArgbUnormPacked2101010(FrameBitmapArgbUnormPacked2101010 {
+src/feature/bitmap/mod.rs:772:                        Ok(Some(PooledFrameBitmap::YCbCr(FrameBitmapYCbCr {
+src/feature/bitmap/mod.rs:788:                        Ok(Some(PooledFrameBitmap::YCbCr(FrameBitmapYCbCr {
+src/feature/bitmap/mod.rs:803:                        Ok(Some(PooledFrameBitmap::RgbaF16x4(FrameBitmapRgbaF16x4 {
+src/feature/dxgi/mod.rs:49:    fn get_dxgi_surface(&self) -> Result<(windows::Win32::Graphics::Dxgi::IDXGISurface, DirectXPixelFormat), WindowsDxgiVideoFrameError>; 
+src/feature/dxgi/mod.rs:67:    fn get_dxgi_surface(&self) -> Result<(windows::Win32::Graphics::Dxgi::IDXGISurface, DirectXPixelFormat), WindowsDxgiVideoFrameError> {
+src/feature/diagnostic/mod.rs:64:fn get_iosurface_info(iosurface: &IOSurface) -> FrameIOSurfaceInfo {
+src/feature/diagnostic/mod.rs:139:                        let iosurface_info = if let Some(iosurface) = sc_stream_frame.sample_buffer.get_image_buffer().map(|image_buffer| image_buffer.get_iosurface()).flatten() {
+src/feature/diagnostic/mod.rs:140:                            Some(get_iosurface_info(&iosurface))
+src/feature/dx11/mod.rs:50:    fn get_dx11_surface(&self) -> Result<(IDirect3DSurface, DirectXPixelFormat), WindowsDx11VideoFrameError>;
+src/feature/dx11/mod.rs:55:    fn get_dx11_texture(&self) -> Result<(ID3D11Texture2D, DirectXPixelFormat), WindowsDx11VideoFrameError>;
+src/feature/dx11/mod.rs:78:    fn get_dx11_surface(&self) -> Result<(IDirect3DSurface, DirectXPixelFormat), WindowsDx11VideoFrameError> {
+src/feature/dx11/mod.rs:82:    fn get_dx11_texture(&self) -> Result<(ID3D11Texture2D, DirectXPixelFormat), WindowsDx11VideoFrameError> {
+src/feature/metal/mod.rs:84:    fn get_metal_texture(&self, plane: MetalVideoFramePlaneTexture) -> Result<metal::Texture, MacosVideoFrameError>;
+src/feature/metal/mod.rs:102:                    match image_buffer.get_iosurface() {
+src/feature/metal/mod.rs:177:    fn get_metal_texture(&self, plane: MetalVideoFramePlaneTexture) -> Result<metal::Texture, MacosVideoFrameError> {

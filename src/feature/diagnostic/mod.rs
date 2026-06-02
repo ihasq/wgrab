@@ -61,7 +61,7 @@ pub trait FrameDiagnosticExt {
 }
 
 #[cfg(target_os = "macos")]
-fn get_iosurface_info(iosurface: &IOSurface) -> FrameIOSurfaceInfo {
+fn iosurface_info(iosurface: &IOSurface) -> FrameIOSurfaceInfo {
     let pixel_format = format!("{:?}", iosurface.get_pixel_format());
     let width = iosurface.get_width();
     let height = iosurface.get_height();
@@ -136,8 +136,8 @@ impl FrameDiagnosticExt for crate::prelude::VideoFrame {
                             let scale_factor_nsnumber = NSNumber::from_id_unretained(scale_factor_nsnumber_raw as _);
                             info_dictionary.push((NSString::from_ref_unretained(SCStreamFrameInfoScaleFactor).as_string(), format!("{:?}", scale_factor_nsnumber.as_f64())));
                         }
-                        let iosurface_info = if let Some(iosurface) = sc_stream_frame.sample_buffer.get_image_buffer().map(|image_buffer| image_buffer.get_iosurface()).flatten() {
-                            Some(get_iosurface_info(&iosurface))
+                        let iosurface_info = if let Some(iosurface) = sc_stream_frame.sample_buffer.get_image_buffer().map(|image_buffer| image_buffer.iosurface()).flatten() {
+                            Some(iosurface_info(&iosurface))
                         } else {
                             None
                         };

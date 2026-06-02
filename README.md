@@ -11,11 +11,11 @@ support.
 
 ## GPU-only direction
 
-wgrab is moving toward a GPU-only capture API. New code should prefer
-`WgpuCaptureFrame` and `wgpu::Texture` output instead of CPU-readable bitmap or
-raw platform output APIs.
+wgrab now treats `WgpuCaptureFrame` as the primary capture output.
 
-Legacy bitmap and raw platform APIs are retained temporarily for migration.
+CPU-readable bitmap APIs and raw platform capture output APIs have been removed
+from the GPU-only branch. Use
+`WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame` for new code.
 
 [![Crates.io Version](https://img.shields.io/crates/v/crabgrab)](https://crates.io/crates/crabgrab)
 [![docs.rs](https://img.shields.io/docsrs/crabgrab)](https://docs.rs/crabgrab/)

@@ -1,5 +1,3 @@
-#![allow(deprecated)]
-
 use std::sync::Arc;
 use std::{error::Error, fmt::Display};
 
@@ -298,7 +296,7 @@ fn objc2_iosurface_ref(io_surface: &IoSurface) -> &objc2_io_surface::IOSurfaceRe
     // SAFETY:
     // `IoSurface` stores a valid IOSurfaceRef and holds an IOSurface use-count
     // for the duration of this borrow. This does not transfer ownership.
-    unsafe { &*(io_surface.get_raw() as *const objc2_io_surface::IOSurfaceRef) }
+    unsafe { &*(io_surface.as_ptr() as *const objc2_io_surface::IOSurfaceRef) }
 }
 
 #[cfg(target_os = "macos")]

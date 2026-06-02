@@ -1,0 +1,836 @@
+src/capturable_content.rs:105:    pub const NORMAL_WINDOWS: Self = CapturableContentFilter {
+src/capturable_content.rs:115:    pub const EVERYTHING_NORMAL: Self = CapturableContentFilter {
+src/capturable_content.rs:126:pub struct CapturableContent {
+src/capturable_content.rs:134:pub struct CapturableWindowIterator<'content> {
+src/capturable_content.rs:161:pub struct CapturableDisplayIterator<'content> {
+src/capturable_content.rs:195:    pub async fn new(filter: CapturableContentFilter) -> Result<Self, CapturableContentError> {
+src/capturable_content.rs:202:    pub fn windows<'a>(&'a self) -> CapturableWindowIterator<'a> {
+src/capturable_content.rs:207:    pub fn displays<'a>(&'a self) -> CapturableDisplayIterator<'a> {
+src/capturable_content.rs:213:pub(crate) enum Capturable {
+src/capturable_content.rs:220:pub struct CapturableWindow {
+src/capturable_content.rs:221:    pub(crate) impl_capturable_window: ImplCapturableWindow
+src/capturable_content.rs:229:    pub fn title(&self) -> String {
+src/capturable_content.rs:234:    pub fn rect(&self) -> Rect {
+src/capturable_content.rs:239:    pub fn application(&self) -> CapturableApplication {
+src/capturable_content.rs:246:    pub fn is_visible(&self) -> bool {
+src/capturable_content.rs:253:pub struct CapturableDisplay {
+src/capturable_content.rs:254:    pub(crate) impl_capturable_display: ImplCapturableDisplay
+src/capturable_content.rs:261:    pub fn rect(&self) -> Rect {
+src/capturable_content.rs:270:pub struct CapturableApplication {
+src/capturable_content.rs:278:    pub fn identifier(&self) -> String {
+src/capturable_content.rs:283:    pub fn name(&self) -> String {
+src/capturable_content.rs:288:    pub fn pid(&self) -> i32 {
+src/capturable_content.rs:35:pub struct CapturableWindowFilter {
+src/capturable_content.rs:37:    pub desktop_windows: bool,
+src/capturable_content.rs:39:    pub onscreen_only: bool,
+src/capturable_content.rs:50:pub struct CapturableContentFilter {
+src/capturable_content.rs:52:    pub(crate) windows: Option<CapturableWindowFilter>,
+src/capturable_content.rs:54:    pub(crate) displays: bool,
+src/capturable_content.rs:56:    pub(crate) impl_capturable_content_filter: ImplCapturableContentFilter,
+src/capturable_content.rs:61:    pub fn new(displays: bool, windows: Option<CapturableWindowFilter>) -> Self {
+src/capturable_content.rs:70:    pub fn is_empty(&self) -> bool {
+src/capturable_content.rs:78:    pub const DISPLAYS: Self = CapturableContentFilter {
+src/capturable_content.rs:7:pub enum CapturableContentError {
+src/capturable_content.rs:85:    pub const ALL_WINDOWS: Self = CapturableContentFilter {
+src/capturable_content.rs:95:    pub const EVERYTHING: Self = CapturableContentFilter {
+src/capture_stream.rs:11:pub enum StreamEvent {
+src/capture_stream.rs:127:pub struct AudioCaptureConfig {
+src/capture_stream.rs:128:    pub(crate) sample_rate: AudioSampleRate, 
+src/capture_stream.rs:129:    pub(crate) channel_count: AudioChannelCount,
+src/capture_stream.rs:130:    pub(crate) impl_capture_audio_config: ImplAudioCaptureConfig,
+src/capture_stream.rs:137:    pub fn new() -> Self {
+src/capture_stream.rs:149:pub enum CapturePixelFormat {
+src/capture_stream.rs:166:pub struct CaptureConfig {
+src/capture_stream.rs:167:    pub(crate) target: Capturable,
+src/capture_stream.rs:168:    pub(crate) output_size: Size,
+src/capture_stream.rs:169:    pub(crate) show_cursor: bool,
+src/capture_stream.rs:170:    pub(crate) pixel_format: CapturePixelFormat,
+src/capture_stream.rs:171:    pub(crate) capture_audio: Option<AudioCaptureConfig>,
+src/capture_stream.rs:172:    pub(crate) impl_capture_config: ImplCaptureConfig,
+src/capture_stream.rs:173:    pub(crate) buffer_count: usize,
+src/capture_stream.rs:178:pub enum CaptureConfigError {
+src/capture_stream.rs:214:    pub fn with_window(window: CapturableWindow, pixel_format: CapturePixelFormat) -> Result<CaptureConfig, CaptureConfigError> {
+src/capture_stream.rs:228:    pub fn with_display(display: CapturableDisplay, pixel_format: CapturePixelFormat) -> CaptureConfig {
+src/capture_stream.rs:244:    pub fn with_buffer_count(self, buffer_count: usize) -> Self {
+src/capture_stream.rs:24:pub enum StreamError {
+src/capture_stream.rs:252:    pub fn with_show_cursor(self, show_cursor: bool) -> Self {
+src/capture_stream.rs:260:    pub fn with_output_size(self, output_size: Size) -> Self {
+src/capture_stream.rs:269:pub struct CaptureStream {
+src/capture_stream.rs:270:    pub(crate) impl_capture_stream: ImplCaptureStream,
+src/capture_stream.rs:277:pub struct CaptureAccessToken {
+src/capture_stream.rs:278:    pub(crate) impl_capture_access_token: ImplCaptureAccessToken
+src/capture_stream.rs:285:    pub fn allows_borderless(&self) -> bool {
+src/capture_stream.rs:292:    pub fn test_access(borderless: bool) -> Option<CaptureAccessToken> {
+src/capture_stream.rs:301:    pub async fn request_access(borderless: bool) -> Option<CaptureAccessToken> {
+src/capture_stream.rs:310:    pub fn supported_pixel_formats() -> &'static [CapturePixelFormat] {
+src/capture_stream.rs:315:    pub fn new(token: CaptureAccessToken, config: CaptureConfig, callback: impl FnMut(Result<StreamEvent, StreamError>) + Send + 'static) -> Result<Self, StreamCreateError> {
+src/capture_stream.rs:323:    pub fn stop(&mut self) -> Result<(), StreamStopError> {
+src/capture_stream.rs:52:pub enum StreamCreateError {
+src/capture_stream.rs:91:pub enum StreamStopError {
+src/feature/bitmap/mod.rs:111:    pub fn free_pooled(&self) {
+src/feature/bitmap/mod.rs:120:    pub data: Option<Box<[T]>>,
+src/feature/bitmap/mod.rs:121:    pub pool: Arc<BitmapPool<T>>,
+src/feature/bitmap/mod.rs:142:pub struct PooledBitmap<T: Sized + Copy + Zeroable> {
+src/feature/bitmap/mod.rs:144:    pub width: usize,
+src/feature/bitmap/mod.rs:145:    pub height: usize,
+src/feature/bitmap/mod.rs:165:pub trait BitmapDataBgra8x4: Sized + AsRef<[[u8; 4]]> + AsMut<[[u8; 4]]> {}
+src/feature/bitmap/mod.rs:173:pub struct FrameBitmapBgraUnorm8x4<Data: BitmapDataBgra8x4> {
+src/feature/bitmap/mod.rs:174:    pub data: Data,
+src/feature/bitmap/mod.rs:175:    pub width:  usize,
+src/feature/bitmap/mod.rs:176:    pub height: usize,
+src/feature/bitmap/mod.rs:184:pub trait BitmapDataArgbUnormPacked2101010: Sized + AsRef<[u32]> {}
+src/feature/bitmap/mod.rs:192:pub struct FrameBitmapArgbUnormPacked2101010<Data: BitmapDataArgbUnormPacked2101010> {
+src/feature/bitmap/mod.rs:193:    pub data: Data,
+src/feature/bitmap/mod.rs:194:    pub width:  usize,
+src/feature/bitmap/mod.rs:195:    pub height: usize,
+src/feature/bitmap/mod.rs:203:pub trait BitmapDataRgbaF16x4: Sized + AsRef<[[f16; 4]]> {}
+src/feature/bitmap/mod.rs:211:pub struct FrameBitmapRgbaF16x4<Data: BitmapDataRgbaF16x4> {
+src/feature/bitmap/mod.rs:212:    pub data: Data,
+src/feature/bitmap/mod.rs:213:    pub width:  usize,
+src/feature/bitmap/mod.rs:214:    pub height: usize,
+src/feature/bitmap/mod.rs:218:pub enum VideoRange {
+src/feature/bitmap/mod.rs:230:pub trait BitmapDataLuma: Sized + AsRef<[u8]> {}
+src/feature/bitmap/mod.rs:238:pub trait BitmapDataChroma: Sized + AsRef<[[u8; 2]]> {}
+src/feature/bitmap/mod.rs:250:pub struct FrameBitmapYCbCr<LumaData: BitmapDataLuma, ChromaData: BitmapDataChroma> {
+src/feature/bitmap/mod.rs:251:    pub luma_data: LumaData,
+src/feature/bitmap/mod.rs:252:    pub luma_width: usize,
+src/feature/bitmap/mod.rs:253:    pub luma_height: usize,
+src/feature/bitmap/mod.rs:254:    pub chroma_data: ChromaData,
+src/feature/bitmap/mod.rs:255:    pub chroma_width: usize,
+src/feature/bitmap/mod.rs:256:    pub chroma_height: usize,
+src/feature/bitmap/mod.rs:257:    pub range: VideoRange,
+src/feature/bitmap/mod.rs:265:pub enum FrameBitmap<DataBgra: BitmapDataBgra8x4, DataArgbPacked: BitmapDataArgbUnormPacked2101010, DataRgbaF16: BitmapDataRgbaF16x4, DataLuma: BitmapDataLuma, DataChroma: BitmapDataChroma> {
+src/feature/bitmap/mod.rs:277:pub type BoxedSliceFrameBitmap = FrameBitmap<
+src/feature/bitmap/mod.rs:295:pub type PooledFrameBitmap = FrameBitmap<
+src/feature/bitmap/mod.rs:316:pub struct FrameBitmapPool {
+src/feature/bitmap/mod.rs:326:    pub fn new_with_initial_capacity(capacity: usize, initial_resolution: (usize, usize), max: usize, format: CapturePixelFormat) -> Self {
+src/feature/bitmap/mod.rs:357:    pub fn new(max: usize) -> Self {
+src/feature/bitmap/mod.rs:368:    pub fn free_pooled(&self) {
+src/feature/bitmap/mod.rs:385:pub trait VideoFrameBitmap {
+src/feature/bitmap/mod.rs:412:pub enum VideoFrameBitmapError {
+src/feature/bitmap/mod.rs:48:    pub fn new(initial_count: usize, max: usize, initial_resolution: (usize, usize)) -> Arc<Self> {
+src/feature/bitmap/mod.rs:73:    pub fn try_get_bitmap(self: &Arc<Self>, resolution: (usize, usize)) -> Option<PooledBitmap<T>> {
+src/feature/bitmap/mod.rs:78:    pub fn get_bitmap(self: &Arc<Self>, resolution: (usize, usize)) -> PooledBitmap<T> {
+src/feature/content_picker/macos.rs:8:pub async fn pick_sharable_content(config: SharableContentPickerConfig) -> Result<Option<PickedSharableContent>, SharableContentPickerError> {
+src/feature/content_picker/mod.rs:16:pub struct SharableContentPickerConfig {
+src/feature/content_picker/mod.rs:18:    pub display: bool,
+src/feature/content_picker/mod.rs:20:    pub window: bool,
+src/feature/content_picker/mod.rs:22:    pub excluded_apps: Vec<CapturableApplication>,
+src/feature/content_picker/mod.rs:36:pub enum SharableContentPickerError {
+src/feature/content_picker/mod.rs:45:pub enum PickedSharableContent {
+src/feature/content_picker/mod.rs:4:pub use macos::pick_sharable_content;
+src/feature/content_picker/mod.rs:9:pub use windows::pick_sharable_content;
+src/feature/content_picker/windows.rs:7:pub async fn pick_sharable_content(config: SharableContentPickerConfig) -> Result<Option<PickedSharableContent>, SharableContentPickerError> {
+src/feature/diagnostic/mod.rs:11:pub struct FrameIOSurfaceComponentInfo {
+src/feature/diagnostic/mod.rs:185:pub struct StreamDiagnostic {
+src/feature/diagnostic/mod.rs:20:pub struct FrameIOSurfacePlaneInfo {
+src/feature/diagnostic/mod.rs:29:pub struct FrameIOSurfaceInfo {
+src/feature/diagnostic/mod.rs:39:pub struct FrameDx11SurfaceInfo {
+src/feature/diagnostic/mod.rs:47:pub struct FrameDiagnostic {
+src/feature/diagnostic/mod.rs:49:    pub iosurface_info: Option<FrameIOSurfaceInfo>,
+src/feature/diagnostic/mod.rs:51:    pub info_dictionary: Vec<(String, String)>,
+src/feature/diagnostic/mod.rs:53:    pub dx11_surface_info: FrameDx11SurfaceInfo,
+src/feature/diagnostic/mod.rs:55:    pub dx_feature_level: String,
+src/feature/diagnostic/mod.rs:59:pub trait FrameDiagnosticExt {
+src/feature/dx11/mod.rs:13:pub enum WindowsDx11VideoFrameError {
+src/feature/dx11/mod.rs:44:pub trait WindowsDx11VideoFrame {
+src/feature/dx11/mod.rs:58:pub(crate) fn windows_dx11_surface_for_video_frame(
+src/feature/dx11/mod.rs:66:pub(crate) fn windows_dx11_texture_for_video_frame(
+src/feature/dx11/mod.rs:92:pub trait WindowsDx11CaptureStream {
+src/feature/dxgi/mod.rs:100:pub trait WindowsDxgiCaptureStream {
+src/feature/dxgi/mod.rs:16:pub enum WindowsDxgiVideoFrameError {
+src/feature/dxgi/mod.rs:43:pub trait WindowsDxgiVideoFrame {
+src/feature/dxgi/mod.rs:52:pub(crate) fn windows_dxgi_surface_for_video_frame(
+src/feature/dxgi/mod.rs:73:pub enum WindowsDxgiCaptureStreamError {
+src/feature/iosurface/mod.rs:100:pub trait MacosIoSurfaceVideoFrameExt {
+src/feature/iosurface/mod.rs:111:pub enum GetIoSurfaceError {
+src/feature/iosurface/mod.rs:141:pub(crate) fn macos_frame_iosurface(frame: &VideoFrame) -> Result<IoSurface, GetIoSurfaceError> {
+src/feature/iosurface/mod.rs:26:pub struct IoSurface(IOSurfaceRef);
+src/feature/iosurface/mod.rs:34:    pub fn get_raw(&self) -> *const c_void {
+src/feature/iosurface/mod.rs:38:    pub(crate) fn get_pixel_format(&self) -> Option<CVPixelFormat> {
+src/feature/iosurface/mod.rs:42:    pub(crate) fn get_width(&self) -> usize {
+src/feature/iosurface/mod.rs:46:    pub(crate) fn get_height(&self) -> usize {
+src/feature/iosurface/mod.rs:50:    pub(crate) fn get_width_of_plane(&self, plane: usize) -> usize {
+src/feature/iosurface/mod.rs:54:    pub(crate) fn get_height_of_plane(&self, plane: usize) -> usize {
+src/feature/iosurface/mod.rs:58:    pub(crate) fn get_bytes_per_row(&self) -> usize {
+src/feature/iosurface/mod.rs:62:    pub(crate) fn get_bytes_per_row_of_plane(&self, plane: usize) -> usize {
+src/feature/iosurface/mod.rs:66:    pub(crate) fn get_plane_count(&self) -> usize {
+src/feature/iosurface/mod.rs:70:    pub(crate) fn from_ref_unretained(r: IOSurfaceRef) -> Self {
+src/feature/metal/mod.rs:187:pub trait MetalCaptureStreamExt {
+src/feature/metal/mod.rs:26:pub enum MetalVideoFramePlaneTexture {
+src/feature/metal/mod.rs:37:pub enum MacosVideoFrameError {
+src/feature/metal/mod.rs:78:pub trait MetalVideoFrameExt {
+src/feature/metal/mod.rs:94:pub(crate) fn macos_metal_texture_for_video_frame(
+src/feature/mod.rs:10:pub mod dxgi;
+src/feature/mod.rs:15:pub mod dx11;
+src/feature/mod.rs:20:pub mod iosurface;
+src/feature/mod.rs:24:pub mod bitmap;
+src/feature/mod.rs:28:pub mod wgpu;
+src/feature/mod.rs:32:pub mod screenshot;
+src/feature/mod.rs:37:pub mod diagnostic;
+src/feature/mod.rs:5:pub mod metal;
+src/feature/screenshot/mod.rs:4:pub use platform::take_screenshot;
+src/feature/screenshot/mod.rs:8:pub enum ScreenshotError {
+src/feature/screenshot/platform/macos.rs:12:pub async fn take_screenshot(token: CaptureAccessToken, config: CaptureConfig) -> Result<VideoFrame, ScreenshotError> {
+src/feature/screenshot/platform/mod.rs:4:pub use macos::take_screenshot;
+src/feature/screenshot/platform/mod.rs:9:pub use windows::take_screenshot;
+src/feature/screenshot/platform/windows.rs:8:pub async fn take_screenshot(token: CaptureAccessToken, config: CaptureConfig) -> Result<VideoFrame, ScreenshotError> {
+src/feature/wgpu/gpu_only.rs:109:pub trait WgpuVideoFrameGpuOnlyExt {
+src/feature/wgpu/gpu_only.rs:14:pub struct WgpuCaptureConfig {
+src/feature/wgpu/gpu_only.rs:28:pub struct WgpuCaptureStream {
+src/feature/wgpu/gpu_only.rs:42:pub struct WgpuCaptureFrame {
+src/feature/wgpu/gpu_only.rs:61:    pub fn texture(&self) -> &wgpu::Texture {
+src/feature/wgpu/gpu_only.rs:66:    pub fn size(&self) -> wgpu::Extent3d {
+src/feature/wgpu/gpu_only.rs:71:    pub fn format(&self) -> wgpu::TextureFormat {
+src/feature/wgpu/gpu_only.rs:76:    pub fn usage(&self) -> wgpu::TextureUsages {
+src/feature/wgpu/gpu_only.rs:81:    pub fn create_view(
+src/feature/wgpu/gpu_only.rs:93:    pub(crate) fn from_wgpu_texture(
+src/feature/wgpu/mod.rs:10:pub use gpu_only::{
+src/feature/wgpu/mod.rs:122:pub enum WgpuVideoFramePlaneTexture {
+src/feature/wgpu/mod.rs:134:pub enum WgpuVideoFrameError {
+src/feature/wgpu/mod.rs:444:pub trait WgpuVideoFrameExt {
+src/feature/wgpu/mod.rs:57:pub trait WgpuCaptureConfigExt: Sized {
+src/feature/wgpu/mod.rs:681:pub trait WgpuCaptureStreamExt {
+src/frame.rs:104:    pub fn origin_time(&self) -> Duration {
+src/frame.rs:111:    pub fn frame_id(&self) -> u64 {
+src/frame.rs:116:pub(crate) trait VideoCaptureFrame {
+src/frame.rs:127:pub struct VideoFrame {
+src/frame.rs:128:    pub(crate) impl_video_frame: ImplVideoFrame,
+src/frame.rs:138:    pub fn frame_id(&self) -> u64 {
+src/frame.rs:143:    pub fn capture_time(&self) -> Instant {
+src/frame.rs:148:    pub fn origin_time(&self) -> Duration {
+src/frame.rs:155:    pub fn size(&self) -> Size {
+src/frame.rs:160:    pub fn dpi(&self) -> f64 {
+src/frame.rs:165:    pub fn content_rect(&self) -> Rect {
+src/frame.rs:17:pub enum AudioChannelCount {
+src/frame.rs:23:pub enum AudioChannelData<'data> {
+src/frame.rs:30:pub struct AudioChannelDataSamples<'data, T> {
+src/frame.rs:31:    pub(crate) data: *const u8,
+src/frame.rs:32:    pub(crate) stride: usize,
+src/frame.rs:33:    pub(crate) length: usize,
+src/frame.rs:34:    pub(crate) phantom_lifetime: PhantomData<&'data T>,
+src/frame.rs:39:    pub fn get(&self, n: usize) -> T {
+src/frame.rs:45:    pub fn length(&self) -> usize {
+src/frame.rs:51:pub enum AudioBufferError {
+src/frame.rs:59:pub(crate) trait AudioCaptureFrame {
+src/frame.rs:69:pub struct AudioFrame {
+src/frame.rs:70:    pub(crate) impl_audio_frame: ImplAudioFrame,
+src/frame.rs:84:    pub fn sample_rate(&self) -> AudioSampleRate {
+src/frame.rs:89:    pub fn channel_count(&self) -> AudioChannelCount {
+src/frame.rs:8:pub enum AudioSampleRate {
+src/frame.rs:94:    pub fn audio_channel_buffer(&mut self, channel: usize) -> Result<AudioChannelData<'_>, AudioBufferError> {
+src/frame.rs:99:    pub fn duration(&self) -> Duration {
+src/lib.rs:100:pub mod prelude;
+src/lib.rs:86:pub mod platform;
+src/lib.rs:88:pub mod feature;
+src/lib.rs:91:pub mod util;
+src/lib.rs:93:pub mod frame;
+src/lib.rs:95:pub mod capture_stream;
+src/lib.rs:97:pub mod capturable_content;
+src/platform/macos/capturable_content.rs:114:pub struct MacosCapturableDisplay {
+src/platform/macos/capturable_content.rs:115:    pub(crate) display: SCDisplay
+src/platform/macos/capturable_content.rs:119:    pub fn from_impl(display: SCDisplay) -> Self {
+src/platform/macos/capturable_content.rs:11:pub struct MacosCapturableContent {
+src/platform/macos/capturable_content.rs:125:    pub fn rect(&self) -> Rect {
+src/platform/macos/capturable_content.rs:12:    pub windows: Vec<SCWindow>,
+src/platform/macos/capturable_content.rs:13:    pub displays: Vec<SCDisplay>,
+src/platform/macos/capturable_content.rs:161:pub struct MacosCapturableApplication {
+src/platform/macos/capturable_content.rs:162:    pub(crate) running_application: SCRunningApplication,
+src/platform/macos/capturable_content.rs:166:    pub fn identifier(&self) -> String {
+src/platform/macos/capturable_content.rs:170:    pub fn name(&self) -> String {
+src/platform/macos/capturable_content.rs:174:    pub fn pid(&self) -> i32 {
+src/platform/macos/capturable_content.rs:17:    pub async fn new(filter: CapturableContentFilter) -> Result<Self, CapturableContentError> {
+src/platform/macos/capturable_content.rs:181:pub enum MacosWindowLevel {
+src/platform/macos/capturable_content.rs:204:pub trait MacosCapturableWindowExt {
+src/platform/macos/capturable_content.rs:299:pub(crate) struct MacosCapturableContentFilter {
+src/platform/macos/capturable_content.rs:300:    pub window_level_range: (Option<MacosWindowLevel>, Option<MacosWindowLevel>),
+src/platform/macos/capturable_content.rs:301:    pub excluded_bundle_ids: Option<Arc<[String]>>,
+src/platform/macos/capturable_content.rs:302:    pub excluded_window_ids: Option<Arc<[u32]>>,
+src/platform/macos/capturable_content.rs:346:    pub const DEFAULT: Self = MacosCapturableContentFilter {
+src/platform/macos/capturable_content.rs:352:    pub const NORMAL_WINDOWS: Self = MacosCapturableContentFilter {
+src/platform/macos/capturable_content.rs:360:pub trait MacosCapturableContentFilterExt: Sized {
+src/platform/macos/capturable_content.rs:53:pub struct MacosCapturableWindow {
+src/platform/macos/capturable_content.rs:54:    pub(crate) window: SCWindow
+src/platform/macos/capturable_content.rs:58:    pub fn from_impl(window: SCWindow) -> Self {
+src/platform/macos/capturable_content.rs:64:    pub fn title(&self) -> String {
+src/platform/macos/capturable_content.rs:68:    pub fn rect(&self) -> Rect {
+src/platform/macos/capturable_content.rs:82:    pub fn application(&self) -> MacosCapturableApplication {
+src/platform/macos/capturable_content.rs:88:    pub fn is_visible(&self) -> bool {
+src/platform/macos/capture_stream.rs:10:pub type MacosPixelFormat = SCStreamPixelFormat;
+src/platform/macos/capture_stream.rs:138:pub trait MacosAudioCaptureConfigExt {
+src/platform/macos/capture_stream.rs:143:pub(crate) struct MacosAudioCaptureConfig {
+src/platform/macos/capture_stream.rs:148:    pub fn new() -> Self {
+src/platform/macos/capture_stream.rs:168:pub(crate) struct MacosCaptureAccessToken();
+src/platform/macos/capture_stream.rs:174:    pub(crate) fn allows_borderless(&self) -> bool {
+src/platform/macos/capture_stream.rs:180:    pub fn supported_pixel_formats() -> &'static [CapturePixelFormat] {
+src/platform/macos/capture_stream.rs:189:    pub fn check_access(_borderless: bool) -> Option<MacosCaptureAccessToken> {
+src/platform/macos/capture_stream.rs:197:    pub async fn request_access(_borderless: bool) -> Option<MacosCaptureAccessToken> {
+src/platform/macos/capture_stream.rs:205:    pub fn new(token: MacosCaptureAccessToken, capture_config: CaptureConfig, mut callback: Box<impl FnMut(Result<StreamEvent, StreamError>) + Send + 'static>) -> Result<Self, StreamCreateError> {
+src/platform/macos/capture_stream.rs:31:pub(crate) struct MacosCaptureStream {
+src/platform/macos/capture_stream.rs:36:    pub(crate) metal_device: metal::Device,
+src/platform/macos/capture_stream.rs:38:    pub(crate) wgpu_device: Option<Arc<dyn AsRef<wgpu::Device> + Send + Sync + 'static>>,
+src/platform/macos/capture_stream.rs:43:pub enum MacosCaptureResolutionType {
+src/platform/macos/capture_stream.rs:484:    pub(crate) fn stop(&mut self) -> Result<(), StreamStopError> {
+src/platform/macos/capture_stream.rs:52:pub trait MacosCaptureConfigExt {
+src/platform/macos/capture_stream.rs:65:pub(crate) struct MacosCaptureConfig {
+src/platform/macos/capture_stream.rs:66:    pub(crate) scale_to_fit: bool,
+src/platform/macos/capture_stream.rs:67:    pub(crate) maximum_fps: Option<f32>,
+src/platform/macos/capture_stream.rs:68:    pub(crate) resolution_type: MacosCaptureResolutionType,
+src/platform/macos/capture_stream.rs:70:    pub(crate) metal_device: Option<metal::Device>,
+src/platform/macos/capture_stream.rs:72:    pub(crate) wgpu_device: Option<Arc<dyn AsRef<wgpu::Device> + Send + Sync + 'static>>,
+src/platform/macos/capture_stream.rs:82:    pub fn new() -> Self {
+src/platform/macos/frame.rs:10:    pub(crate) sample_buffer: CMSampleBuffer,
+src/platform/macos/frame.rs:11:    pub(crate) capture_time: Instant,
+src/platform/macos/frame.rs:12:    pub(crate) dictionary: RefCell<Option<CFDictionary>>,
+src/platform/macos/frame.rs:13:    pub(crate) frame_id: u64,
+src/platform/macos/frame.rs:143:pub struct MacosAudioFrame {
+src/platform/macos/frame.rs:144:    pub(crate) sample_buffer: CMSampleBuffer,
+src/platform/macos/frame.rs:145:    pub(crate) audio_format_description: AudioStreamBasicDescription,
+src/platform/macos/frame.rs:146:    pub(crate) pcm_audio_buffer: Option<AVAudioPCMBuffer>,
+src/platform/macos/frame.rs:147:    pub(crate) block_buffer: Option<CMBlockBuffer>,
+src/platform/macos/frame.rs:148:    pub(crate) buffer_list: Option<AudioBufferList>,
+src/platform/macos/frame.rs:149:    pub(crate) capture_time: Instant,
+src/platform/macos/frame.rs:150:    pub(crate) frame_id: u64,
+src/platform/macos/frame.rs:15:    pub(crate) metal_device: Option<metal::Device>,
+src/platform/macos/frame.rs:17:    pub(crate) wgpu_device: Option<Arc<dyn AsRef<wgpu::Device> + Send + Sync + 'static>>,
+src/platform/macos/frame.rs:20:pub(crate) struct MacosCGDisplayStreamVideoFrame {
+src/platform/macos/frame.rs:21:    pub(crate) io_surface: IOSurface,
+src/platform/macos/frame.rs:22:    pub(crate) duration: Duration,
+src/platform/macos/frame.rs:23:    pub(crate) capture_time: Duration,
+src/platform/macos/frame.rs:24:    pub(crate) capture_timestamp: Instant,
+src/platform/macos/frame.rs:25:    pub(crate) frame_id: u64,
+src/platform/macos/frame.rs:26:    pub(crate) source_rect: Rect,
+src/platform/macos/frame.rs:27:    pub(crate) dest_size: Size,
+src/platform/macos/frame.rs:29:    pub(crate) metal_device: metal::Device,
+src/platform/macos/frame.rs:31:    pub(crate) wgpu_device: Option<Arc<dyn AsRef<wgpu::Device> + Send + Sync + 'static>>,
+src/platform/macos/frame.rs:35:    pub(crate) fn get_info_dict(&self) -> Ref<'_, CFDictionary> {
+src/platform/macos/frame.rs:45:pub(crate) enum MacosVideoFrame {
+src/platform/macos/frame.rs:9:pub(crate) struct MacosSCStreamVideoFrame {
+src/platform/macos/mod.rs:10:pub(crate) use capture_stream::MacosCaptureConfig as ImplCaptureConfig;
+src/platform/macos/mod.rs:11:pub(crate) use capture_stream::MacosPixelFormat as ImplPixelFormat;
+src/platform/macos/mod.rs:12:pub(crate) use capture_stream::MacosCaptureAccessToken as ImplCaptureAccessToken;
+src/platform/macos/mod.rs:14:pub(crate) use frame::MacosAudioFrame as ImplAudioFrame;
+src/platform/macos/mod.rs:15:pub(crate) use frame::MacosVideoFrame as ImplVideoFrame;
+src/platform/macos/mod.rs:17:pub(crate) use capturable_content::MacosCapturableContent as ImplCapturableContent;
+src/platform/macos/mod.rs:18:pub(crate) use capturable_content::MacosCapturableWindow as ImplCapturableWindow;
+src/platform/macos/mod.rs:19:pub(crate) use capturable_content::MacosCapturableDisplay as ImplCapturableDisplay;
+src/platform/macos/mod.rs:20:pub(crate) use capturable_content::MacosCapturableContentFilter as ImplCapturableContentFilter;
+src/platform/macos/mod.rs:21:pub(crate) use capturable_content::MacosCapturableApplication as ImplCapturableApplication;
+src/platform/macos/mod.rs:24:pub use capture_stream::MacosAudioCaptureConfigExt;
+src/platform/macos/mod.rs:26:pub use capture_stream::MacosCaptureConfigExt;
+src/platform/macos/mod.rs:28:pub use capture_stream::MacosCaptureResolutionType;
+src/platform/macos/mod.rs:31:pub use capturable_content::MacosCapturableWindowExt;
+src/platform/macos/mod.rs:33:pub use capturable_content::MacosCapturableContentFilterExt;
+src/platform/macos/mod.rs:35:pub use capturable_content::MacosWindowLevel;
+src/platform/macos/mod.rs:3:pub(crate) mod capture_stream;
+src/platform/macos/mod.rs:4:pub(crate) mod frame;
+src/platform/macos/mod.rs:5:pub(crate) mod capturable_content;
+src/platform/macos/mod.rs:6:pub(crate) mod objc_wrap;
+src/platform/macos/mod.rs:8:pub(crate) use capture_stream::MacosCaptureStream as ImplCaptureStream;
+src/platform/macos/mod.rs:9:pub(crate) use capture_stream::MacosAudioCaptureConfig as ImplAudioCaptureConfig;
+src/platform/macos/objc_wrap.rs:1016:pub(crate) struct CMTime {
+src/platform/macos/objc_wrap.rs:1032:pub(crate) const K_CMTIME_FLAGS_VALID                   : u32 = 1 << 0;
+src/platform/macos/objc_wrap.rs:1033:pub(crate) const K_CMTIME_FLAGS_HAS_BEEN_ROUNDED        : u32 = 1 << 0;
+src/platform/macos/objc_wrap.rs:1034:pub(crate) const K_CMTIME_FLAGS_POSITIVE_INFINITY       : u32 = 1 << 0;
+src/platform/macos/objc_wrap.rs:1035:pub(crate) const K_CMTIME_FLAGS_NEGATIVE_INFINITY       : u32 = 1 << 0;
+src/platform/macos/objc_wrap.rs:1036:pub(crate) const K_CMTIME_FLAGS_INDEFINITE              : u32 = 1 << 0;
+src/platform/macos/objc_wrap.rs:1037:pub(crate) const K_CMTIME_FLAGS_IMPLIED_VALUE_FLAG_MASK : u32 = 
+src/platform/macos/objc_wrap.rs:1053:pub(crate) enum CMTimeRoundingMethod {
+src/platform/macos/objc_wrap.rs:1063:    pub(crate) fn to_u32(&self) -> u32 {
+src/platform/macos/objc_wrap.rs:1136:    pub(crate) fn new_with_seconds(seconds: f64, timescale: i32) -> Self {
+src/platform/macos/objc_wrap.rs:1140:    pub(crate) const fn is_valid(&self) -> bool {
+src/platform/macos/objc_wrap.rs:1144:    pub(crate) const fn is_invalid(&self) -> bool {
+src/platform/macos/objc_wrap.rs:1148:    pub(crate) const fn is_indefinite(&self) -> bool {
+src/platform/macos/objc_wrap.rs:1153:    pub(crate) const fn is_positive_infinity(&self) -> bool {
+src/platform/macos/objc_wrap.rs:1158:    pub(crate) const fn is_negative_infinity(&self) -> bool {
+src/platform/macos/objc_wrap.rs:1163:    pub(crate) const fn is_numeric(&self) -> bool {
+src/platform/macos/objc_wrap.rs:1170:    pub(crate) const fn has_been_rounded(&self) -> bool {
+src/platform/macos/objc_wrap.rs:1174:    pub(crate) fn convert_timescale(&self, new_timescale: i32, rounding_method: CMTimeRoundingMethod) -> Self {
+src/platform/macos/objc_wrap.rs:1178:    pub(crate) fn multiply_by_ratio(&self, multiplier: i32, divisor: i32) -> Self {
+src/platform/macos/objc_wrap.rs:1182:    pub(crate) fn seconds_f64(&self) -> f64 {
+src/platform/macos/objc_wrap.rs:1188:pub(crate) enum SCStreamSampleRate {
+src/platform/macos/objc_wrap.rs:1196:    pub(crate) fn to_isize(&self) -> isize {
+src/platform/macos/objc_wrap.rs:1208:pub(crate) struct SCContentFilter(pub(crate) *mut AnyObject);
+src/platform/macos/objc_wrap.rs:1214:    pub(crate) fn new_with_desktop_independent_window(window: &SCWindow) -> Self {
+src/platform/macos/objc_wrap.rs:1222:    pub(crate) fn new_with_display_excluding_apps_excepting_windows(display: SCDisplay, excluded_applications: NSArray, excepting_windows: NSArray) -> Self {
+src/platform/macos/objc_wrap.rs:1244:pub(crate) enum SCStreamCallbackError {
+src/platform/macos/objc_wrap.rs:1260:    pub fn new(callback: impl FnMut(Result<(CMSampleBuffer, SCStreamOutputType), SCStreamCallbackError>) + Send + 'static) -> Self {
+src/platform/macos/objc_wrap.rs:1266:    pub fn call_output(&mut self, sample_buffer: CMSampleBuffer, output_type: SCStreamOutputType) {
+src/platform/macos/objc_wrap.rs:1270:    pub fn call_error(&mut self, error: SCStreamCallbackError) {
+src/platform/macos/objc_wrap.rs:1276:pub enum SCStreamOutputType {
+src/platform/macos/objc_wrap.rs:1342:pub(crate) struct SCStreamHandler(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:1345:    pub fn new(callback: impl FnMut(Result<(CMSampleBuffer, SCStreamOutputType), SCStreamCallbackError>) + Send + 'static) -> Self {
+src/platform/macos/objc_wrap.rs:134:    pub(crate) fn CGMainDisplayID() -> u32;
+src/platform/macos/objc_wrap.rs:1377:pub struct SCStream(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:1403:    pub fn preflight_access() -> bool {
+src/platform/macos/objc_wrap.rs:1407:    pub async fn request_access() -> bool {
+src/platform/macos/objc_wrap.rs:140:    pub(crate) fn CGWindowListCreateImage(screen_bounds: CGRect, options: u32, window_id: u32, image_options: u32) -> CGImageRef;
+src/platform/macos/objc_wrap.rs:1413:    pub fn from_id(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:1418:    pub fn is_nil(&self) -> bool {
+src/platform/macos/objc_wrap.rs:1422:    pub fn new(filter: SCContentFilter, config: SCStreamConfiguration, handler_queue: DispatchQueue, handler: SCStreamHandler) -> Result<Self, String> {
+src/platform/macos/objc_wrap.rs:1437:    pub fn start(&mut self) {
+src/platform/macos/objc_wrap.rs:1450:    pub fn stop(&mut self) {
+src/platform/macos/objc_wrap.rs:1466:pub(crate) struct CMSampleBuffer(CMSampleBufferRef);
+src/platform/macos/objc_wrap.rs:1471:    pub(crate) fn copy_from_ref(r: CMSampleBufferRef) -> Result<Self, ()> {
+src/platform/macos/objc_wrap.rs:1483:    pub(crate) fn get_presentation_timestamp(&self) -> CMTime {
+src/platform/macos/objc_wrap.rs:1487:    pub(crate) fn get_duration(&self) -> CMTime {
+src/platform/macos/objc_wrap.rs:1491:    pub(crate) fn get_format_description(&self) -> CMFormatDescription {
+src/platform/macos/objc_wrap.rs:1497:    pub(crate) unsafe fn get_audio_buffer_list_with_block_buffer(&self) -> Result<(AudioBufferList, CMBlockBuffer), ()> {
+src/platform/macos/objc_wrap.rs:1516:    pub(crate) fn get_sample_attachment_array(&self) -> Vec<CFDictionary> {
+src/platform/macos/objc_wrap.rs:1531:    pub(crate) fn get_image_buffer(&self) -> Option<CVPixelBuffer> {
+src/platform/macos/objc_wrap.rs:1557:pub(crate) struct CFDictionary(CFTypeRef);
+src/platform/macos/objc_wrap.rs:1560:    pub(crate) fn from_ref_retained(r: CFDictionaryRef) -> Self {
+src/platform/macos/objc_wrap.rs:1564:    pub(crate) fn from_ref_unretained(r: CFDictionaryRef) -> Self {
+src/platform/macos/objc_wrap.rs:1569:    pub(crate) fn get_value(&self, key: CFTypeRef) -> CFTypeRef {
+src/platform/macos/objc_wrap.rs:1586:pub(crate) enum CMMediaType {
+src/platform/macos/objc_wrap.rs:1592:    pub(crate) fn from_ostype(ostype: OSType) -> Option<Self> {
+src/platform/macos/objc_wrap.rs:1602:pub(crate) struct CMFormatDescription(CMFormatDescriptionRef);
+src/platform/macos/objc_wrap.rs:1605:    pub(crate) fn from_ref_retained(r: CMFormatDescriptionRef) -> Self {
+src/platform/macos/objc_wrap.rs:1609:    pub(crate) fn from_ref_unretained(r: CMFormatDescriptionRef) -> Self {
+src/platform/macos/objc_wrap.rs:1614:    pub(crate) fn get_media_type(&self) -> OSType {
+src/platform/macos/objc_wrap.rs:1618:    pub(crate) fn as_audio_format_description(&self) -> Option<CMAudioFormatDescription> {
+src/platform/macos/objc_wrap.rs:1636:pub(crate) struct AudioStreamBasicDescription {
+src/platform/macos/objc_wrap.rs:1637:    pub sample_rate: f64,
+src/platform/macos/objc_wrap.rs:1638:    pub format_id: u32,
+src/platform/macos/objc_wrap.rs:1639:    pub format_flags: u32,
+src/platform/macos/objc_wrap.rs:163:    pub(crate) fn IOSurfaceIncrementUseCount(r: IOSurfaceRef);
+src/platform/macos/objc_wrap.rs:1640:    pub bytes_per_packet: u32,
+src/platform/macos/objc_wrap.rs:1641:    pub frames_per_packet: u32,
+src/platform/macos/objc_wrap.rs:1642:    pub bytes_per_frame: u32,
+src/platform/macos/objc_wrap.rs:1643:    pub channels_per_frame: u32,
+src/platform/macos/objc_wrap.rs:1644:    pub bits_per_channel: u32,
+src/platform/macos/objc_wrap.rs:1645:    pub reserved: u32,
+src/platform/macos/objc_wrap.rs:1649:pub(crate) struct CMAudioFormatDescription(CMFormatDescriptionRef);
+src/platform/macos/objc_wrap.rs:164:    pub(crate) fn IOSurfaceDecrementUseCount(r: IOSurfaceRef);
+src/platform/macos/objc_wrap.rs:1652:    pub(crate) fn from_ref_retained(r: CMFormatDescriptionRef) -> Self {
+src/platform/macos/objc_wrap.rs:1656:    pub(crate) fn from_ref_unretained(r: CMFormatDescriptionRef) -> Self {
+src/platform/macos/objc_wrap.rs:1661:    pub(crate) fn get_basic_stream_description(&self) -> &'_ AudioStreamBasicDescription {
+src/platform/macos/objc_wrap.rs:1672:pub(crate) struct AVAudioFormat(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:1679:    pub fn new_with_standard_format_sample_rate_channels(sample_rate: f64, channel_count: u32) -> Self {
+src/platform/macos/objc_wrap.rs:1695:pub(crate) struct AudioBuffer {
+src/platform/macos/objc_wrap.rs:1710:pub(crate) struct AudioBufferList {
+src/platform/macos/objc_wrap.rs:1736:pub(crate) struct CMBlockBuffer(CMBlockBufferRef);
+src/platform/macos/objc_wrap.rs:1740:    pub(crate) fn from_ref_retained(r: CMBlockBufferRef) -> Self {
+src/platform/macos/objc_wrap.rs:1744:    pub(crate) fn from_ref_unretained(r: CMBlockBufferRef) -> Self {
+src/platform/macos/objc_wrap.rs:1756:pub(crate) struct AVAudioPCMBuffer(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:1759:    pub fn new_with_format_buffer_list_no_copy_deallocator(format: AVAudioFormat, buffer_list_no_copy: *const AudioBufferList) -> Result<Self, ()> {
+src/platform/macos/objc_wrap.rs:1772:    pub fn stride(&self) -> usize {
+src/platform/macos/objc_wrap.rs:1776:    pub fn frame_capacity(&self) -> usize {
+src/platform/macos/objc_wrap.rs:1780:    pub fn channel_count(&self) -> usize {
+src/platform/macos/objc_wrap.rs:1784:    pub fn f32_buffer(&self, channel: usize) -> Option<*const f32> {
+src/platform/macos/objc_wrap.rs:1804:    pub fn i32_buffer(&self, channel: usize) -> Option<*const i32> {
+src/platform/macos/objc_wrap.rs:1824:    pub fn i16_buffer(&self, channel: usize) -> Option<*const i16> {
+src/platform/macos/objc_wrap.rs:1871:    pub(crate) fn new_mutable(capacity: Option<isize>, callbacks: Option<&CFArrayCallBacks>) -> Result<Self, ()> {
+src/platform/macos/objc_wrap.rs:1882:    pub(crate) fn append_value(&mut self, value: *const c_void) {
+src/platform/macos/objc_wrap.rs:1888:    pub(crate) fn from_ref_unretained(r: CFStringRef) -> Self {
+src/platform/macos/objc_wrap.rs:1893:    pub(crate) fn from_ref_retained(r: CFStringRef) -> Self {
+src/platform/macos/objc_wrap.rs:1897:    pub(crate) fn get_count(&self) -> i32 {
+src/platform/macos/objc_wrap.rs:1901:    pub(crate) fn get_value_at_index(&self, index: i32) -> *const c_void {
+src/platform/macos/objc_wrap.rs:1923:pub struct DispatchQueue(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:1930:    pub fn make_concurrent(name: String) -> Self {
+src/platform/macos/objc_wrap.rs:1935:    pub fn make_serial(name: String) -> Self {
+src/platform/macos/objc_wrap.rs:1940:    pub fn make_null() -> Self {
+src/platform/macos/objc_wrap.rs:1967:pub(crate) struct SCRunningApplication(pub(crate) *mut AnyObject);
+src/platform/macos/objc_wrap.rs:1970:    pub(crate) fn from_id_unretained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:1975:    pub(crate) fn from_id_retained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:1979:    pub(crate) fn pid(&self) -> i32 {
+src/platform/macos/objc_wrap.rs:1985:    pub(crate) fn application_name(&self) -> String {
+src/platform/macos/objc_wrap.rs:1992:    pub(crate) fn bundle_identifier(&self) -> String {
+src/platform/macos/objc_wrap.rs:199:    pub(crate) static SCStreamFrameInfoStatus       : CFStringRef;
+src/platform/macos/objc_wrap.rs:200:    pub(crate) static SCStreamFrameInfoDisplayTime  : CFStringRef;
+src/platform/macos/objc_wrap.rs:2013:pub(crate) enum CGDisplayStreamFrameStatus {
+src/platform/macos/objc_wrap.rs:201:    pub(crate) static SCStreamFrameInfoScaleFactor  : CFStringRef;
+src/platform/macos/objc_wrap.rs:2021:    pub fn from_i32(x: i32) -> Option<Self> {
+src/platform/macos/objc_wrap.rs:202:    pub(crate) static SCStreamFrameInfoContentScale : CFStringRef;
+src/platform/macos/objc_wrap.rs:2032:pub(crate) struct CGDisplayStream{
+src/platform/macos/objc_wrap.rs:2038:    pub fn new(callback: impl Fn(CGDisplayStreamFrameStatus, Duration, IOSurface) + 'static, display_id: u32, size: (usize, usize), pixel_format: SCStreamPixelFormat, options_dict: NSDictionary, dispatch_queue: DispatchQueue) -> Self {
+src/platform/macos/objc_wrap.rs:203:    pub(crate) static SCStreamFrameInfoContentRect  : CFStringRef;
+src/platform/macos/objc_wrap.rs:204:    pub(crate) static SCStreamFrameInfoBoundingRect : CFStringRef;
+src/platform/macos/objc_wrap.rs:205:    pub(crate) static SCStreamFrameInfoScreenRect   : CFStringRef;
+src/platform/macos/objc_wrap.rs:206:    pub(crate) static SCStreamFrameInfoDirtyRects   : CFStringRef;
+src/platform/macos/objc_wrap.rs:2071:    pub fn start(&self) -> Result<(), ()> {
+src/platform/macos/objc_wrap.rs:2080:    pub fn stop(&self) -> Result<(), ()> {
+src/platform/macos/objc_wrap.rs:208:    pub(crate) static kCGDisplayStreamSourceRect          : CFStringRef;
+src/platform/macos/objc_wrap.rs:209:    pub(crate) static kCGDisplayStreamDestinationRect     : CFStringRef;
+src/platform/macos/objc_wrap.rs:210:    pub(crate) static kCGDisplayStreamPreserveAspectRatio : CFStringRef;
+src/platform/macos/objc_wrap.rs:2113:pub enum CVPixelFormat {
+src/platform/macos/objc_wrap.rs:211:    pub(crate) static kCGDisplayStreamColorSpace          : CFStringRef;
+src/platform/macos/objc_wrap.rs:2126:    pub(crate) fn from_ostype(ostype: &OSType) -> Option<Self> {
+src/platform/macos/objc_wrap.rs:212:    pub(crate) static kCGDisplayStreamMinimumFrameTime    : CFStringRef;
+src/platform/macos/objc_wrap.rs:213:    pub(crate) static kCGDisplayStreamShowCursor          : CFStringRef;
+src/platform/macos/objc_wrap.rs:2145:pub(crate) struct IOSurface(pub(crate) IOSurfaceRef);
+src/platform/macos/objc_wrap.rs:214:    pub(crate) static kCGDisplayStreamQueueDepth          : CFStringRef;
+src/platform/macos/objc_wrap.rs:2154:pub enum IOSurfaceLockError {
+src/platform/macos/objc_wrap.rs:2159:pub struct IOSurfaceLockGaurd(IOSurfaceRef, u32);
+src/platform/macos/objc_wrap.rs:215:    pub(crate) static kCGDisplayStreamYCbCrMatrix         : CFStringRef;
+src/platform/macos/objc_wrap.rs:2162:    pub(crate) fn get_base_address_of_plane(&self, plane: usize) -> Option<*const c_void> {
+src/platform/macos/objc_wrap.rs:2173:    pub(crate) fn get_base_address(&self) -> Option<*const c_void> {
+src/platform/macos/objc_wrap.rs:2195:pub enum IOSurfaceComponentName {
+src/platform/macos/objc_wrap.rs:2216:pub enum IOSurfaceComponentType {
+src/platform/macos/objc_wrap.rs:2231:pub enum IOSurfaceCacheMode {
+src/platform/macos/objc_wrap.rs:223:    pub(crate) static CGRectNull     : CGRect;
+src/platform/macos/objc_wrap.rs:224:    pub(crate) static CGRectInfinite : CGRect;
+src/platform/macos/objc_wrap.rs:2250:    pub(crate) fn get_pixel_format(&self) -> Option<CVPixelFormat> {
+src/platform/macos/objc_wrap.rs:2257:    pub(crate) fn get_bytes_per_row(&self) -> usize {
+src/platform/macos/objc_wrap.rs:2263:    pub(crate) fn get_bytes_per_row_of_plane(&self, plane: usize) -> usize {
+src/platform/macos/objc_wrap.rs:2269:    pub(crate) fn get_width(&self) -> usize {
+src/platform/macos/objc_wrap.rs:226:    pub(crate) static kIOSurfaceCacheMode: CFStringRef;
+src/platform/macos/objc_wrap.rs:2275:    pub(crate) fn get_height(&self) -> usize {
+src/platform/macos/objc_wrap.rs:2281:    pub(crate) fn get_height_of_plane(&self, plane: usize) -> usize {
+src/platform/macos/objc_wrap.rs:2287:    pub(crate) fn get_width_of_plane(&self, plane: usize) -> usize {
+src/platform/macos/objc_wrap.rs:2293:    pub(crate) fn get_plane_count(&self) -> usize {
+src/platform/macos/objc_wrap.rs:2299:    pub(crate) fn get_plane_component_count(&self, plane: usize) -> usize {
+src/platform/macos/objc_wrap.rs:2305:    pub(crate) fn get_plane_component_name(&self, plane: usize, component: usize) -> IOSurfaceComponentName {
+src/platform/macos/objc_wrap.rs:231:pub const kAudioFormatFlagIsFloat          : u32 = 1 << 0;
+src/platform/macos/objc_wrap.rs:2320:    pub(crate) fn get_plane_component_type(&self, plane: usize, component: usize) -> IOSurfaceComponentType {
+src/platform/macos/objc_wrap.rs:232:pub const kAudioFormatFlagIsBigEndian     : u32 = 1 << 1;
+src/platform/macos/objc_wrap.rs:2332:    pub(crate) fn get_plane_component_bit_depth(&self, plane: usize, component: usize) -> usize {
+src/platform/macos/objc_wrap.rs:2338:    pub(crate) fn get_plane_component_bit_offset(&self, plane: usize, component: usize) -> usize {
+src/platform/macos/objc_wrap.rs:233:pub const kAudioFormatFlagIsPacked         : u32 = 1 << 3;
+src/platform/macos/objc_wrap.rs:2344:    pub(crate) fn lock(&self, read_only: bool, avoid_sync: bool) -> Result<IOSurfaceLockGaurd, IOSurfaceLockError> {
+src/platform/macos/objc_wrap.rs:234:pub const kAudioFormatFlagIsNonInterleaved : u32 = 1 << 5;
+src/platform/macos/objc_wrap.rs:236:pub const kAudioFormatNativeEndian         : u32 = kAudioFormatFlagIsBigEndian;
+src/platform/macos/objc_wrap.rs:238:pub const kAudioFormatNativeEndian         : u32 = 0;
+src/platform/macos/objc_wrap.rs:2393:pub(crate) enum CFNumberType {
+src/platform/macos/objc_wrap.rs:240:pub const kAudioFormatFlagsCanonical       : u32 = kAudioFormatFlagIsFloat | kAudioFormatFlagIsPacked | kAudioFormatNativeEndian;
+src/platform/macos/objc_wrap.rs:2413:    pub(crate) fn to_isize(self) -> isize {
+src/platform/macos/objc_wrap.rs:242:pub const kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment: u32 = 1 << 0;
+src/platform/macos/objc_wrap.rs:2434:    pub(crate) fn from_i32(x: i32) -> Option<Self> {
+src/platform/macos/objc_wrap.rs:244:pub const kCMSampleBufferError_ArrayTooSmall: i32 = -12737;
+src/platform/macos/objc_wrap.rs:2460:pub(crate) struct CFNumber(pub(crate) CFNumberRef);
+src/platform/macos/objc_wrap.rs:2463:    pub fn new_f32(x: f32) -> Self {
+src/platform/macos/objc_wrap.rs:246:pub const kCFStringEncodingUTF8: u32 = 0x08000100;
+src/platform/macos/objc_wrap.rs:2470:    pub fn new_i32(x: i32) -> Self {
+src/platform/macos/objc_wrap.rs:2477:    pub fn as_i32(&self) -> Result<i32, ()> {
+src/platform/macos/objc_wrap.rs:2488:    pub fn from_ref_unretained(r: CFNumberRef) -> Self {
+src/platform/macos/objc_wrap.rs:2509:pub struct NSNumber(pub(crate) *mut AnyObject);
+src/platform/macos/objc_wrap.rs:250:pub(crate) struct CGColorRef(CFTypeRef);
+src/platform/macos/objc_wrap.rs:2512:    pub(crate) fn from_id_unretained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:2517:    pub(crate) fn from_id_retained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:2521:    pub(crate) fn new_isize(x: isize) -> Self {
+src/platform/macos/objc_wrap.rs:2528:    pub(crate) fn new_f32(x: f32) -> Self {
+src/platform/macos/objc_wrap.rs:2535:    pub(crate) fn as_i32(&self) -> i32 {
+src/platform/macos/objc_wrap.rs:2541:    pub(crate) fn as_f64(&self) -> f64 {
+src/platform/macos/objc_wrap.rs:2561:pub struct NSApplication(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:2573:    pub fn shared() -> Self {
+src/platform/macos/objc_wrap.rs:257:pub(crate) struct NSString(pub(crate) *mut AnyObject);
+src/platform/macos/objc_wrap.rs:2580:    pub fn run(&self) {
+src/platform/macos/objc_wrap.rs:2599:pub enum SCFrameStatus {
+src/platform/macos/objc_wrap.rs:2609:    pub fn from_i32(x: i32) -> Option<Self> {
+src/platform/macos/objc_wrap.rs:2622:pub struct CVPixelBuffer(CVPixelBufferRef);
+src/platform/macos/objc_wrap.rs:2625:    pub fn from_ref_unretained(r: CVPixelBufferRef) -> Self {
+src/platform/macos/objc_wrap.rs:2630:    pub fn from_ref_retained(r: CVPixelBufferRef) -> Self {
+src/platform/macos/objc_wrap.rs:2634:    pub fn get_iosurface_ptr(&self) -> Option<*const c_void> {
+src/platform/macos/objc_wrap.rs:2645:    pub fn get_iosurface(&self) -> Option<IOSurface> {
+src/platform/macos/objc_wrap.rs:2656:    pub fn get_width(&self) -> usize {
+src/platform/macos/objc_wrap.rs:2662:    pub fn get_height(&self) -> usize {
+src/platform/macos/objc_wrap.rs:268:    pub(crate) fn new(s: &str) -> Self {
+src/platform/macos/objc_wrap.rs:2711:pub struct NSScreen(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:2714:    pub(crate) fn screens() -> Vec<NSScreen> {
+src/platform/macos/objc_wrap.rs:2730:    pub(crate) fn dpi(&self) -> f64 {
+src/platform/macos/objc_wrap.rs:2756:    pub(crate) fn frame(&self) -> CGRect {
+src/platform/macos/objc_wrap.rs:2762:pub struct CGImage(CGImageRef);
+src/platform/macos/objc_wrap.rs:2767:    pub fn from_ref_unretained(r: CGImageRef) -> Self {
+src/platform/macos/objc_wrap.rs:276:    pub(crate) fn from_ref_unretained(r: CFStringRef) -> Self {
+src/platform/macos/objc_wrap.rs:2772:    pub fn from_ref_retained(r: CGImageRef) -> Self {
+src/platform/macos/objc_wrap.rs:2776:    pub fn width(&self) -> usize {
+src/platform/macos/objc_wrap.rs:2780:    pub fn height(&self) -> usize {
+src/platform/macos/objc_wrap.rs:2784:    pub fn bits_per_component(&self) -> usize {
+src/platform/macos/objc_wrap.rs:2788:    pub fn bits_per_pixel(&self) -> usize {
+src/platform/macos/objc_wrap.rs:2792:    pub fn bytes_per_row(&self) -> usize {
+src/platform/macos/objc_wrap.rs:2796:    pub fn get_bitmap_info(&self) -> CGBitmapInfo {
+src/platform/macos/objc_wrap.rs:281:    pub(crate) fn from_ref_retained(r: CFStringRef) -> Self {
+src/platform/macos/objc_wrap.rs:2821:    pub fn get_pixel_format(&self) -> CGImagePixelFormat {
+src/platform/macos/objc_wrap.rs:2834:    pub fn get_data_provider(&self) -> CGDataProvider {
+src/platform/macos/objc_wrap.rs:285:    pub(crate) fn from_id_unretained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:2881:pub enum CGBitmapAlphaInfo {
+src/platform/macos/objc_wrap.rs:2891:pub enum CGBitmapByteOrder {
+src/platform/macos/objc_wrap.rs:2899:pub enum CGImagePixelFormat {
+src/platform/macos/objc_wrap.rs:2907:pub struct CGBitmapInfo {
+src/platform/macos/objc_wrap.rs:2913:pub struct CGDataProvider(CGDataProviderRef);
+src/platform/macos/objc_wrap.rs:292:    pub(crate) fn as_string(&self) -> String {
+src/platform/macos/objc_wrap.rs:2964:pub const SCContentSharingPickerModeSingleWindow         : usize = 1 << 0;
+src/platform/macos/objc_wrap.rs:2965:pub const SCContentSharingPickerModeMultipleWindows      : usize = 1 << 1;
+src/platform/macos/objc_wrap.rs:2966:pub const SCContentSharingPickerModeSingleApplication    : usize = 1 << 2;
+src/platform/macos/objc_wrap.rs:2967:pub const SCContentSharingPickerModeMultipleApplications : usize = 1 << 3;
+src/platform/macos/objc_wrap.rs:2968:pub const SCContentSharingPickerModeSingleDisplay        : usize = 1 << 4;
+src/platform/macos/objc_wrap.rs:2970:pub struct SCContentSharingPickerConfiguration(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:2973:    pub fn new() -> Self {
+src/platform/macos/objc_wrap.rs:2981:    pub fn from_id_retained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:2985:    pub fn from_id_unretained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:2992:    pub fn set_changing_selected_content_allowed(&self, allowed: bool) {
+src/platform/macos/objc_wrap.rs:2998:    pub fn set_allowed_picker_modes(&self, allowed_picker_modes: usize) {
+src/platform/macos/objc_wrap.rs:3021:pub struct SCContentSharingPickerObserver(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:304:pub(crate) struct NSError(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:3066:    pub fn from_id_retained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:3070:    pub fn from_id_unretained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:3077:    pub fn new(callback: impl FnMut(Result<SCContentSharingPickerEvent, NSError>) + Send + 'static) -> Self {
+src/platform/macos/objc_wrap.rs:3108:pub enum SCContentSharingPickerEvent {
+src/platform/macos/objc_wrap.rs:3119:    pub fn new(callback: impl FnMut(Result<SCContentSharingPickerEvent, NSError>) + Send + 'static) -> Self {
+src/platform/macos/objc_wrap.rs:3125:    pub fn call_cancelled(&mut self, picker: SCContentSharingPicker, stream: Option<SCStream>) {
+src/platform/macos/objc_wrap.rs:3128:    pub fn call_did_update_with_filter(&mut self, picker: SCContentSharingPicker, filter: SCContentFilter, stream: Option<SCStream>) {
+src/platform/macos/objc_wrap.rs:312:    pub(crate) fn from_id_unretained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:3131:    pub fn call_error(&mut self, error: NSError) {
+src/platform/macos/objc_wrap.rs:3135:pub enum SCShareableContentStyle {
+src/platform/macos/objc_wrap.rs:3142:pub struct SCContentSharingPicker(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:3145:    pub fn shared() -> Self {
+src/platform/macos/objc_wrap.rs:3163:    pub fn set_active(&self, active: bool) {
+src/platform/macos/objc_wrap.rs:3169:    pub fn add(&self, observer: SCContentSharingPickerObserver) {
+src/platform/macos/objc_wrap.rs:3175:    pub fn remove(&self, observer: SCContentSharingPickerObserver) {
+src/platform/macos/objc_wrap.rs:317:    pub(crate) fn from_id_retained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:3181:    pub fn present(&self) {
+src/platform/macos/objc_wrap.rs:3187:    pub fn present_using_content_style(&self, content_style: SCShareableContentStyle) {
+src/platform/macos/objc_wrap.rs:3199:    pub fn set_configuration_for_stream(&self, configuration: SCContentSharingPickerConfiguration, for_stream: Option<&SCStream>) {
+src/platform/macos/objc_wrap.rs:3224:pub struct SCScreenshotManager();
+src/platform/macos/objc_wrap.rs:3229:    pub fn class_exists() -> bool {
+src/platform/macos/objc_wrap.rs:3233:    pub fn capture_image_with_filter_and_configuration(filter: &SCContentFilter, config: &SCStreamConfiguration, completion_handler: impl FnMut(Result<CGImage, NSError>) + Send + 'static) {
+src/platform/macos/objc_wrap.rs:3252:    pub fn capture_samplebuffer_with_filter_and_configuration(filter: SCContentFilter, config: SCStreamConfiguration, completion_handler: impl FnMut(Result<CMSampleBuffer, String>) + Send + 'static) {
+src/platform/macos/objc_wrap.rs:325:    pub(crate) fn code(&self) -> isize {
+src/platform/macos/objc_wrap.rs:3279:pub(crate) struct WindowDescription {
+src/platform/macos/objc_wrap.rs:3280:    pub window_layer: i32,
+src/platform/macos/objc_wrap.rs:3283:pub(crate) fn get_window_description(window: CGWindowID) -> Result<WindowDescription, ()> {
+src/platform/macos/objc_wrap.rs:329:    pub(crate) fn domain(&self) -> String {
+src/platform/macos/objc_wrap.rs:3313:pub struct WindowLevels {
+src/platform/macos/objc_wrap.rs:3314:    pub base                : i32,
+src/platform/macos/objc_wrap.rs:3315:    pub minimum             : i32,
+src/platform/macos/objc_wrap.rs:3316:    pub desktop             : i32,
+src/platform/macos/objc_wrap.rs:3317:    pub desktop_icon        : i32,
+src/platform/macos/objc_wrap.rs:3318:    pub backstop            : i32,
+src/platform/macos/objc_wrap.rs:3319:    pub normal              : i32,
+src/platform/macos/objc_wrap.rs:3320:    pub floating            : i32,
+src/platform/macos/objc_wrap.rs:3321:    pub torn_off_menu       : i32,
+src/platform/macos/objc_wrap.rs:3322:    pub modal_panel         : i32,
+src/platform/macos/objc_wrap.rs:3323:    pub utility             : i32,
+src/platform/macos/objc_wrap.rs:3324:    pub dock                : i32,
+src/platform/macos/objc_wrap.rs:3325:    pub main_menu           : i32,
+src/platform/macos/objc_wrap.rs:3326:    pub status              : i32,
+src/platform/macos/objc_wrap.rs:3327:    pub pop_up_menu         : i32,
+src/platform/macos/objc_wrap.rs:3328:    pub overlay             : i32,
+src/platform/macos/objc_wrap.rs:3329:    pub help                : i32,
+src/platform/macos/objc_wrap.rs:3330:    pub dragging            : i32,
+src/platform/macos/objc_wrap.rs:3331:    pub screen_saver        : i32,
+src/platform/macos/objc_wrap.rs:3332:    pub assistive_tech_high : i32,
+src/platform/macos/objc_wrap.rs:3333:    pub cursor              : i32,
+src/platform/macos/objc_wrap.rs:3334:    pub maximum             : i32,
+src/platform/macos/objc_wrap.rs:336:    pub fn description(&self) -> String {
+src/platform/macos/objc_wrap.rs:3391:pub(crate) fn get_window_levels() -> &'static WindowLevels {
+src/platform/macos/objc_wrap.rs:340:    pub fn reason(&self) -> String {
+src/platform/macos/objc_wrap.rs:355:pub(crate) struct NSArrayRef(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:358:    pub(crate) fn is_null(&self) -> bool {
+src/platform/macos/objc_wrap.rs:364:pub(crate) struct NSArray(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:367:    pub(crate) fn new() -> Self {
+src/platform/macos/objc_wrap.rs:374:    pub(crate) fn new_mutable() -> Self {
+src/platform/macos/objc_wrap.rs:382:    pub(crate) fn from_ref(r: NSArrayRef) -> Self {
+src/platform/macos/objc_wrap.rs:386:    pub(crate) fn from_id_unretained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:391:    pub(crate) fn from_id_retained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:395:    pub(crate) fn count(&self) -> usize {
+src/platform/macos/objc_wrap.rs:399:    pub(crate) fn add_object<T: 'static + Encode>(&mut self, object: T) {
+src/platform/macos/objc_wrap.rs:405:    pub(crate) fn obj_at_index<T: 'static + Encode>(&self, i: usize) -> T {
+src/platform/macos/objc_wrap.rs:419:pub(crate) struct NSDictionaryEncoded(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:41:pub(crate) type IOSurfaceRef = CFTypeRef;
+src/platform/macos/objc_wrap.rs:422:    pub(crate) fn is_null(&self) -> bool {
+src/platform/macos/objc_wrap.rs:428:pub(crate) struct NSDictionary(pub(crate) *mut AnyObject);
+src/platform/macos/objc_wrap.rs:431:    pub(crate) fn new() -> Self {
+src/platform/macos/objc_wrap.rs:438:    pub(crate) fn new_mutable() -> Self {
+src/platform/macos/objc_wrap.rs:445:    pub(crate) fn from_ref_unretained(r: CGDictionaryRef) -> Self {
+src/platform/macos/objc_wrap.rs:449:    pub(crate) fn from_encoded(e: NSDictionaryEncoded) -> Self {
+src/platform/macos/objc_wrap.rs:453:    pub(crate) fn from_id_unretained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:458:    pub(crate) fn from_id_retained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:462:    pub(crate) fn count(&self) -> usize {
+src/platform/macos/objc_wrap.rs:466:    pub(crate) fn all_keys(&self) -> NSArray {
+src/platform/macos/objc_wrap.rs:473:    pub(crate) fn value_for_key(&self, key: CFStringRef) -> *mut AnyObject {
+src/platform/macos/objc_wrap.rs:479:    pub(crate) fn set_object_for_key(&mut self, object: *mut AnyObject, key: *mut AnyObject) {
+src/platform/macos/objc_wrap.rs:502:pub(crate) struct CGPoint {
+src/platform/macos/objc_wrap.rs:503:    pub(crate) x: CGFloat,
+src/platform/macos/objc_wrap.rs:504:    pub(crate) y: CGFloat,
+src/platform/macos/objc_wrap.rs:512:    pub(crate) const ZERO: CGPoint = CGPoint { x: 0.0, y: 0.0 };
+src/platform/macos/objc_wrap.rs:513:    pub(crate) const INF: CGPoint = CGPoint { x: std::f64::INFINITY, y: std::f64::INFINITY };
+src/platform/macos/objc_wrap.rs:518:pub(crate) struct CGSize {
+src/platform/macos/objc_wrap.rs:519:    pub(crate) x: CGFloat,
+src/platform/macos/objc_wrap.rs:520:    pub(crate) y: CGFloat,
+src/platform/macos/objc_wrap.rs:528:    pub(crate) const ZERO: CGSize = CGSize { x: 0.0, y: 0.0 };
+src/platform/macos/objc_wrap.rs:533:pub(crate) struct CGRect {
+src/platform/macos/objc_wrap.rs:534:    pub(crate) origin: CGPoint,
+src/platform/macos/objc_wrap.rs:535:    pub(crate) size: CGSize,
+src/platform/macos/objc_wrap.rs:543:    pub(crate) const ZERO: CGRect = CGRect {
+src/platform/macos/objc_wrap.rs:548:    pub(crate) const NULL: CGRect = CGRect {
+src/platform/macos/objc_wrap.rs:553:    pub(crate) fn contains(&self, p: CGPoint) -> bool {
+src/platform/macos/objc_wrap.rs:560:    pub(crate) fn create_dicitonary_representation(&self) -> NSDictionary {
+src/platform/macos/objc_wrap.rs:566:    pub(crate) fn create_from_dictionary_representation(dictionary: &NSDictionary) -> Self {
+src/platform/macos/objc_wrap.rs:577:pub(crate) struct CGWindowID(pub(crate) u32);
+src/platform/macos/objc_wrap.rs:580:    pub(crate) fn raw(&self) -> u32 {
+src/platform/macos/objc_wrap.rs:588:pub(crate) struct SCWindow(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:596:    pub(crate) fn from_id_unretained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:601:    pub(crate) fn from_id_retained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:605:    pub(crate) fn id(&self) -> CGWindowID {
+src/platform/macos/objc_wrap.rs:612:    pub(crate) fn title(&self) -> String {
+src/platform/macos/objc_wrap.rs:619:    pub(crate) fn frame(&self) -> CGRect {
+src/platform/macos/objc_wrap.rs:630:    pub(crate) fn owning_application(&self) -> SCRunningApplication {
+src/platform/macos/objc_wrap.rs:637:    pub(crate) fn on_screen(&self) -> bool {
+src/platform/macos/objc_wrap.rs:658:pub(crate) struct SCDisplay(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:65:    pub(crate) static kCFBooleanTrue: CFBooleanRef;
+src/platform/macos/objc_wrap.rs:662:    pub(crate) fn from_id_unretained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:667:    pub(crate) fn from_id_retained(id: *mut AnyObject) -> Self {
+src/platform/macos/objc_wrap.rs:66:    pub(crate) static kCFBooleanFalse: CFBooleanRef;
+src/platform/macos/objc_wrap.rs:671:    pub(crate) fn frame(&self) -> CGRect {
+src/platform/macos/objc_wrap.rs:681:    pub(crate) fn raw_id(&self) -> u32 {
+src/platform/macos/objc_wrap.rs:702:pub(crate) struct SCShareableContent(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:707:    pub(crate) fn get_shareable_content_with_completion_handler(
+src/platform/macos/objc_wrap.rs:735:    pub(crate) fn windows(&self) -> Vec<SCWindow> {
+src/platform/macos/objc_wrap.rs:74:    pub(crate) fn CGRectMakeWithDictionaryRepresentation(dictionary: CGDictionaryRef, rect: *mut CGRect) -> bool;
+src/platform/macos/objc_wrap.rs:752:    pub(crate) fn displays(&self) -> Vec<SCDisplay> {
+src/platform/macos/objc_wrap.rs:769:    pub(crate) fn applications(&self) -> Vec<SCRunningApplication> {
+src/platform/macos/objc_wrap.rs:795:pub(crate) struct OSType([u8; 4]);
+src/platform/macos/objc_wrap.rs:798:    pub fn as_i32(&self) -> i32 {
+src/platform/macos/objc_wrap.rs:802:    pub fn as_u32(&self) -> u32 {
+src/platform/macos/objc_wrap.rs:813:pub(crate) enum SCStreamPixelFormat {
+src/platform/macos/objc_wrap.rs:821:    pub(crate) fn to_ostype(&self) -> OSType {
+src/platform/macos/objc_wrap.rs:833:pub(crate) enum SCStreamBackgroundColor {
+src/platform/macos/objc_wrap.rs:840:pub(crate) enum SCStreamColorMatrix {
+src/platform/macos/objc_wrap.rs:847:    pub(crate) fn to_cfstringref(&self) -> CFStringRef {
+src/platform/macos/objc_wrap.rs:859:pub enum SCCaptureResolutionType {
+src/platform/macos/objc_wrap.rs:872:pub(crate) struct SCStreamConfiguration(pub(crate) *mut AnyObject);
+src/platform/macos/objc_wrap.rs:877:    pub(crate) fn new() -> Self {
+src/platform/macos/objc_wrap.rs:885:    pub(crate) fn set_size(&mut self, size: CGSize) {
+src/platform/macos/objc_wrap.rs:897:    pub(crate) fn set_source_rect(&mut self, source_rect: CGRect) {
+src/platform/macos/objc_wrap.rs:903:    pub(crate) fn set_scales_to_fit(&mut self, scale_to_fit: bool) {
+src/platform/macos/objc_wrap.rs:909:    pub(crate) fn set_pixel_format(&mut self, format: SCStreamPixelFormat) {
+src/platform/macos/objc_wrap.rs:916:    pub(crate) fn set_color_matrix(&mut self, color_matrix: SCStreamColorMatrix) {
+src/platform/macos/objc_wrap.rs:922:    pub(crate) fn set_resolution_type(&mut self, resolution_type: SCCaptureResolutionType) -> Result<(), ()> {
+src/platform/macos/objc_wrap.rs:934:    pub(crate) fn set_background_color(&mut self, bg_color: SCStreamBackgroundColor) {
+src/platform/macos/objc_wrap.rs:947:    pub(crate) fn set_queue_depth(&mut self, queue_depth: isize) {
+src/platform/macos/objc_wrap.rs:953:    pub(crate) fn set_minimum_time_interval(&mut self, interval: CMTime) {
+src/platform/macos/objc_wrap.rs:964:    pub(crate) fn set_sample_rate(&mut self, sample_rate: SCStreamSampleRate) {
+src/platform/macos/objc_wrap.rs:971:    pub(crate) fn set_show_cursor(&mut self, show_cursor: bool) {
+src/platform/macos/objc_wrap.rs:978:    pub(crate) fn set_capture_audio(&mut self, capture_audio: bool) {
+src/platform/macos/objc_wrap.rs:985:    pub(crate) fn set_channel_count(&mut self, channel_count: isize) {
+src/platform/macos/objc_wrap.rs:992:    pub(crate) fn set_exclude_current_process_audio(&mut self, exclude_current_process_audio: bool) {
+src/platform/mod.rs:10:pub mod windows;
+src/platform/mod.rs:13:pub(crate)  use windows as platform_impl;
+src/platform/mod.rs:3:pub mod macos;
+src/platform/mod.rs:6:pub(crate) use macos as platform_impl;
+src/platform/windows/audio_capture_stream.rs:12:pub enum WindowsAudioCaptureStreamCreateError {
+src/platform/windows/audio_capture_stream.rs:159:    pub fn stop(&mut self) {
+src/platform/windows/audio_capture_stream.rs:21:pub enum WindowsAudioCaptureStreamError {
+src/platform/windows/audio_capture_stream.rs:27:pub struct WindowsAudioCaptureStreamPacket<'a> {
+src/platform/windows/audio_capture_stream.rs:28:    pub(crate) data: &'a [i16],
+src/platform/windows/audio_capture_stream.rs:29:    pub(crate) channel_count: u32,
+src/platform/windows/audio_capture_stream.rs:30:    pub(crate) origin_time: Duration,
+src/platform/windows/audio_capture_stream.rs:31:    pub(crate) duration: Duration,
+src/platform/windows/audio_capture_stream.rs:32:    pub(crate) sample_index: u64,
+src/platform/windows/audio_capture_stream.rs:51:    pub fn new(config: AudioCaptureConfig, mut callback: Box<dyn for <'a> FnMut(Result<WindowsAudioCaptureStreamPacket<'a>, WindowsAudioCaptureStreamError>) + Send + 'static>) -> Result<Self, WindowsAudioCaptureStreamCreateError> {
+src/platform/windows/audio_capture_stream.rs:7:pub struct WindowsAudioCaptureStream {
+src/platform/windows/capturable_content.rs:121:pub struct WindowsCapturableApplication(pub(crate) u32);
+src/platform/windows/capturable_content.rs:124:    pub fn identifier(&self) -> String {
+src/platform/windows/capturable_content.rs:12:pub struct WindowsCapturableWindow(pub(crate) HWND);
+src/platform/windows/capturable_content.rs:160:    pub fn name(&self) -> String {
+src/platform/windows/capturable_content.rs:164:    pub fn pid(&self) -> i32 {
+src/platform/windows/capturable_content.rs:169:pub struct WindowsCapturableContent {
+src/platform/windows/capturable_content.rs:170:    pub(crate) windows: Vec<HWND>,
+src/platform/windows/capturable_content.rs:171:    pub(crate) displays: Vec<(HMONITOR, RECT)>,
+src/platform/windows/capturable_content.rs:187:    pub async fn new(filter: CapturableContentFilter) -> Result<Self, CapturableContentError> {
+src/platform/windows/capturable_content.rs:225:pub trait WindowsCapturableWindowExt {
+src/platform/windows/capturable_content.rs:23:    pub fn from_impl(hwnd: HWND) -> Self {
+src/platform/windows/capturable_content.rs:254:pub(crate) struct WindowsCapturableContentFilter {
+src/platform/windows/capturable_content.rs:267:    pub(crate) const DEFAULT: Self = Self {
+src/platform/windows/capturable_content.rs:270:    pub(crate) const NORMAL_WINDOWS: Self = Self::DEFAULT;
+src/platform/windows/capturable_content.rs:27:    pub fn title(&self) -> String {
+src/platform/windows/capturable_content.rs:282:pub trait WindowsCapturableContentFilterExt: Sized {
+src/platform/windows/capturable_content.rs:42:    pub fn rect(&self) -> Rect {
+src/platform/windows/capturable_content.rs:59:    pub fn application(&self) -> WindowsCapturableApplication {
+src/platform/windows/capturable_content.rs:5:pub use windows::Win32::Foundation::HWND;
+src/platform/windows/capturable_content.rs:63:    pub fn is_visible(&self) -> bool {
+src/platform/windows/capturable_content.rs:83:pub struct WindowsCapturableDisplay(pub(crate) HMONITOR, pub(crate) RECT);
+src/platform/windows/capturable_content.rs:86:    pub fn from_impl(monitor: (HMONITOR, RECT)) -> Self {
+src/platform/windows/capturable_content.rs:90:    pub fn rect(&self) -> Rect {
+src/platform/windows/capture_stream.rs:100:pub struct WindowsCaptureStream {
+src/platform/windows/capture_stream.rs:101:    pub(crate) dxgi_adapter: Option<IDXGIAdapter>,
+src/platform/windows/capture_stream.rs:102:    pub(crate) dxgi_adapter_error: Option<String>,
+src/platform/windows/capture_stream.rs:103:    pub(crate) dxgi_device: IDXGIDevice,
+src/platform/windows/capture_stream.rs:104:    pub(crate) d3d11_device: ID3D11Device,
+src/platform/windows/capture_stream.rs:106:    pub(crate) wgpu_device: Option<Arc<dyn AsRef<wgpu::Device> + Send + Sync + 'static>>,
+src/platform/windows/capture_stream.rs:107:    pub(crate) frame_pool: Direct3D11CaptureFramePool,
+src/platform/windows/capture_stream.rs:108:    pub(crate) capture_session: GraphicsCaptureSession,
+src/platform/windows/capture_stream.rs:116:pub(crate) struct SharedHandlerData {
+src/platform/windows/capture_stream.rs:124:pub(crate) struct WindowsCaptureAccessToken {
+src/platform/windows/capture_stream.rs:12:pub enum WindowsPixelFormat {
+src/platform/windows/capture_stream.rs:132:    pub(crate) fn allows_borderless(&self) -> bool {
+src/platform/windows/capture_stream.rs:152:    pub fn supported_pixel_formats() -> &'static [CapturePixelFormat] {
+src/platform/windows/capture_stream.rs:159:    pub fn check_access(borderless: bool) -> Option<WindowsCaptureAccessToken> {
+src/platform/windows/capture_stream.rs:17:pub struct WindowsAudioCaptureConfig {}
+src/platform/windows/capture_stream.rs:181:    pub async fn request_access(borderless: bool) -> Option<WindowsCaptureAccessToken> {
+src/platform/windows/capture_stream.rs:20:    pub fn new() -> Self {
+src/platform/windows/capture_stream.rs:27:pub trait WindowsAudioCaptureConfigExt {
+src/platform/windows/capture_stream.rs:35:pub struct WindowsCaptureConfig {
+src/platform/windows/capture_stream.rs:36:    pub(crate) borderless: bool,
+src/platform/windows/capture_stream.rs:37:    pub(crate) dxgi_adapter: Option<IDXGIAdapter4>,
+src/platform/windows/capture_stream.rs:38:    pub(crate) d3d11_device: Option<ID3D11Device>,
+src/platform/windows/capture_stream.rs:40:    pub(crate) wgpu_device: Option<Arc<dyn AsRef<wgpu::Device> + Send + Sync + 'static>>,
+src/platform/windows/capture_stream.rs:456:    pub fn new(token: WindowsCaptureAccessToken, config: CaptureConfig, callback: Box<impl FnMut(Result<StreamEvent, StreamError>) + Send + 'static>) -> Result<Self, StreamCreateError> {
+src/platform/windows/capture_stream.rs:50:    pub fn new() -> Self {
+src/platform/windows/capture_stream.rs:524:    pub fn stop(&self) -> Result<(), StreamStopError> {
+src/platform/windows/capture_stream.rs:61:pub trait WindowsCaptureConfigExt {
+src/platform/windows/frame.rs:10:    pub(crate) frame_size       : (usize, usize),
+src/platform/windows/frame.rs:11:    pub(crate) pixel_format     : DirectXPixelFormat,
+src/platform/windows/frame.rs:12:    pub(crate) frame_id         : u64,
+src/platform/windows/frame.rs:13:    pub(crate) dpi              : u32,
+src/platform/windows/frame.rs:14:    pub(crate) t_capture        : std::time::Instant,
+src/platform/windows/frame.rs:15:    pub(crate) t_origin         : std::time::Duration,
+src/platform/windows/frame.rs:16:    pub(crate) duration         : std::time::Duration,
+src/platform/windows/frame.rs:18:    pub(crate) wgpu_device      : Option<Arc<dyn AsRef<wgpu::Device> + Send + Sync + 'static>>,
+src/platform/windows/frame.rs:64:pub struct WindowsAudioFrame {
+src/platform/windows/frame.rs:65:    pub(crate) data: Box<[i16]>,
+src/platform/windows/frame.rs:66:    pub(crate) channel_count: AudioChannelCount,
+src/platform/windows/frame.rs:67:    pub(crate) sample_rate: AudioSampleRate,
+src/platform/windows/frame.rs:68:    pub(crate) duration: Duration,
+src/platform/windows/frame.rs:69:    pub(crate) origin_time: Duration,
+src/platform/windows/frame.rs:70:    pub(crate) frame_id: u64,
+src/platform/windows/frame.rs:7:pub struct WindowsVideoFrame {
+src/platform/windows/frame.rs:8:    pub(crate) device           : ID3D11Device,
+src/platform/windows/frame.rs:9:    pub(crate) frame            : Direct3D11CaptureFrame,
+src/platform/windows/mod.rs:15:pub(crate) struct AutoCom(Option<COINIT>);
+src/platform/windows/mod.rs:3:pub(crate) mod capture_stream;
+src/platform/windows/mod.rs:43:pub(crate) use capturable_content::WindowsCapturableApplication as ImplCapturableApplication;
+src/platform/windows/mod.rs:44:pub(crate) use capturable_content::WindowsCapturableDisplay as ImplCapturableDisplay;
+src/platform/windows/mod.rs:45:pub(crate) use capturable_content::WindowsCapturableWindow as ImplCapturableWindow;
+src/platform/windows/mod.rs:46:pub(crate) use capturable_content::WindowsCapturableContent as ImplCapturableContent;
+src/platform/windows/mod.rs:47:pub(crate) use capturable_content::WindowsCapturableContentFilter as ImplCapturableContentFilter;
+src/platform/windows/mod.rs:49:pub(crate) use capture_stream::WindowsCaptureStream as ImplCaptureStream;
+src/platform/windows/mod.rs:50:pub(crate) use capture_stream::WindowsCaptureConfig as ImplCaptureConfig;
+src/platform/windows/mod.rs:51:pub(crate) use capture_stream::WindowsAudioCaptureConfig as ImplAudioCaptureConfig;
+src/platform/windows/mod.rs:52:pub(crate) use capture_stream::WindowsCaptureAccessToken as ImplCaptureAccessToken;
+src/platform/windows/mod.rs:54:pub(crate) use frame::WindowsVideoFrame as ImplVideoFrame;
+src/platform/windows/mod.rs:55:pub(crate) use frame::WindowsAudioFrame as ImplAudioFrame;
+src/platform/windows/mod.rs:57:pub use capture_stream::WindowsCaptureConfigExt;
+src/platform/windows/mod.rs:60:pub use capturable_content::WindowsCapturableWindowExt;
+src/platform/windows/mod.rs:62:pub use capturable_content::WindowsCapturableContentFilterExt;
+src/platform/windows/mod.rs:64:pub use capturable_content::HWND;
+src/platform/windows/mod.rs:6:pub(crate) mod frame;
+src/platform/windows/mod.rs:8:pub(crate) struct AutoHandle(pub HANDLE);
+src/prelude.rs:11:pub use crate::feature::screenshot::*;
+src/prelude.rs:14:pub use crate::feature::iosurface::*;
+src/prelude.rs:17:pub use crate::feature::metal::*;
+src/prelude.rs:1:pub use crate::capturable_content::*;
+src/prelude.rs:20:pub use crate::feature::dx11::*;
+src/prelude.rs:23:pub use crate::feature::dxgi::*;
+src/prelude.rs:2:pub use crate::frame::*;
+src/prelude.rs:3:pub use crate::capture_stream::*;
+src/prelude.rs:4:pub use crate::util::*;
+src/prelude.rs:7:pub use crate::feature::wgpu::*;
+src/prelude.rs:9:pub use crate::feature::bitmap::*;
+src/util.rs:10:    pub fn scaled(&self, scale: f64) -> Self {
+src/util.rs:18:    pub fn scaled_2d(&self, scale: (f64, f64)) -> Self {
+src/util.rs:28:pub struct Point {
+src/util.rs:29:    pub x: f64,
+src/util.rs:30:    pub y: f64,
+src/util.rs:35:    pub const ZERO: Point = Point {
+src/util.rs:3:pub struct Size {
+src/util.rs:41:    pub fn scaled(&self, scale: f64) -> Self {
+src/util.rs:49:    pub fn scaled_2d(&self, scale: (f64, f64)) -> Self {
+src/util.rs:4:    pub width: f64,
+src/util.rs:59:pub struct Rect {
+src/util.rs:5:    pub height: f64,
+src/util.rs:60:    pub origin: Point,
+src/util.rs:61:    pub size: Size,
+src/util.rs:66:    pub fn scaled(&self, scale: f64) -> Self {
+src/util.rs:74:    pub fn scaled_2d(&self, scale: (f64, f64)) -> Self {

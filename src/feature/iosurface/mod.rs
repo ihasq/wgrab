@@ -1,6 +1,5 @@
 #![cfg(target_os = "macos")]
 #![cfg(feature = "iosurface")]
-#![allow(deprecated)]
 
 use std::os::raw::c_void;
 
@@ -18,20 +17,10 @@ use crate::{
     prelude::VideoFrame,
 };
 
-/// A MacOS IOSurface instance
-#[deprecated(
-    since = "0.5.0",
-    note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
-)]
-pub struct IoSurface(IOSurfaceRef);
+pub(crate) struct IoSurface(IOSurfaceRef);
 
 impl IoSurface {
-    /// Gets the raw IOSurfaceRef
-    #[deprecated(
-        since = "0.5.0",
-        note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
-    )]
-    pub fn get_raw(&self) -> *const c_void {
+    pub(crate) fn as_ptr(&self) -> *const c_void {
         self.0
     }
 
@@ -92,23 +81,9 @@ impl Drop for IoSurface {
     }
 }
 
-/// A video frame which can inter-operate with any MacOS GPU API using IOSurfaces
-#[deprecated(
-    since = "0.5.0",
-    note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
-)]
-pub trait MacosIoSurfaceVideoFrameExt {
-    /// Get the IOSurface representing the video frame's texture
-    #[deprecated(
-        since = "0.5.0",
-        note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
-    )]
-    fn get_iosurface(&self) -> Result<IoSurface, GetIoSurfaceError>;
-}
-
 #[derive(Debug)]
 /// Represents an error when getting the IOSurface behind this video frame
-pub enum GetIoSurfaceError {
+pub(crate) enum GetIoSurfaceError {
     /// There was no image buffer in this frame
     NoImageBuffer,
     /// There was no IOSurface in the frame's image buffer
@@ -141,7 +116,7 @@ impl Error for GetIoSurfaceError {
 pub(crate) fn macos_frame_iosurface(frame: &VideoFrame) -> Result<IoSurface, GetIoSurfaceError> {
     match &frame.impl_video_frame {
         MacosVideoFrame::SCStream(frame) => match frame.sample_buffer.get_image_buffer() {
-            Some(image_buffer) => match image_buffer.get_iosurface_ptr() {
+            Some(image_buffer) => match image_buffer.iosurface_ptr() {
                 Some(ptr) => Ok(IoSurface::from_ref_unretained(ptr)),
                 None => Err(GetIoSurfaceError::NoIoSurface),
             },
@@ -150,11 +125,5 @@ pub(crate) fn macos_frame_iosurface(frame: &VideoFrame) -> Result<IoSurface, Get
         MacosVideoFrame::CGDisplayStream(frame) => {
             Ok(IoSurface::from_ref_unretained(frame.io_surface.0))
         }
-    }
-}
-
-impl MacosIoSurfaceVideoFrameExt for VideoFrame {
-    fn get_iosurface(&self) -> Result<IoSurface, GetIoSurfaceError> {
-        macos_frame_iosurface(self)
     }
 }

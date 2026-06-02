@@ -1,0 +1,145 @@
+--- logs/phase19x_public_items_before.txt	2026-06-02 13:03:26.489205381 +0000
++++ logs/phase19x_public_items_after.txt	2026-06-02 13:13:47.293524972 +0000
+@@ -67,50 +67,6 @@
+ src/capture_stream.rs:323:    pub fn stop(&mut self) -> Result<(), StreamStopError> {
+ src/capture_stream.rs:52:pub enum StreamCreateError {
+ src/capture_stream.rs:91:pub enum StreamStopError {
+-src/feature/bitmap/mod.rs:111:    pub fn free_pooled(&self) {
+-src/feature/bitmap/mod.rs:120:    pub data: Option<Box<[T]>>,
+-src/feature/bitmap/mod.rs:121:    pub pool: Arc<BitmapPool<T>>,
+-src/feature/bitmap/mod.rs:142:pub struct PooledBitmap<T: Sized + Copy + Zeroable> {
+-src/feature/bitmap/mod.rs:144:    pub width: usize,
+-src/feature/bitmap/mod.rs:145:    pub height: usize,
+-src/feature/bitmap/mod.rs:165:pub trait BitmapDataBgra8x4: Sized + AsRef<[[u8; 4]]> + AsMut<[[u8; 4]]> {}
+-src/feature/bitmap/mod.rs:173:pub struct FrameBitmapBgraUnorm8x4<Data: BitmapDataBgra8x4> {
+-src/feature/bitmap/mod.rs:174:    pub data: Data,
+-src/feature/bitmap/mod.rs:175:    pub width:  usize,
+-src/feature/bitmap/mod.rs:176:    pub height: usize,
+-src/feature/bitmap/mod.rs:184:pub trait BitmapDataArgbUnormPacked2101010: Sized + AsRef<[u32]> {}
+-src/feature/bitmap/mod.rs:192:pub struct FrameBitmapArgbUnormPacked2101010<Data: BitmapDataArgbUnormPacked2101010> {
+-src/feature/bitmap/mod.rs:193:    pub data: Data,
+-src/feature/bitmap/mod.rs:194:    pub width:  usize,
+-src/feature/bitmap/mod.rs:195:    pub height: usize,
+-src/feature/bitmap/mod.rs:203:pub trait BitmapDataRgbaF16x4: Sized + AsRef<[[f16; 4]]> {}
+-src/feature/bitmap/mod.rs:211:pub struct FrameBitmapRgbaF16x4<Data: BitmapDataRgbaF16x4> {
+-src/feature/bitmap/mod.rs:212:    pub data: Data,
+-src/feature/bitmap/mod.rs:213:    pub width:  usize,
+-src/feature/bitmap/mod.rs:214:    pub height: usize,
+-src/feature/bitmap/mod.rs:218:pub enum VideoRange {
+-src/feature/bitmap/mod.rs:230:pub trait BitmapDataLuma: Sized + AsRef<[u8]> {}
+-src/feature/bitmap/mod.rs:238:pub trait BitmapDataChroma: Sized + AsRef<[[u8; 2]]> {}
+-src/feature/bitmap/mod.rs:250:pub struct FrameBitmapYCbCr<LumaData: BitmapDataLuma, ChromaData: BitmapDataChroma> {
+-src/feature/bitmap/mod.rs:251:    pub luma_data: LumaData,
+-src/feature/bitmap/mod.rs:252:    pub luma_width: usize,
+-src/feature/bitmap/mod.rs:253:    pub luma_height: usize,
+-src/feature/bitmap/mod.rs:254:    pub chroma_data: ChromaData,
+-src/feature/bitmap/mod.rs:255:    pub chroma_width: usize,
+-src/feature/bitmap/mod.rs:256:    pub chroma_height: usize,
+-src/feature/bitmap/mod.rs:257:    pub range: VideoRange,
+-src/feature/bitmap/mod.rs:265:pub enum FrameBitmap<DataBgra: BitmapDataBgra8x4, DataArgbPacked: BitmapDataArgbUnormPacked2101010, DataRgbaF16: BitmapDataRgbaF16x4, DataLuma: BitmapDataLuma, DataChroma: BitmapDataChroma> {
+-src/feature/bitmap/mod.rs:277:pub type BoxedSliceFrameBitmap = FrameBitmap<
+-src/feature/bitmap/mod.rs:295:pub type PooledFrameBitmap = FrameBitmap<
+-src/feature/bitmap/mod.rs:316:pub struct FrameBitmapPool {
+-src/feature/bitmap/mod.rs:326:    pub fn new_with_initial_capacity(capacity: usize, initial_resolution: (usize, usize), max: usize, format: CapturePixelFormat) -> Self {
+-src/feature/bitmap/mod.rs:357:    pub fn new(max: usize) -> Self {
+-src/feature/bitmap/mod.rs:368:    pub fn free_pooled(&self) {
+-src/feature/bitmap/mod.rs:385:pub trait VideoFrameBitmap {
+-src/feature/bitmap/mod.rs:412:pub enum VideoFrameBitmapError {
+-src/feature/bitmap/mod.rs:48:    pub fn new(initial_count: usize, max: usize, initial_resolution: (usize, usize)) -> Arc<Self> {
+-src/feature/bitmap/mod.rs:73:    pub fn try_get_bitmap(self: &Arc<Self>, resolution: (usize, usize)) -> Option<PooledBitmap<T>> {
+-src/feature/bitmap/mod.rs:78:    pub fn get_bitmap(self: &Arc<Self>, resolution: (usize, usize)) -> PooledBitmap<T> {
+ src/feature/content_picker/macos.rs:8:pub async fn pick_sharable_content(config: SharableContentPickerConfig) -> Result<Option<PickedSharableContent>, SharableContentPickerError> {
+ src/feature/content_picker/mod.rs:16:pub struct SharableContentPickerConfig {
+ src/feature/content_picker/mod.rs:18:    pub display: bool,
+@@ -132,35 +88,23 @@
+ src/feature/diagnostic/mod.rs:53:    pub dx11_surface_info: FrameDx11SurfaceInfo,
+ src/feature/diagnostic/mod.rs:55:    pub dx_feature_level: String,
+ src/feature/diagnostic/mod.rs:59:pub trait FrameDiagnosticExt {
+-src/feature/dx11/mod.rs:13:pub enum WindowsDx11VideoFrameError {
+-src/feature/dx11/mod.rs:44:pub trait WindowsDx11VideoFrame {
+-src/feature/dx11/mod.rs:58:pub(crate) fn windows_dx11_surface_for_video_frame(
+-src/feature/dx11/mod.rs:66:pub(crate) fn windows_dx11_texture_for_video_frame(
+-src/feature/dx11/mod.rs:92:pub trait WindowsDx11CaptureStream {
+-src/feature/dxgi/mod.rs:100:pub trait WindowsDxgiCaptureStream {
+-src/feature/dxgi/mod.rs:16:pub enum WindowsDxgiVideoFrameError {
+-src/feature/dxgi/mod.rs:43:pub trait WindowsDxgiVideoFrame {
+-src/feature/dxgi/mod.rs:52:pub(crate) fn windows_dxgi_surface_for_video_frame(
+-src/feature/dxgi/mod.rs:73:pub enum WindowsDxgiCaptureStreamError {
+-src/feature/iosurface/mod.rs:100:pub trait MacosIoSurfaceVideoFrameExt {
+-src/feature/iosurface/mod.rs:111:pub enum GetIoSurfaceError {
+-src/feature/iosurface/mod.rs:141:pub(crate) fn macos_frame_iosurface(frame: &VideoFrame) -> Result<IoSurface, GetIoSurfaceError> {
+-src/feature/iosurface/mod.rs:26:pub struct IoSurface(IOSurfaceRef);
+-src/feature/iosurface/mod.rs:34:    pub fn get_raw(&self) -> *const c_void {
+-src/feature/iosurface/mod.rs:38:    pub(crate) fn get_pixel_format(&self) -> Option<CVPixelFormat> {
+-src/feature/iosurface/mod.rs:42:    pub(crate) fn get_width(&self) -> usize {
+-src/feature/iosurface/mod.rs:46:    pub(crate) fn get_height(&self) -> usize {
+-src/feature/iosurface/mod.rs:50:    pub(crate) fn get_width_of_plane(&self, plane: usize) -> usize {
+-src/feature/iosurface/mod.rs:54:    pub(crate) fn get_height_of_plane(&self, plane: usize) -> usize {
+-src/feature/iosurface/mod.rs:58:    pub(crate) fn get_bytes_per_row(&self) -> usize {
+-src/feature/iosurface/mod.rs:62:    pub(crate) fn get_bytes_per_row_of_plane(&self, plane: usize) -> usize {
+-src/feature/iosurface/mod.rs:66:    pub(crate) fn get_plane_count(&self) -> usize {
+-src/feature/iosurface/mod.rs:70:    pub(crate) fn from_ref_unretained(r: IOSurfaceRef) -> Self {
+-src/feature/metal/mod.rs:187:pub trait MetalCaptureStreamExt {
+-src/feature/metal/mod.rs:26:pub enum MetalVideoFramePlaneTexture {
+-src/feature/metal/mod.rs:37:pub enum MacosVideoFrameError {
+-src/feature/metal/mod.rs:78:pub trait MetalVideoFrameExt {
+-src/feature/metal/mod.rs:94:pub(crate) fn macos_metal_texture_for_video_frame(
++src/feature/dx11/mod.rs:19:pub(crate) enum WindowsDx11VideoFrameError {
++src/feature/dx11/mod.rs:64:pub(crate) fn windows_dx11_texture_for_video_frame(
++src/feature/dxgi/mod.rs:10:pub enum WindowsDxgiCaptureStreamError {
++src/feature/dxgi/mod.rs:40:pub trait WindowsDxgiCaptureStream {
++src/feature/iosurface/mod.rs:116:pub(crate) fn macos_frame_iosurface(frame: &VideoFrame) -> Result<IoSurface, GetIoSurfaceError> {
++src/feature/iosurface/mod.rs:20:pub(crate) struct IoSurface(IOSurfaceRef);
++src/feature/iosurface/mod.rs:23:    pub(crate) fn as_ptr(&self) -> *const c_void {
++src/feature/iosurface/mod.rs:27:    pub(crate) fn get_pixel_format(&self) -> Option<CVPixelFormat> {
++src/feature/iosurface/mod.rs:31:    pub(crate) fn get_width(&self) -> usize {
++src/feature/iosurface/mod.rs:35:    pub(crate) fn get_height(&self) -> usize {
++src/feature/iosurface/mod.rs:39:    pub(crate) fn get_width_of_plane(&self, plane: usize) -> usize {
++src/feature/iosurface/mod.rs:43:    pub(crate) fn get_height_of_plane(&self, plane: usize) -> usize {
++src/feature/iosurface/mod.rs:47:    pub(crate) fn get_bytes_per_row(&self) -> usize {
++src/feature/iosurface/mod.rs:51:    pub(crate) fn get_bytes_per_row_of_plane(&self, plane: usize) -> usize {
++src/feature/iosurface/mod.rs:55:    pub(crate) fn get_plane_count(&self) -> usize {
++src/feature/iosurface/mod.rs:59:    pub(crate) fn from_ref_unretained(r: IOSurfaceRef) -> Self {
++src/feature/iosurface/mod.rs:86:pub(crate) enum GetIoSurfaceError {
+ src/feature/mod.rs:10:pub mod dxgi;
+ src/feature/mod.rs:15:pub mod dx11;
+ src/feature/mod.rs:20:pub mod iosurface;
+@@ -185,12 +129,12 @@
+ src/feature/wgpu/gpu_only.rs:76:    pub fn usage(&self) -> wgpu::TextureUsages {
+ src/feature/wgpu/gpu_only.rs:81:    pub fn create_view(
+ src/feature/wgpu/gpu_only.rs:93:    pub(crate) fn from_wgpu_texture(
+-src/feature/wgpu/mod.rs:10:pub use gpu_only::{
+-src/feature/wgpu/mod.rs:122:pub enum WgpuVideoFramePlaneTexture {
+-src/feature/wgpu/mod.rs:134:pub enum WgpuVideoFrameError {
+-src/feature/wgpu/mod.rs:444:pub trait WgpuVideoFrameExt {
+-src/feature/wgpu/mod.rs:57:pub trait WgpuCaptureConfigExt: Sized {
+-src/feature/wgpu/mod.rs:681:pub trait WgpuCaptureStreamExt {
++src/feature/wgpu/mod.rs:120:pub enum WgpuVideoFramePlaneTexture {
++src/feature/wgpu/mod.rs:132:pub enum WgpuVideoFrameError {
++src/feature/wgpu/mod.rs:442:pub trait WgpuVideoFrameExt {
++src/feature/wgpu/mod.rs:55:pub trait WgpuCaptureConfigExt: Sized {
++src/feature/wgpu/mod.rs:679:pub trait WgpuCaptureStreamExt {
++src/feature/wgpu/mod.rs:8:pub use gpu_only::{
+ src/frame.rs:104:    pub fn origin_time(&self) -> Duration {
+ src/frame.rs:111:    pub fn frame_id(&self) -> u64 {
+ src/frame.rs:116:pub(crate) trait VideoCaptureFrame {
+@@ -520,8 +464,8 @@
+ src/platform/macos/objc_wrap.rs:2622:pub struct CVPixelBuffer(CVPixelBufferRef);
+ src/platform/macos/objc_wrap.rs:2625:    pub fn from_ref_unretained(r: CVPixelBufferRef) -> Self {
+ src/platform/macos/objc_wrap.rs:2630:    pub fn from_ref_retained(r: CVPixelBufferRef) -> Self {
+-src/platform/macos/objc_wrap.rs:2634:    pub fn get_iosurface_ptr(&self) -> Option<*const c_void> {
+-src/platform/macos/objc_wrap.rs:2645:    pub fn get_iosurface(&self) -> Option<IOSurface> {
++src/platform/macos/objc_wrap.rs:2634:    pub fn iosurface_ptr(&self) -> Option<*const c_void> {
++src/platform/macos/objc_wrap.rs:2645:    pub fn iosurface(&self) -> Option<IOSurface> {
+ src/platform/macos/objc_wrap.rs:2656:    pub fn get_width(&self) -> usize {
+ src/platform/macos/objc_wrap.rs:2662:    pub fn get_height(&self) -> usize {
+ src/platform/macos/objc_wrap.rs:268:    pub(crate) fn new(s: &str) -> Self {
+@@ -538,7 +482,7 @@
+ src/platform/macos/objc_wrap.rs:2784:    pub fn bits_per_component(&self) -> usize {
+ src/platform/macos/objc_wrap.rs:2788:    pub fn bits_per_pixel(&self) -> usize {
+ src/platform/macos/objc_wrap.rs:2792:    pub fn bytes_per_row(&self) -> usize {
+-src/platform/macos/objc_wrap.rs:2796:    pub fn get_bitmap_info(&self) -> CGBitmapInfo {
++src/platform/macos/objc_wrap.rs:2796:    pub fn bitmap_info(&self) -> CGBitmapInfo {
+ src/platform/macos/objc_wrap.rs:281:    pub(crate) fn from_ref_retained(r: CFStringRef) -> Self {
+ src/platform/macos/objc_wrap.rs:2821:    pub fn get_pixel_format(&self) -> CGImagePixelFormat {
+ src/platform/macos/objc_wrap.rs:2834:    pub fn get_data_provider(&self) -> CGDataProvider {

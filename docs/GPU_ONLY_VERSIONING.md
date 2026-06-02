@@ -91,3 +91,12 @@ Meaning:
 ## Phase 18P decision
 
 No package or version change is made in Phase 18P.
+
+## Phase 19X status
+
+Deprecated APIs have been removed on the Git dependency branch.
+
+Package name and version remain unchanged until the owner decides the release
+channel.
+
+Distribution strategy remains Option C: Git dependency only.

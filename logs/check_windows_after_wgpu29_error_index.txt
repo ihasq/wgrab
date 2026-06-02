@@ -1,0 +1,6 @@
+130:error[E0107]: method takes 1 generic argument but 3 generic arguments were supplied
+144:error[E0061]: this method takes 0 arguments but 1 argument was supplied
+187:error[E0107]: method takes 1 generic argument but 3 generic arguments were supplied
+201:error[E0308]: mismatched types
+217:error[E0061]: this method takes 0 arguments but 1 argument was supplied
+379:error[E0308]: mismatched types

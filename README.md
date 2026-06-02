@@ -9,6 +9,14 @@ The current direction is to preserve the CrabGrab API surface while modernizing
 the internal platform and GPU interop implementation, including current `wgpu`
 support.
 
+## GPU-only direction
+
+wgrab is moving toward a GPU-only capture API. New code should prefer
+`WgpuCaptureFrame` and `wgpu::Texture` output instead of CPU-readable bitmap or
+raw platform output APIs.
+
+Legacy bitmap and raw platform APIs are retained temporarily for migration.
+
 [![Crates.io Version](https://img.shields.io/crates/v/crabgrab)](https://crates.io/crates/crabgrab)
 [![docs.rs](https://img.shields.io/docsrs/crabgrab)](https://docs.rs/crabgrab/)
 [MacOS Documentation](https://augmendtech.github.io/CrabGrab/macos_docs/crabgrab/index.html)

@@ -1,4 +1,5 @@
 #![cfg(feature = "bitmap")]
+#![allow(deprecated)]
 
 use std::error::Error;
 use std::fmt::Display;
@@ -131,6 +132,13 @@ impl<T: Sized + Zeroable + Copy> Drop for PooledBitmapData<T> {
 }
 
 /// A pooled bitmap, belinging to it's creator BitmapPool. When this bitmap is dropped, it will be returned to it's pool.
+///
+/// Deprecated: wgrab is moving to GPU-only capture output.
+/// Use `WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame`.
+#[deprecated(
+    since = "0.5.0",
+    note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+)]
 pub struct PooledBitmap<T: Sized + Copy + Zeroable> {
     data: PooledBitmapData<T>,
     pub width: usize,
@@ -150,10 +158,18 @@ impl<T: Sized + Zeroable + Copy> AsMut<[T]> for PooledBitmap<T> {
 }
 
 /// Bitmap data in the Bgra8888 format
+#[deprecated(
+    since = "0.5.0",
+    note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+)]
 pub trait BitmapDataBgra8x4: Sized + AsRef<[[u8; 4]]> + AsMut<[[u8; 4]]> {}
 impl<T: Sized + AsRef<[[u8; 4]]> + AsMut<[[u8; 4]]>> BitmapDataBgra8x4 for T {}
 
 /// A Bgra8888 format bitmap
+#[deprecated(
+    since = "0.5.0",
+    note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+)]
 pub struct FrameBitmapBgraUnorm8x4<Data: BitmapDataBgra8x4> {
     pub data: Data,
     pub width:  usize,
@@ -161,10 +177,18 @@ pub struct FrameBitmapBgraUnorm8x4<Data: BitmapDataBgra8x4> {
 }
 
 /// Bitmap data in the Argb2101010 format
+#[deprecated(
+    since = "0.5.0",
+    note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+)]
 pub trait BitmapDataArgbUnormPacked2101010: Sized + AsRef<[u32]> {}
 impl<T: Sized + AsRef<[u32]> + AsMut<[u32]>> BitmapDataArgbUnormPacked2101010 for T {}
 
 /// A Rgba1010102 format bitmap
+#[deprecated(
+    since = "0.5.0",
+    note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+)]
 pub struct FrameBitmapArgbUnormPacked2101010<Data: BitmapDataArgbUnormPacked2101010> {
     pub data: Data,
     pub width:  usize,
@@ -172,10 +196,18 @@ pub struct FrameBitmapArgbUnormPacked2101010<Data: BitmapDataArgbUnormPacked2101
 }
 
 /// Bitmap data in the RgbaF16x4 format
+#[deprecated(
+    since = "0.5.0",
+    note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+)]
 pub trait BitmapDataRgbaF16x4: Sized + AsRef<[[f16; 4]]> {}
 impl<T: Sized + AsRef<[[f16; 4]]> + AsMut<[[f16; 4]]>> BitmapDataRgbaF16x4 for T {}
 
 /// A RgbaF16x4 format bitmap
+#[deprecated(
+    since = "0.5.0",
+    note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+)]
 pub struct FrameBitmapRgbaF16x4<Data: BitmapDataRgbaF16x4> {
     pub data: Data,
     pub width:  usize,
@@ -191,10 +223,18 @@ pub enum VideoRange {
 }
 
 /// Bitmap data in the Luma/u8 format
+#[deprecated(
+    since = "0.5.0",
+    note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+)]
 pub trait BitmapDataLuma: Sized + AsRef<[u8]> {}
 impl<T: Sized + AsRef<[u8]> + AsMut<[u8]>> BitmapDataLuma for T {}
 
 /// Bitmap data in the CbCr Chroma/u8x2 format
+#[deprecated(
+    since = "0.5.0",
+    note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+)]
 pub trait BitmapDataChroma: Sized + AsRef<[[u8; 2]]> {}
 impl<T: Sized + AsRef<[[u8; 2]]> + AsMut<[[u8; 2]]>> BitmapDataChroma for T {}
 
@@ -203,6 +243,10 @@ impl<T: Sized + AsRef<[[u8; 2]]> + AsMut<[[u8; 2]]>> BitmapDataChroma for T {}
 /// Dual-planar, with luminance (Y) in one plane, and chrominance (CbCr) in another.
 /// Note that each plane may have a different size, as with V420 format, where
 /// the chroma plane is 2 by 2 blocks, but luma is per-pixel
+#[deprecated(
+    since = "0.5.0",
+    note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+)]
 pub struct FrameBitmapYCbCr<LumaData: BitmapDataLuma, ChromaData: BitmapDataChroma> {
     pub luma_data: LumaData,
     pub luma_width: usize,
@@ -214,6 +258,10 @@ pub struct FrameBitmapYCbCr<LumaData: BitmapDataLuma, ChromaData: BitmapDataChro
 }
 
 /// A bitmap image of the selected format
+#[deprecated(
+    since = "0.5.0",
+    note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+)]
 pub enum FrameBitmap<DataBgra: BitmapDataBgra8x4, DataArgbPacked: BitmapDataArgbUnormPacked2101010, DataRgbaF16: BitmapDataRgbaF16x4, DataLuma: BitmapDataLuma, DataChroma: BitmapDataChroma> {
     BgraUnorm8x4(FrameBitmapBgraUnorm8x4<DataBgra>),
     ArgbUnormPacked2101010(FrameBitmapArgbUnormPacked2101010<DataArgbPacked>),
@@ -222,6 +270,10 @@ pub enum FrameBitmap<DataBgra: BitmapDataBgra8x4, DataArgbPacked: BitmapDataArgb
 }
 
 /// A Bitmap with boxed-slice image data
+#[deprecated(
+    since = "0.5.0",
+    note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+)]
 pub type BoxedSliceFrameBitmap = FrameBitmap<
     // Bgra8888
     Box<[[u8; 4]]>,
@@ -236,6 +288,10 @@ pub type BoxedSliceFrameBitmap = FrameBitmap<
 >;
 
 /// A bitmap with booled images as bitmap data
+#[deprecated(
+    since = "0.5.0",
+    note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+)]
 pub type PooledFrameBitmap = FrameBitmap<
     // Bgra8888
     PooledBitmap<[u8; 4]>,
@@ -250,6 +306,13 @@ pub type PooledFrameBitmap = FrameBitmap<
 >;
 
 /// A pool of frame bitmaps
+///
+/// Deprecated: wgrab is moving to GPU-only capture output.
+/// Use `WgpuCaptureFrame` instead of CPU-readable bitmap pools.
+#[deprecated(
+    since = "0.5.0",
+    note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+)]
 pub struct FrameBitmapPool {
     bgra_u8x4: Arc<BitmapPool<[u8; 4]>>,
     argb_packed_2101010: Arc<BitmapPool<u32>>,
@@ -311,17 +374,36 @@ impl FrameBitmapPool {
     }
 }
 
-/// A video frame which can produce a bitmap
+/// A video frame which can produce a bitmap.
+///
+/// Deprecated: wgrab is moving to GPU-only capture output.
+/// Use `WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame`.
+#[deprecated(
+    since = "0.5.0",
+    note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+)]
 pub trait VideoFrameBitmap {
     /// Create a bitmap image from this frame. This usually involves a memory transfer from VRAM to system RAM,
     /// and is an expensive operation.
+    #[deprecated(
+        since = "0.5.0",
+        note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+    )]
     fn get_bitmap(&self) -> Result<BoxedSliceFrameBitmap, VideoFrameBitmapError>;
 
     /// Try and get a pooled bitmap using the given bitmap pool, and return Ok(None) if there are no pooled bitmaps available
     /// and `max` pooled bitmaps exist
+    #[deprecated(
+        since = "0.5.0",
+        note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+    )]
     fn try_get_pooled_bitmap(&self, bitmap_pool: &FrameBitmapPool) -> Result<Option<PooledFrameBitmap>, VideoFrameBitmapError>;
 
     /// Get a pooled bitmap, waiting for one to become available if `max` pooled bitmaps are checked out
+    #[deprecated(
+        since = "0.5.0",
+        note = "wgrab is moving to GPU-only capture output. Use WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame and WgpuCaptureFrame instead."
+    )]
     fn get_pooled_bitmap(&self, bitmap_pool: &FrameBitmapPool) -> Result<PooledFrameBitmap, VideoFrameBitmapError>;
 }
 
@@ -731,5 +813,4 @@ impl VideoFrameBitmap for VideoFrame {
         })
     }
 }
-
 

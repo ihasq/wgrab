@@ -1,0 +1,270 @@
+    Checking naga v29.0.3
+    Checking crabgrab v0.4.0 (/home/ihasq/code/wgrab)
+error[E0432]: unresolved import `crate::platform::platform_impl`
+  --> src/frame.rs:4:23
+   |
+ 4 | use crate::{platform::platform_impl::{ImplAudioFrame, ImplVideoFrame}, util::*};
+   |                       ^^^^^^^^^^^^^ could not find `platform_impl` in `platform`
+   |
+note: found an item that was configured out
+  --> src/platform/mod.rs:6:25
+   |
+ 5 | #[cfg(target_os = "macos")]
+   |       ------------------- the item is gated behind the `macos` feature
+ 6 | pub(crate) use macos as platform_impl;
+   |                         ^^^^^^^^^^^^^
+note: found an item that was configured out
+  --> src/platform/mod.rs:13:28
+   |
+12 | #[cfg(target_os = "windows")]
+   |       --------------------- the item is gated behind the `windows` feature
+13 | pub(crate)  use windows as platform_impl;
+   |                            ^^^^^^^^^^^^^
+
+error[E0432]: unresolved import `crate::platform::platform_impl`
+  --> src/capture_stream.rs:4:22
+   |
+ 4 | use crate::platform::platform_impl::{ImplAudioCaptureConfig, ImplCaptureAccessToken, ImplCaptureConfig, ImplCaptureStream};
+   |                      ^^^^^^^^^^^^^ could not find `platform_impl` in `platform`
+   |
+note: found an item that was configured out
+  --> src/platform/mod.rs:6:25
+   |
+ 5 | #[cfg(target_os = "macos")]
+   |       ------------------- the item is gated behind the `macos` feature
+ 6 | pub(crate) use macos as platform_impl;
+   |                         ^^^^^^^^^^^^^
+note: found an item that was configured out
+  --> src/platform/mod.rs:13:28
+   |
+12 | #[cfg(target_os = "windows")]
+   |       --------------------- the item is gated behind the `windows` feature
+13 | pub(crate)  use windows as platform_impl;
+   |                            ^^^^^^^^^^^^^
+
+error[E0432]: unresolved import `crate::platform::platform_impl`
+  --> src/capturable_content.rs:3:23
+   |
+ 3 | use crate::{platform::platform_impl::{ImplCapturableApplication, ImplCapturableContent, ImplCapturableContentFilter, ImplCapturableD...
+   |                       ^^^^^^^^^^^^^ could not find `platform_impl` in `platform`
+   |
+note: found an item that was configured out
+  --> src/platform/mod.rs:6:25
+   |
+ 5 | #[cfg(target_os = "macos")]
+   |       ------------------- the item is gated behind the `macos` feature
+ 6 | pub(crate) use macos as platform_impl;
+   |                         ^^^^^^^^^^^^^
+note: found an item that was configured out
+  --> src/platform/mod.rs:13:28
+   |
+12 | #[cfg(target_os = "windows")]
+   |       --------------------- the item is gated behind the `windows` feature
+13 | pub(crate)  use windows as platform_impl;
+   |                            ^^^^^^^^^^^^^
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/gpu_only.rs:89:31
+   |
+89 |                 .create_view(&wgpu::TextureViewDescriptor::default()),
+   |                               ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0308]: mismatched types
+  --> src/feature/wgpu/mod.rs:63:101
+   |
+63 |     fn with_wgpu_device(self, wgpu_device: Arc<dyn AsRef<wgpu::Device> + Send + Sync + 'static>) -> Result<Self, String> {
+   |        ---------------- implicitly returns `()` as its body has no tail or `return` expression      ^^^^^^^^^^^^^^^^^^^^ expected `Result<CaptureConfig, String>`, found `()`
+   |
+   = note:   expected enum `Result<capture_stream::CaptureConfig, String>`
+           found unit type `()`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/gpu_only.rs:43:14
+   |
+43 |     texture: wgpu::Texture,
+   |              ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/gpu_only.rs:44:11
+   |
+44 |     size: wgpu::Extent3d,
+   |           ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/gpu_only.rs:45:13
+   |
+45 |     format: wgpu::TextureFormat,
+   |             ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/gpu_only.rs:46:12
+   |
+46 |     usage: wgpu::TextureUsages,
+   |            ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/gpu_only.rs:61:31
+   |
+61 |     pub fn texture(&self) -> &wgpu::Texture {
+   |                               ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/gpu_only.rs:66:27
+   |
+66 |     pub fn size(&self) -> wgpu::Extent3d {
+   |                           ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/gpu_only.rs:71:29
+   |
+71 |     pub fn format(&self) -> wgpu::TextureFormat {
+   |                             ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/gpu_only.rs:76:28
+   |
+76 |     pub fn usage(&self) -> wgpu::TextureUsages {
+   |                            ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/gpu_only.rs:83:29
+   |
+83 |         descriptor: Option<&wgpu::TextureViewDescriptor<'_>>,
+   |                             ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/gpu_only.rs:84:10
+   |
+84 |     ) -> wgpu::TextureView {
+   |          ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/gpu_only.rs:94:18
+   |
+94 |         texture: wgpu::Texture,
+   |                  ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/gpu_only.rs:95:15
+   |
+95 |         size: wgpu::Extent3d,
+   |               ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/gpu_only.rs:96:17
+   |
+96 |         format: wgpu::TextureFormat,
+   |                 ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/gpu_only.rs:97:16
+   |
+97 |         usage: wgpu::TextureUsages,
+   |                ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/mod.rs:58:53
+   |
+58 |     fn with_wgpu_device(self, device: Arc<dyn AsRef<wgpu::Device> + Send + Sync + 'static>) -> Result<Self, String>;
+   |                                                     ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+  --> src/feature/wgpu/mod.rs:63:58
+   |
+63 |     fn with_wgpu_device(self, wgpu_device: Arc<dyn AsRef<wgpu::Device> + Send + Sync + 'static>) -> Result<Self, String> {
+   |                                                          ^^^^ use of unresolved module or unlinked crate `wgpu`
+   |
+   = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+   --> src/feature/wgpu/mod.rs:144:17
+    |
+144 |         actual: wgpu::Backend,
+    |                 ^^^^ use of unresolved module or unlinked crate `wgpu`
+    |
+    = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+   --> src/feature/wgpu/mod.rs:446:106
+    |
+446 | ...bel: Option<&'static str>) -> Result<wgpu::Texture, WgpuVideoFrameError>;
+    |                                         ^^^^ use of unresolved module or unlinked crate `wgpu`
+    |
+    = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+   --> src/feature/wgpu/mod.rs:450:106
+    |
+450 | ...bel: Option<&'static str>) -> Result<wgpu::Texture, WgpuVideoFrameError> {
+    |                                         ^^^^ use of unresolved module or unlinked crate `wgpu`
+    |
+    = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+   --> src/feature/wgpu/mod.rs:683:63
+    |
+683 |     fn get_wgpu_device_wrapper(&self) -> Option<Arc<dyn AsRef<wgpu::Device> + Send + Sync + 'static>>;
+    |                                                               ^^^^ use of unresolved module or unlinked crate `wgpu`
+    |
+    = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+   --> src/feature/wgpu/mod.rs:685:42
+    |
+685 |     fn get_wgpu_device(&self) -> Option<&wgpu::Device>;
+    |                                          ^^^^ use of unresolved module or unlinked crate `wgpu`
+    |
+    = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+   --> src/feature/wgpu/mod.rs:689:42
+    |
+689 |     fn get_wgpu_device(&self) -> Option<&wgpu::Device> {
+    |                                          ^^^^ use of unresolved module or unlinked crate `wgpu`
+    |
+    = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `wgpu` in this scope
+   --> src/feature/wgpu/mod.rs:696:63
+    |
+696 |     fn get_wgpu_device_wrapper(&self) -> Option<Arc<dyn AsRef<wgpu::Device> + Send + Sync + 'static>> {
+    |                                                               ^^^^ use of unresolved module or unlinked crate `wgpu`
+    |
+    = help: if you wanted to use a crate named `wgpu`, use `cargo add wgpu` to add it to your `Cargo.toml`
+
+Some errors have detailed explanations: E0308, E0432, E0433.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `crabgrab` (lib) due to 28 previous errors
+warning: build failed, waiting for other jobs to finish...

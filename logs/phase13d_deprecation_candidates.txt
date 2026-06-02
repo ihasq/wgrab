@@ -1,0 +1,50 @@
+src/prelude.rs:9:pub use crate::feature::bitmap::*;
+src/prelude.rs:17:pub use crate::feature::metal::*;
+src/platform/macos/capturable_content.rs:12:    pub windows: Vec<SCWindow>,
+src/platform/macos/capturable_content.rs:13:    pub displays: Vec<SCDisplay>,
+src/platform/macos/objc_wrap.rs:1640:    pub bytes_per_packet: u32,
+src/platform/macos/objc_wrap.rs:1642:    pub bytes_per_frame: u32,
+src/platform/macos/objc_wrap.rs:2038:    pub fn new(callback: impl Fn(CGDisplayStreamFrameStatus, Duration, IOSurface) + 'static, display_id: u32, size: (usize, usize), pixel_format: SCStreamPixelFormat, options_dict: NSDictionary, dispatch_queue: DispatchQueue) -> Self {
+src/platform/macos/objc_wrap.rs:2154:pub enum IOSurfaceLockError {
+src/platform/macos/objc_wrap.rs:2159:pub struct IOSurfaceLockGaurd(IOSurfaceRef, u32);
+src/platform/macos/objc_wrap.rs:2195:pub enum IOSurfaceComponentName {
+src/platform/macos/objc_wrap.rs:2216:pub enum IOSurfaceComponentType {
+src/platform/macos/objc_wrap.rs:2231:pub enum IOSurfaceCacheMode {
+src/platform/macos/objc_wrap.rs:2645:    pub fn get_iosurface(&self) -> Option<IOSurface> {
+src/platform/macos/objc_wrap.rs:2792:    pub fn bytes_per_row(&self) -> usize {
+src/platform/macos/objc_wrap.rs:2796:    pub fn get_bitmap_info(&self) -> CGBitmapInfo {
+src/platform/macos/objc_wrap.rs:2881:pub enum CGBitmapAlphaInfo {
+src/platform/macos/objc_wrap.rs:2891:pub enum CGBitmapByteOrder {
+src/platform/macos/objc_wrap.rs:2907:pub struct CGBitmapInfo {
+src/feature/content_picker/mod.rs:22:    pub excluded_apps: Vec<CapturableApplication>,
+src/feature/iosurface/mod.rs:21:pub struct IoSurface(IOSurfaceRef);
+src/feature/bitmap/mod.rs:72:    pub fn try_get_bitmap(self: &Arc<Self>, resolution: (usize, usize)) -> Option<PooledBitmap<T>> {
+src/feature/bitmap/mod.rs:77:    pub fn get_bitmap(self: &Arc<Self>, resolution: (usize, usize)) -> PooledBitmap<T> {
+src/feature/bitmap/mod.rs:120:    pub pool: Arc<BitmapPool<T>>,
+src/feature/bitmap/mod.rs:134:pub struct PooledBitmap<T: Sized + Copy + Zeroable> {
+src/feature/bitmap/mod.rs:153:pub trait BitmapDataBgra8x4: Sized + AsRef<[[u8; 4]]> + AsMut<[[u8; 4]]> {}
+src/feature/bitmap/mod.rs:157:pub struct FrameBitmapBgraUnorm8x4<Data: BitmapDataBgra8x4> {
+src/feature/bitmap/mod.rs:164:pub trait BitmapDataArgbUnormPacked2101010: Sized + AsRef<[u32]> {}
+src/feature/bitmap/mod.rs:168:pub struct FrameBitmapArgbUnormPacked2101010<Data: BitmapDataArgbUnormPacked2101010> {
+src/feature/bitmap/mod.rs:175:pub trait BitmapDataRgbaF16x4: Sized + AsRef<[[f16; 4]]> {}
+src/feature/bitmap/mod.rs:179:pub struct FrameBitmapRgbaF16x4<Data: BitmapDataRgbaF16x4> {
+src/feature/bitmap/mod.rs:194:pub trait BitmapDataLuma: Sized + AsRef<[u8]> {}
+src/feature/bitmap/mod.rs:198:pub trait BitmapDataChroma: Sized + AsRef<[[u8; 2]]> {}
+src/feature/bitmap/mod.rs:206:pub struct FrameBitmapYCbCr<LumaData: BitmapDataLuma, ChromaData: BitmapDataChroma> {
+src/feature/bitmap/mod.rs:217:pub enum FrameBitmap<DataBgra: BitmapDataBgra8x4, DataArgbPacked: BitmapDataArgbUnormPacked2101010, DataRgbaF16: BitmapDataRgbaF16x4, DataLuma: BitmapDataLuma, DataChroma: BitmapDataChroma> {
+src/feature/bitmap/mod.rs:225:pub type BoxedSliceFrameBitmap = FrameBitmap<
+src/feature/bitmap/mod.rs:239:pub type PooledFrameBitmap = FrameBitmap<
+src/feature/bitmap/mod.rs:253:pub struct FrameBitmapPool {
+src/feature/bitmap/mod.rs:315:pub trait VideoFrameBitmap {
+src/feature/bitmap/mod.rs:330:pub enum VideoFrameBitmapError {
+src/feature/diagnostic/mod.rs:11:pub struct FrameIOSurfaceComponentInfo {
+src/feature/diagnostic/mod.rs:20:pub struct FrameIOSurfacePlaneInfo {
+src/feature/diagnostic/mod.rs:29:pub struct FrameIOSurfaceInfo {
+src/feature/diagnostic/mod.rs:39:pub struct FrameDx11SurfaceInfo {
+src/feature/diagnostic/mod.rs:49:    pub iosurface_info: Option<FrameIOSurfaceInfo>,
+src/feature/diagnostic/mod.rs:51:    pub info_dictionary: Vec<(String, String)>,
+src/feature/diagnostic/mod.rs:53:    pub dx11_surface_info: FrameDx11SurfaceInfo,
+src/feature/mod.rs:24:pub mod bitmap;
+src/feature/dx11/mod.rs:12:pub enum WindowsDx11VideoFrameError {
+src/feature/dx11/mod.rs:39:pub trait WindowsDx11VideoFrame {
+src/feature/dx11/mod.rs:63:pub trait WindowsDx11CaptureStream {

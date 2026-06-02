@@ -1,3 +1,7 @@
+//! GPU-only capture example.
+//!
+//! This example intentionally does not read captured pixels back to CPU memory.
+
 #[cfg(any(target_os = "macos", target_os = "windows"))]
 use std::process::ExitCode;
 

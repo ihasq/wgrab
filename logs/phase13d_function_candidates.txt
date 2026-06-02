@@ -1,0 +1,80 @@
+src/frame.rs:62:    fn audio_channel_buffer(&mut self, channel: usize) -> Result<AudioChannelData<'_>, AudioBufferError>;
+src/frame.rs:94:    pub fn audio_channel_buffer(&mut self, channel: usize) -> Result<AudioChannelData<'_>, AudioBufferError> {
+src/platform/macos/frame.rs:174:    fn audio_channel_buffer(&mut self, channel: usize) -> Result<AudioChannelData<'_>, AudioBufferError> {
+src/platform/macos/objc_wrap.rs:109:    fn CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(sbuf: CMSampleBufferRef, buffer_list_size_needed_out: *mut usize, buffer_list_out: *mut AudioBufferList, buffer_list_size: usize, block_buffer_structure_allocator: CFAllocatorRef, block_buffer_block_allocator: CFAllocatorRef, flags: u32, block_buffer_out: *mut CMBlockBufferRef) -> OSStatus;
+src/platform/macos/objc_wrap.rs:110:    fn CMSampleBufferGetImageBuffer(sbuffer: CMSampleBufferRef) -> CVPixelBufferRef;
+src/platform/macos/objc_wrap.rs:111:    fn CVPixelBufferGetIOSurface(pixel_buffer: CVPixelBufferRef) -> IOSurfaceRef;
+src/platform/macos/objc_wrap.rs:112:    fn CVPixelBufferGetWidth(pixel_buffer: CVPixelBufferRef) -> usize;
+src/platform/macos/objc_wrap.rs:113:    fn CVPixelBufferGetHeight(pixel_buffer: CVPixelBufferRef) -> usize;
+src/platform/macos/objc_wrap.rs:114:    fn CVBufferRetain(buffer: CVPixelBufferRef) -> CVPixelBufferRef;
+src/platform/macos/objc_wrap.rs:115:    fn CVBufferRelease(buffer: CVPixelBufferRef) -> CVPixelBufferRef;
+src/platform/macos/objc_wrap.rs:122:    fn CFStringCreateWithBytes(allocator: CFTypeRef, bytes: *const u8, byte_count: isize, encoding: u32, contains_byte_order_marker: bool) -> CFStringRef;
+src/platform/macos/objc_wrap.rs:140:    pub(crate) fn CGWindowListCreateImage(screen_bounds: CGRect, options: u32, window_id: u32, image_options: u32) -> CGImageRef;
+src/platform/macos/objc_wrap.rs:146:    fn CGImageRetain(image: CGImageRef);
+src/platform/macos/objc_wrap.rs:147:    fn CGImageRelease(image: CGImageRef);
+src/platform/macos/objc_wrap.rs:148:    fn CGImageGetWidth(image: CGImageRef) -> usize;
+src/platform/macos/objc_wrap.rs:149:    fn CGImageGetHeight(image: CGImageRef) -> usize;
+src/platform/macos/objc_wrap.rs:150:    fn CGImageGetDataProvider(image: CGImageRef) -> CGDataProviderRef;
+src/platform/macos/objc_wrap.rs:151:    fn CGImageGetBitsPerComponent(image: CGImageRef) -> usize;
+src/platform/macos/objc_wrap.rs:152:    fn CGImageGetBitsPerPixel(image: CGImageRef) -> usize;
+src/platform/macos/objc_wrap.rs:153:    fn CGImageGetBytesPerRow(image: CGImageRef) -> usize;
+src/platform/macos/objc_wrap.rs:154:    fn CGImageGetPixelFormatInfo(image: CGImageRef) -> u32;
+src/platform/macos/objc_wrap.rs:155:    fn CGImageGetBitmapInfo(image: CGImageRef) -> u32;
+src/platform/macos/objc_wrap.rs:1266:    pub fn call_output(&mut self, sample_buffer: CMSampleBuffer, output_type: SCStreamOutputType) {
+src/platform/macos/objc_wrap.rs:1308:extern fn sc_stream_output_did_output_sample_buffer_of_type(this: *mut AnyObject, _sel: Sel, stream: SCStream, buffer: CMSampleBufferRef, output_type: SCStreamOutputTypeEncoded) {
+src/platform/macos/objc_wrap.rs:1471:    pub(crate) fn copy_from_ref(r: CMSampleBufferRef) -> Result<Self, ()> {
+src/platform/macos/objc_wrap.rs:1497:    pub(crate) unsafe fn get_audio_buffer_list_with_block_buffer(&self) -> Result<(AudioBufferList, CMBlockBuffer), ()> {
+src/platform/macos/objc_wrap.rs:1531:    pub(crate) fn get_image_buffer(&self) -> Option<CVPixelBuffer> {
+src/platform/macos/objc_wrap.rs:1759:    pub fn new_with_format_buffer_list_no_copy_deallocator(format: AVAudioFormat, buffer_list_no_copy: *const AudioBufferList) -> Result<Self, ()> {
+src/platform/macos/objc_wrap.rs:1784:    pub fn f32_buffer(&self, channel: usize) -> Option<*const f32> {
+src/platform/macos/objc_wrap.rs:1804:    pub fn i32_buffer(&self, channel: usize) -> Option<*const i32> {
+src/platform/macos/objc_wrap.rs:1824:    pub fn i16_buffer(&self, channel: usize) -> Option<*const i16> {
+src/platform/macos/objc_wrap.rs:2257:    pub(crate) fn get_bytes_per_row(&self) -> usize {
+src/platform/macos/objc_wrap.rs:2263:    pub(crate) fn get_bytes_per_row_of_plane(&self, plane: usize) -> usize {
+src/platform/macos/objc_wrap.rs:2634:    pub fn get_iosurface_ptr(&self) -> Option<*const c_void> {
+src/platform/macos/objc_wrap.rs:2645:    pub fn get_iosurface(&self) -> Option<IOSurface> {
+src/platform/macos/objc_wrap.rs:2792:    pub fn bytes_per_row(&self) -> usize {
+src/platform/macos/objc_wrap.rs:2796:    pub fn get_bitmap_info(&self) -> CGBitmapInfo {
+src/platform/macos/objc_wrap.rs:2925:    fn copy_data(&self) -> CFData {
+src/platform/macos/objc_wrap.rs:3233:    pub fn capture_image_with_filter_and_configuration(filter: &SCContentFilter, config: &SCStreamConfiguration, completion_handler: impl FnMut(Result<CGImage, NSError>) + Send + 'static) {
+src/platform/macos/objc_wrap.rs:3252:    pub fn capture_samplebuffer_with_filter_and_configuration(filter: SCContentFilter, config: SCStreamConfiguration, completion_handler: impl FnMut(Result<CMSampleBuffer, String>) + Send + 'static) {
+src/platform/macos/capture_stream.rs:59:    fn with_metal_device(self, metal_device: metal::Device) -> Self;
+src/platform/macos/capture_stream.rs:117:    fn with_metal_device(self, metal_device: metal::Device) -> Self {
+src/platform/windows/frame.rs:82:    fn audio_channel_buffer(&mut self, channel: usize) -> Result<crate::prelude::AudioChannelData<'_>, crate::prelude::AudioBufferError> {
+src/capture_stream.rs:244:    pub fn with_buffer_count(self, buffer_count: usize) -> Self {
+src/feature/iosurface/mod.rs:49:    pub(crate) fn get_bytes_per_row(&self) -> usize {
+src/feature/iosurface/mod.rs:53:    pub(crate) fn get_bytes_per_row_of_plane(&self, plane: usize) -> usize {
+src/feature/iosurface/mod.rs:89:    fn get_iosurface(&self) -> Result<IoSurface, GetIoSurfaceError>;
+src/feature/iosurface/mod.rs:125:    fn get_iosurface(&self) -> Result<IoSurface, GetIoSurfaceError> {
+src/feature/bitmap/mod.rs:61:    fn make_new_bitmap(self: &Arc<Self>, resolution: (usize, usize)) -> Option<PooledBitmap<T>> {
+src/feature/bitmap/mod.rs:72:    pub fn try_get_bitmap(self: &Arc<Self>, resolution: (usize, usize)) -> Option<PooledBitmap<T>> {
+src/feature/bitmap/mod.rs:77:    pub fn get_bitmap(self: &Arc<Self>, resolution: (usize, usize)) -> PooledBitmap<T> {
+src/feature/bitmap/mod.rs:88:    fn try_get_bitmap_internal(self: &Arc<Self>, resolution: (usize, usize), free_bitmaps_and_count: &mut (Vec<Box<[T]>>, usize)) -> Option<PooledBitmap<T>> {
+src/feature/bitmap/mod.rs:318:    fn get_bitmap(&self) -> Result<BoxedSliceFrameBitmap, VideoFrameBitmapError>;
+src/feature/bitmap/mod.rs:322:    fn try_get_pooled_bitmap(&self, bitmap_pool: &FrameBitmapPool) -> Result<Option<PooledFrameBitmap>, VideoFrameBitmapError>;
+src/feature/bitmap/mod.rs:325:    fn get_pooled_bitmap(&self, bitmap_pool: &FrameBitmapPool) -> Result<PooledFrameBitmap, VideoFrameBitmapError>;
+src/feature/bitmap/mod.rs:373:    fn get_bitmap_internal<T>(&self, output_mapping: &impl Fn(VideoFrameDataCopyPtrs) -> Result<T, VideoFrameBitmapError>) -> Result<T, VideoFrameBitmapError>; 
+src/feature/bitmap/mod.rs:377:    fn get_bitmap_internal<T>(&self, output_mapping: &impl Fn(VideoFrameDataCopyPtrs) -> Result<T, VideoFrameBitmapError>) -> Result<T, VideoFrameBitmapError> {
+src/feature/bitmap/mod.rs:532:fn copy_boxed_slice_plane<T: Sized + Copy + Pod + Zeroable>(plane_ptr: VideoFramePlanePtr) -> Box<[T]> {
+src/feature/bitmap/mod.rs:542:fn copy_pooled_plane<T: Sized + Copy + Pod + Zeroable>(plane_ptr: VideoFramePlanePtr, pool: &Arc<BitmapPool<T>>) -> PooledBitmap<T> {
+src/feature/bitmap/mod.rs:552:fn try_copy_pooled_plane<T: Sized + Copy + Pod + Zeroable>(plane_ptr: VideoFramePlanePtr, pool: &Arc<BitmapPool<T>>) -> Option<PooledBitmap<T>> {
+src/feature/bitmap/mod.rs:563:    fn get_bitmap(&self) -> Result<BoxedSliceFrameBitmap, VideoFrameBitmapError> {
+src/feature/bitmap/mod.rs:613:    fn get_pooled_bitmap(&self, bitmap_pool: &FrameBitmapPool) -> Result<PooledFrameBitmap, VideoFrameBitmapError> {
+src/feature/bitmap/mod.rs:663:    fn try_get_pooled_bitmap(&self, bitmap_pool: &FrameBitmapPool) -> Result<Option<PooledFrameBitmap>, VideoFrameBitmapError> {
+src/feature/diagnostic/mod.rs:64:fn get_iosurface_info(iosurface: &IOSurface) -> FrameIOSurfaceInfo {
+src/feature/wgpu/mod.rs:202:fn get_metal_hal_device(
+src/feature/wgpu/mod.rs:225:fn metal_pixel_format_to_wgpu(
+src/feature/wgpu/mod.rs:253:fn metal_texture_dimension(
+src/feature/wgpu/mod.rs:265:fn metal_texture_usage_to_wgpu(
+src/feature/wgpu/mod.rs:295:fn objc2_iosurface_ref(io_surface: &IoSurface) -> &objc2_io_surface::IOSurfaceRef {
+src/feature/wgpu/mod.rs:303:fn objc2_metal_texture_from_iosurface(
+src/feature/dx11/mod.rs:41:    fn get_dx11_surface(&self) -> Result<(IDirect3DSurface, DirectXPixelFormat), WindowsDx11VideoFrameError>;
+src/feature/dx11/mod.rs:42:    fn get_dx11_texture(&self) -> Result<(ID3D11Texture2D, DirectXPixelFormat), WindowsDx11VideoFrameError>;
+src/feature/dx11/mod.rs:46:    fn get_dx11_surface(&self) -> Result<(IDirect3DSurface, DirectXPixelFormat), WindowsDx11VideoFrameError> {
+src/feature/dx11/mod.rs:52:    fn get_dx11_texture(&self) -> Result<(ID3D11Texture2D, DirectXPixelFormat), WindowsDx11VideoFrameError> {
+src/feature/dx11/mod.rs:65:    fn get_dx11_device(&self) -> ID3D11Device;
+src/feature/dx11/mod.rs:69:    fn get_dx11_device(&self) -> ID3D11Device {
+src/feature/metal/mod.rs:71:    fn get_metal_texture(&self, plane: MetalVideoFramePlaneTexture) -> Result<metal::Texture, MacosVideoFrameError>;
+src/feature/metal/mod.rs:83:    fn get_metal_texture(&self, plane: MetalVideoFramePlaneTexture) -> Result<metal::Texture, MacosVideoFrameError> {
+src/feature/metal/mod.rs:165:    fn get_metal_device(&self) -> metal::Device;
+src/feature/metal/mod.rs:169:    fn get_metal_device(&self) -> metal::Device {

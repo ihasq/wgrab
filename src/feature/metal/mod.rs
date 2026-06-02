@@ -1,5 +1,6 @@
 #![cfg(target_os = "macos")]
 #![cfg(feature = "metal")]
+#![allow(deprecated)]
 
 use metal::foreign_types::ForeignType;
 use objc2::msg_send;
@@ -18,6 +19,10 @@ use crate::platform::macos::frame::MacosVideoFrame;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 /// Identifies planes of a video frame
+#[deprecated(
+    since = "0.5.0",
+    note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
+)]
 pub enum MetalVideoFramePlaneTexture {
     /// The single RGBA plane for an RGBA format frame
     Rgba,
@@ -66,8 +71,16 @@ impl Error for MacosVideoFrameError {
 }
 
 /// A video frame which can be used to create metal textures
+#[deprecated(
+    since = "0.5.0",
+    note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
+)]
 pub trait MetalVideoFrameExt {
     /// Get the texture for the given plane of the video frame
+    #[deprecated(
+        since = "0.5.0",
+        note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
+    )]
     fn get_metal_texture(&self, plane: MetalVideoFramePlaneTexture) -> Result<metal::Texture, MacosVideoFrameError>;
 }
 
@@ -160,8 +173,16 @@ impl MetalVideoFrameExt for VideoFrame {
 }
 
 /// A capture stream which inter-operates with Metal
+#[deprecated(
+    since = "0.5.0",
+    note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
+)]
 pub trait MetalCaptureStreamExt {
     /// Get the metal device used for frame capture
+    #[deprecated(
+        since = "0.5.0",
+        note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
+    )]
     fn get_metal_device(&self) -> metal::Device;
 }
 

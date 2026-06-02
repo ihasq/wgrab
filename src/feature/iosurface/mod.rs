@@ -1,5 +1,6 @@
 #![cfg(target_os = "macos")]
 #![cfg(feature = "iosurface")]
+#![allow(deprecated)]
 
 use std::os::raw::c_void;
 
@@ -18,10 +19,18 @@ use crate::{
 };
 
 /// A MacOS IOSurface instance
+#[deprecated(
+    since = "0.5.0",
+    note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
+)]
 pub struct IoSurface(IOSurfaceRef);
 
 impl IoSurface {
     /// Gets the raw IOSurfaceRef
+    #[deprecated(
+        since = "0.5.0",
+        note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
+    )]
     pub fn get_raw(&self) -> *const c_void {
         self.0
     }
@@ -84,8 +93,16 @@ impl Drop for IoSurface {
 }
 
 /// A video frame which can inter-operate with any MacOS GPU API using IOSurfaces
+#[deprecated(
+    since = "0.5.0",
+    note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
+)]
 pub trait MacosIoSurfaceVideoFrameExt {
     /// Get the IOSurface representing the video frame's texture
+    #[deprecated(
+        since = "0.5.0",
+        note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
+    )]
     fn get_iosurface(&self) -> Result<IoSurface, GetIoSurfaceError>;
 }
 

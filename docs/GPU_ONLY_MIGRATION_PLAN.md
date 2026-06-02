@@ -38,3 +38,10 @@
 Phase 2 has started.
 
 The new GPU-only API is being introduced without removing legacy APIs yet.
+
+## Phase 3 status
+
+Legacy CPU-readable and raw platform output APIs are now being marked as
+deprecated.
+
+No API is removed in this phase.

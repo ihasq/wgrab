@@ -55,3 +55,59 @@ APIs that may remain internally but should not be public.
 ## Out of scope
 
 Audio APIs such as `AudioFrame::audio_channel_buffer` expose audio sample buffers, not captured screen regions. They are not part of the GPU-only video output decision in phase 11G.
+
+## Phase 13D result
+
+Deprecated:
+
+- `PooledBitmap`
+- `BitmapDataBgra8x4`
+- `BitmapDataArgbUnormPacked2101010`
+- `BitmapDataRgbaF16x4`
+- `BitmapDataLuma`
+- `BitmapDataChroma`
+- `FrameBitmapBgraUnorm8x4`
+- `FrameBitmapArgbUnormPacked2101010`
+- `FrameBitmapRgbaF16x4`
+- `FrameBitmapYCbCr`
+- `FrameBitmap`
+- `BoxedSliceFrameBitmap`
+- `PooledFrameBitmap`
+- `FrameBitmapPool`
+- `VideoFrameBitmap`
+- `VideoFrameBitmap::get_bitmap`
+- `VideoFrameBitmap::try_get_pooled_bitmap`
+- `VideoFrameBitmap::get_pooled_bitmap`
+- `IoSurface`
+- `IoSurface::get_raw`
+- `MacosIoSurfaceVideoFrameExt`
+- `MacosIoSurfaceVideoFrameExt::get_iosurface`
+- `MetalVideoFramePlaneTexture`
+- `MetalVideoFrameExt`
+- `MetalVideoFrameExt::get_metal_texture`
+- `MetalCaptureStreamExt`
+- `MetalCaptureStreamExt::get_metal_device`
+- `WindowsDx11VideoFrame`
+- `WindowsDx11VideoFrame::get_dx11_surface`
+- `WindowsDx11VideoFrame::get_dx11_texture`
+- `WindowsDx11CaptureStream`
+- `WindowsDx11CaptureStream::get_dx11_device`
+
+Deferred:
+
+- API removal
+- feature removal
+- public module removal
+- package rename
+- version bump
+
+Not deprecated yet because still internal implementation dependency:
+
+- `objc_wrap` platform bridge types and functions
+- `dxgi` feature APIs
+- diagnostic structs
+
+Reason:
+
+These are either low-level platform implementation details, diagnostics, or
+outside the primary CPU/readback and raw-output deprecation set for phase 13D.

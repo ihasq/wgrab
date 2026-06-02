@@ -1,5 +1,6 @@
 #![cfg(target_os = "windows")]
 #![cfg(feature = "dx11")]
+#![allow(deprecated)]
 
 use windows::{core::Interface, Graphics::DirectX::{Direct3D11::IDirect3DSurface, DirectXPixelFormat}, Win32::{Graphics::Direct3D11::{ID3D11Device, ID3D11Texture2D}, System::WinRT::Direct3D11::IDirect3DDxgiInterfaceAccess}};
 
@@ -36,9 +37,21 @@ impl Error for WindowsDx11VideoFrameError {
 }
 
 /// A video frame which can yield a DX11 surface
+#[deprecated(
+    since = "0.5.0",
+    note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
+)]
 pub trait WindowsDx11VideoFrame {
     /// Get the DX11 surface representing the video frame's texture memory, as well as the pixel format
+    #[deprecated(
+        since = "0.5.0",
+        note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
+    )]
     fn get_dx11_surface(&self) -> Result<(IDirect3DSurface, DirectXPixelFormat), WindowsDx11VideoFrameError>;
+    #[deprecated(
+        since = "0.5.0",
+        note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
+    )]
     fn get_dx11_texture(&self) -> Result<(ID3D11Texture2D, DirectXPixelFormat), WindowsDx11VideoFrameError>;
 }
 
@@ -60,8 +73,16 @@ impl WindowsDx11VideoFrame for VideoFrame {
 }
 
 /// A capture stream which can inter-operate with DX11
+#[deprecated(
+    since = "0.5.0",
+    note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
+)]
 pub trait WindowsDx11CaptureStream {
     /// Get the underlying DX11 device used for frame capture
+    #[deprecated(
+        since = "0.5.0",
+        note = "raw platform capture outputs are planned to become internal implementation details. Prefer WgpuCaptureFrame for GPU-only capture output."
+    )]
     fn get_dx11_device(&self) -> ID3D11Device;
 }
 

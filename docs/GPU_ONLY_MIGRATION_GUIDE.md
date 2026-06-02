@@ -60,3 +60,9 @@ longer the preferred path.
 ## Deferred removals
 
 Actual removal is deferred to a later breaking-change phase.
+
+## Raw platform API note
+
+Raw platform APIs are deprecated or under review for future internalization.
+
+Use `WgpuCaptureFrame` unless you are maintaining legacy interop code.

@@ -1,0 +1,32 @@
+src/feature/iosurface/mod.rs:22:#[deprecated(
+src/feature/iosurface/mod.rs:30:    #[deprecated(
+src/feature/iosurface/mod.rs:96:#[deprecated(
+src/feature/iosurface/mod.rs:102:    #[deprecated(
+src/feature/bitmap/mod.rs:138:#[deprecated(
+src/feature/bitmap/mod.rs:161:#[deprecated(
+src/feature/bitmap/mod.rs:169:#[deprecated(
+src/feature/bitmap/mod.rs:180:#[deprecated(
+src/feature/bitmap/mod.rs:188:#[deprecated(
+src/feature/bitmap/mod.rs:199:#[deprecated(
+src/feature/bitmap/mod.rs:207:#[deprecated(
+src/feature/bitmap/mod.rs:226:#[deprecated(
+src/feature/bitmap/mod.rs:234:#[deprecated(
+src/feature/bitmap/mod.rs:246:#[deprecated(
+src/feature/bitmap/mod.rs:261:#[deprecated(
+src/feature/bitmap/mod.rs:273:#[deprecated(
+src/feature/bitmap/mod.rs:291:#[deprecated(
+src/feature/bitmap/mod.rs:312:#[deprecated(
+src/feature/bitmap/mod.rs:381:#[deprecated(
+src/feature/bitmap/mod.rs:388:    #[deprecated(
+src/feature/bitmap/mod.rs:396:    #[deprecated(
+src/feature/bitmap/mod.rs:403:    #[deprecated(
+src/feature/dx11/mod.rs:40:#[deprecated(
+src/feature/dx11/mod.rs:46:    #[deprecated(
+src/feature/dx11/mod.rs:51:    #[deprecated(
+src/feature/dx11/mod.rs:76:#[deprecated(
+src/feature/dx11/mod.rs:82:    #[deprecated(
+src/feature/metal/mod.rs:22:#[deprecated(
+src/feature/metal/mod.rs:74:#[deprecated(
+src/feature/metal/mod.rs:80:    #[deprecated(
+src/feature/metal/mod.rs:176:#[deprecated(
+src/feature/metal/mod.rs:182:    #[deprecated(

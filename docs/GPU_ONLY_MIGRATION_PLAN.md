@@ -45,3 +45,9 @@ Legacy CPU-readable and raw platform output APIs are now being marked as
 deprecated.
 
 No API is removed in this phase.
+
+## Phase 4 planning status
+
+Raw platform output internalization planning has started.
+
+No public APIs are removed in this phase.

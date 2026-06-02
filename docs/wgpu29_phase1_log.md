@@ -4,7 +4,7 @@
 
 - Branch: wgpu29-phase1
 - Base commit: a535cfbbadb9ea5ba36aef9fa61a5da15021815b
-- Final commit: 未作成
+- Final commit: 最終提出時の branch tip は最終報告に記載。依存更新診断コミットは 0122f242。
 
 ## 2. 開発環境
 

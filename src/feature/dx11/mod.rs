@@ -55,20 +55,32 @@ pub trait WindowsDx11VideoFrame {
     fn get_dx11_texture(&self) -> Result<(ID3D11Texture2D, DirectXPixelFormat), WindowsDx11VideoFrameError>;
 }
 
+pub(crate) fn windows_dx11_surface_for_video_frame(
+    frame: &VideoFrame,
+) -> Result<(IDirect3DSurface, DirectXPixelFormat), WindowsDx11VideoFrameError> {
+    frame.impl_video_frame.frame.Surface()
+        .map_err(|e| WindowsDx11VideoFrameError::Other(format!("Failed to get frame surface: {}", e.to_string())))
+        .map(|surface| (surface, frame.impl_video_frame.pixel_format))
+}
+
+pub(crate) fn windows_dx11_texture_for_video_frame(
+    frame: &VideoFrame,
+) -> Result<(ID3D11Texture2D, DirectXPixelFormat), WindowsDx11VideoFrameError> {
+    let (surface, pixel_format) = windows_dx11_surface_for_video_frame(frame)?;
+    let dxgi_interface_access = surface.cast::<IDirect3DDxgiInterfaceAccess>()
+        .map_err(|e| WindowsDx11VideoFrameError::Other(format!("Failed to cast surface to dxgi interface access: {}", e.to_string())))?;
+    let texture = unsafe { dxgi_interface_access.GetInterface::<ID3D11Texture2D>() }
+        .map_err(|e| WindowsDx11VideoFrameError::Other(format!("Failed to get ID3D11Texture interface {}", e.to_string())))?;
+    Ok((texture, pixel_format))
+}
+
 impl WindowsDx11VideoFrame for VideoFrame {
     fn get_dx11_surface(&self) -> Result<(IDirect3DSurface, DirectXPixelFormat), WindowsDx11VideoFrameError> {
-        self.impl_video_frame.frame.Surface()
-            .map_err(|e| WindowsDx11VideoFrameError::Other(format!("Failed to get frame surface: {}", e.to_string())))
-            .map(|surface| (surface, self.impl_video_frame.pixel_format))
+        windows_dx11_surface_for_video_frame(self)
     }
 
     fn get_dx11_texture(&self) -> Result<(ID3D11Texture2D, DirectXPixelFormat), WindowsDx11VideoFrameError> {
-        let (surface, pixel_format) = self.get_dx11_surface()?;
-        let dxgi_interface_access = surface.cast::<IDirect3DDxgiInterfaceAccess>()
-            .map_err(|e| WindowsDx11VideoFrameError::Other(format!("Failed to cast surface to dxgi interface access: {}", e.to_string())))?;
-        let texture = unsafe { dxgi_interface_access.GetInterface::<ID3D11Texture2D>() }
-            .map_err(|e| WindowsDx11VideoFrameError::Other(format!("Failed to get ID3D11Texture interface {}", e.to_string())))?;
-        Ok((texture, pixel_format))
+        windows_dx11_texture_for_video_frame(self)
     }
 }
 

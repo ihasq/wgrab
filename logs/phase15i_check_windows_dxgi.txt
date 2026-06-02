@@ -1,0 +1,58 @@
+    Checking windows v0.62.2
+    Checking crabgrab v0.4.0 (/home/ihasq/code/wgrab)
+warning: unused import: `HWND`
+ --> src/platform/windows/capture_stream.rs:6:425
+  |
+6 | ...ity, AppCapabilityAccessStatus}, Win32::{Foundation::{HMODULE, HWND}, Graphics::{Direct3D::{D3D_DRIVER_TYPE_UNKNOWN, D3D_FEATURE_L...
+  |                                                                   ^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `sync::Arc`
+ --> src/platform/windows/frame.rs:1:32
+  |
+1 | use std::{marker::PhantomData, sync::Arc, time::Duration};
+  |                                ^^^^^^^^^
+
+warning: field `0` is never read
+  --> src/platform/windows/audio_capture_stream.rs:13:11
+   |
+13 |     Other(String),
+   |     ----- ^^^^^^
+   |     |
+   |     field in this variant
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+   |
+13 -     Other(String),
+13 +     Other(()),
+   |
+
+warning: field `0` is never read
+  --> src/platform/windows/audio_capture_stream.rs:22:11
+   |
+22 |     Other(String),
+   |     ----- ^^^^^^
+   |     |
+   |     field in this variant
+   |
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+   |
+22 -     Other(String),
+22 +     Other(()),
+   |
+
+warning: fields `device` and `frame_size` are never read
+  --> src/platform/windows/frame.rs:8:16
+   |
+ 7 | pub struct WindowsVideoFrame {
+   |            ----------------- fields in this struct
+ 8 |     pub(crate) device           : ID3D11Device,
+   |                ^^^^^^
+ 9 |     pub(crate) frame            : Direct3D11CaptureFrame,
+10 |     pub(crate) frame_size       : (usize, usize),
+   |                ^^^^^^^^^^
+
+warning: `crabgrab` (lib) generated 5 warnings (run `cargo fix --lib -p crabgrab` to apply 2 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 14.99s

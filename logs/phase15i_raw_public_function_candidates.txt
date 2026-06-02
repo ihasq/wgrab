@@ -1,0 +1,7 @@
+src/platform/macos/objc_wrap.rs:1422:    pub fn new(filter: SCContentFilter, config: SCStreamConfiguration, handler_queue: DispatchQueue, handler: SCStreamHandler) -> Result<Self, String> {
+src/platform/macos/objc_wrap.rs:2634:    pub fn get_iosurface_ptr(&self) -> Option<*const c_void> {
+src/platform/macos/objc_wrap.rs:2645:    pub fn get_iosurface(&self) -> Option<IOSurface> {
+src/platform/macos/objc_wrap.rs:3233:    pub fn capture_image_with_filter_and_configuration(filter: &SCContentFilter, config: &SCStreamConfiguration, completion_handler: impl FnMut(Result<CGImage, NSError>) + Send + 'static) {
+src/platform/macos/objc_wrap.rs:3252:    pub fn capture_samplebuffer_with_filter_and_configuration(filter: SCContentFilter, config: SCStreamConfiguration, completion_handler: impl FnMut(Result<CMSampleBuffer, String>) + Send + 'static) {
+src/feature/iosurface/mod.rs:34:    pub fn get_raw(&self) -> *const c_void {
+src/feature/wgpu/gpu_only.rs:61:    pub fn texture(&self) -> &wgpu::Texture {

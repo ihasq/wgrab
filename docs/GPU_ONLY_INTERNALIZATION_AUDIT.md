@@ -127,3 +127,46 @@ Lavapipe smoke test without adding Linux capture support to wgrab.
 
 Future work may split the `wgpu` feature or add Linux-friendly
 backend-smoke-only checks.
+
+## Phase 15I result
+
+### Public primary API
+
+- `WgpuCaptureFrame`
+- `WgpuVideoFrameGpuOnlyExt`
+- `WgpuCaptureConfig`
+- `WgpuCaptureStream`
+
+### Deprecated public shims kept
+
+- bitmap APIs
+- iosurface raw output APIs
+- metal raw output APIs
+- dx11 raw output APIs
+- targeted dxgi raw output API: `WindowsDxgiVideoFrame::get_dxgi_surface`
+
+### Internalized
+
+- `macos_frame_iosurface`
+- `macos_metal_texture_for_video_frame`
+- `windows_dx11_surface_for_video_frame`
+- `windows_dx11_texture_for_video_frame`
+- `windows_dxgi_surface_for_video_frame`
+
+### Still public due to compatibility
+
+- `IoSurface`
+- `MacosIoSurfaceVideoFrameExt`
+- `MetalVideoFrameExt`
+- `MetalCaptureStreamExt`
+- `WindowsDx11VideoFrame`
+- `WindowsDx11CaptureStream`
+- `WindowsDxgiVideoFrame`
+- `WindowsDxgiCaptureStream`
+- `WindowsDxgiCaptureStream::{get_dxgi_adapter,get_dxgi_device}`
+
+### Diagnostic policy
+
+Diagnostic APIs remain public because they are not primary capture output APIs.
+
+No diagnostic API is deprecated in Phase 15I.

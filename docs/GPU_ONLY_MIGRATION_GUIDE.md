@@ -66,3 +66,10 @@ Actual removal is deferred to a later breaking-change phase.
 Raw platform APIs are deprecated or under review for future internalization.
 
 Use `WgpuCaptureFrame` unless you are maintaining legacy interop code.
+
+## Deprecated raw output shims
+
+Deprecated raw platform APIs remain callable temporarily, but new code should
+not use them.
+
+Use `WgpuCaptureFrame` for capture output.

@@ -1,0 +1,27 @@
+src/prelude.rs:17:pub use crate::feature::metal::*;
+src/prelude.rs:23:pub use crate::feature::dxgi::*;
+src/platform/macos/objc_wrap.rs:2038:    pub fn new(callback: impl Fn(CGDisplayStreamFrameStatus, Duration, IOSurface) + 'static, display_id: u32, size: (usize, usize), pixel_format: SCStreamPixelFormat, options_dict: NSDictionary, dispatch_queue: DispatchQueue) -> Self {
+src/platform/macos/objc_wrap.rs:2154:pub enum IOSurfaceLockError {
+src/platform/macos/objc_wrap.rs:2159:pub struct IOSurfaceLockGaurd(IOSurfaceRef, u32);
+src/platform/macos/objc_wrap.rs:2195:pub enum IOSurfaceComponentName {
+src/platform/macos/objc_wrap.rs:2216:pub enum IOSurfaceComponentType {
+src/platform/macos/objc_wrap.rs:2231:pub enum IOSurfaceCacheMode {
+src/platform/macos/objc_wrap.rs:2645:    pub fn get_iosurface(&self) -> Option<IOSurface> {
+src/platform/windows/mod.rs:8:pub(crate) struct AutoHandle(pub HANDLE);
+src/feature/iosurface/mod.rs:26:pub struct IoSurface(IOSurfaceRef);
+src/feature/iosurface/mod.rs:34:    pub fn get_raw(&self) -> *const c_void {
+src/feature/iosurface/mod.rs:100:pub trait MacosIoSurfaceVideoFrameExt {
+src/feature/iosurface/mod.rs:111:pub enum GetIoSurfaceError {
+src/feature/diagnostic/mod.rs:11:pub struct FrameIOSurfaceComponentInfo {
+src/feature/diagnostic/mod.rs:20:pub struct FrameIOSurfacePlaneInfo {
+src/feature/diagnostic/mod.rs:29:pub struct FrameIOSurfaceInfo {
+src/feature/diagnostic/mod.rs:39:pub struct FrameDx11SurfaceInfo {
+src/feature/diagnostic/mod.rs:49:    pub iosurface_info: Option<FrameIOSurfaceInfo>,
+src/feature/diagnostic/mod.rs:53:    pub dx11_surface_info: FrameDx11SurfaceInfo,
+src/feature/mod.rs:10:pub mod dxgi;
+src/feature/dx11/mod.rs:13:pub enum WindowsDx11VideoFrameError {
+src/feature/dx11/mod.rs:44:pub trait WindowsDx11VideoFrame {
+src/feature/dx11/mod.rs:92:pub trait WindowsDx11CaptureStream {
+src/feature/metal/mod.rs:26:pub enum MetalVideoFramePlaneTexture {
+src/feature/metal/mod.rs:78:pub trait MetalVideoFrameExt {
+src/feature/metal/mod.rs:187:pub trait MetalCaptureStreamExt {

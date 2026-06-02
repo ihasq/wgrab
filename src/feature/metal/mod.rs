@@ -91,84 +91,91 @@ unsafe impl Encode for IOSurfacePtrEncoded {
     const ENCODING: objc2::Encoding = Encoding::Pointer(&Encoding::Struct("__IOSurface", &[]));
 }
 
+pub(crate) fn macos_metal_texture_for_video_frame(
+    frame: &VideoFrame,
+    plane: MetalVideoFramePlaneTexture,
+) -> Result<metal::Texture, MacosVideoFrameError> {
+    let iosurface_and_metal_device = match &frame.impl_video_frame {
+        MacosVideoFrame::SCStream(frame) => {
+            match frame.sample_buffer.get_image_buffer() {
+                Some(image_buffer) => {
+                    match image_buffer.get_iosurface() {
+                        Some(iosurface) => {
+                            Ok((iosurface, frame.metal_device.clone()))
+                        },
+                        None => Err(MacosVideoFrameError::NoIoSurface)
+                    }
+                },
+                None => Err(MacosVideoFrameError::NoImageBuffer)
+            }
+        },
+        MacosVideoFrame::CGDisplayStream(frame) => {
+            Ok((frame.io_surface.clone(), Some(frame.metal_device.clone())))
+        }
+    }?;
+    let (iosurface, metal_device) = iosurface_and_metal_device;
+    let pixel_format = match iosurface.get_pixel_format() {
+        None => return Err(MacosVideoFrameError::Other("Unable to get pixel format from iosurface".to_string())),
+        Some(format) => format
+    };
+    match pixel_format {
+        CVPixelFormat::BGRA8888 => {
+            match plane {
+                MetalVideoFramePlaneTexture::Rgba => {},
+                _ => return Err(MacosVideoFrameError::InvalidVideoPlaneTexture),
+            }
+            unsafe {
+                let device_ref = metal_device.as_ref().unwrap().as_ptr();
+                let texture_descriptor = metal::TextureDescriptor::new();
+                texture_descriptor.set_texture_type(metal::MTLTextureType::D2);
+                texture_descriptor.set_pixel_format(metal::MTLPixelFormat::BGRA8Unorm);
+                texture_descriptor.set_width(iosurface.get_width() as u64);
+                texture_descriptor.set_height(iosurface.get_height() as u64);
+                texture_descriptor.set_sample_count(1);
+                texture_descriptor.set_mipmap_level_count(1);
+                texture_descriptor.set_storage_mode(metal::MTLStorageMode::Shared);
+                texture_descriptor.set_cpu_cache_mode(metal::MTLCPUCacheMode::DefaultCache);
+                let texture_ptr: *mut AnyObject = msg_send![device_ref as *mut AnyObject, newTextureWithDescriptor: texture_descriptor.as_ptr() as *mut AnyObject, iosurface: IOSurfacePtrEncoded(iosurface.0), plane: 0usize];
+                if texture_ptr.is_null() {
+                    Err(MacosVideoFrameError::Other("Failed to create metal texture".to_string()))
+                } else {
+                    Ok((metal::Texture::from_ptr(texture_ptr as *mut metal::MTLTexture)).to_owned())
+                }
+            }
+        },
+        CVPixelFormat::V420 | CVPixelFormat::F420 => {
+            let (plane, pixel_format) = match plane {
+                MetalVideoFramePlaneTexture::Luminance => (0, metal::MTLPixelFormat::R8Uint),
+                MetalVideoFramePlaneTexture::Chroma => (1, metal::MTLPixelFormat::RG8Uint),
+                _ => return Err(MacosVideoFrameError::InvalidVideoPlaneTexture),
+            };
+            unsafe {
+                let device_ref = metal_device.as_ref().unwrap().as_ptr();
+                let texture_descriptor = metal::TextureDescriptor::new();
+                texture_descriptor.set_texture_type(metal::MTLTextureType::D2);
+                texture_descriptor.set_pixel_format(pixel_format);
+                texture_descriptor.set_width(iosurface.get_width() as u64);
+                texture_descriptor.set_height(iosurface.get_height_of_plane(plane) as u64);
+                texture_descriptor.set_sample_count(1);
+                texture_descriptor.set_mipmap_level_count(1);
+                texture_descriptor.set_storage_mode(metal::MTLStorageMode::Shared);
+                texture_descriptor.set_cpu_cache_mode(metal::MTLCPUCacheMode::DefaultCache);
+                let texture_ptr: *mut AnyObject = msg_send![device_ref as *mut AnyObject, newTextureWithDescriptor: texture_descriptor.as_ptr() as *mut AnyObject, iosurface: iosurface.0, plane: plane];
+                if texture_ptr.is_null() {
+                    Err(MacosVideoFrameError::Other("Failed to create metal texture".to_string()))
+                } else {
+                    Ok((metal::Texture::from_ptr(texture_ptr as *mut metal::MTLTexture)).to_owned())
+                }
+            }
+        },
+        _ => Err(MacosVideoFrameError::Other("Unknown pixel format on iosurface".to_string())),
+    }
+}
+
 #[cfg(feature="metal")]
 impl MetalVideoFrameExt for VideoFrame {
     fn get_metal_texture(&self, plane: MetalVideoFramePlaneTexture) -> Result<metal::Texture, MacosVideoFrameError> {
-        let iosurface_and_metal_device = match &self.impl_video_frame {
-            MacosVideoFrame::SCStream(frame) => {
-                match frame.sample_buffer.get_image_buffer() {
-                    Some(image_buffer) => {
-                        match image_buffer.get_iosurface() {
-                            Some(iosurface) => {
-                                Ok((iosurface, frame.metal_device.clone()))
-                            },
-                            None => Err(MacosVideoFrameError::NoIoSurface)
-                        }
-                    },
-                    None => Err(MacosVideoFrameError::NoImageBuffer)
-                }
-            },
-            MacosVideoFrame::CGDisplayStream(frame) => {
-                Ok((frame.io_surface.clone(), Some(frame.metal_device.clone())))
-            }
-        }?;
-        let (iosurface, metal_device) = iosurface_and_metal_device;
-        let pixel_format = match iosurface.get_pixel_format() {
-            None => return Err(MacosVideoFrameError::Other("Unable to get pixel format from iosurface".to_string())),
-            Some(format) => format
-        };
-        match pixel_format {
-            CVPixelFormat::BGRA8888 => {
-                match plane {
-                    MetalVideoFramePlaneTexture::Rgba => {},
-                    _ => return Err(MacosVideoFrameError::InvalidVideoPlaneTexture),
-                }
-                unsafe {
-                    let device_ref = metal_device.as_ref().unwrap().as_ptr();
-                    let texture_descriptor = metal::TextureDescriptor::new();
-                    texture_descriptor.set_texture_type(metal::MTLTextureType::D2);
-                    texture_descriptor.set_pixel_format(metal::MTLPixelFormat::BGRA8Unorm);
-                    texture_descriptor.set_width(iosurface.get_width() as u64);
-                    texture_descriptor.set_height(iosurface.get_height() as u64);
-                    texture_descriptor.set_sample_count(1);
-                    texture_descriptor.set_mipmap_level_count(1);
-                    texture_descriptor.set_storage_mode(metal::MTLStorageMode::Shared);
-                    texture_descriptor.set_cpu_cache_mode(metal::MTLCPUCacheMode::DefaultCache);
-                    let texture_ptr: *mut AnyObject = msg_send![device_ref as *mut AnyObject, newTextureWithDescriptor: texture_descriptor.as_ptr() as *mut AnyObject, iosurface: IOSurfacePtrEncoded(iosurface.0), plane: 0usize];
-                    if texture_ptr.is_null() {
-                        Err(MacosVideoFrameError::Other("Failed to create metal texture".to_string()))
-                    } else {
-                        Ok((metal::Texture::from_ptr(texture_ptr as *mut metal::MTLTexture)).to_owned())
-                    }
-                }
-            },
-            CVPixelFormat::V420 | CVPixelFormat::F420 => {
-                let (plane, pixel_format) = match plane {
-                    MetalVideoFramePlaneTexture::Luminance => (0, metal::MTLPixelFormat::R8Uint),
-                    MetalVideoFramePlaneTexture::Chroma => (1, metal::MTLPixelFormat::RG8Uint),
-                    _ => return Err(MacosVideoFrameError::InvalidVideoPlaneTexture),
-                };
-                unsafe {
-                    let device_ref = metal_device.as_ref().unwrap().as_ptr();
-                    let texture_descriptor = metal::TextureDescriptor::new();
-                    texture_descriptor.set_texture_type(metal::MTLTextureType::D2);
-                    texture_descriptor.set_pixel_format(pixel_format);
-                    texture_descriptor.set_width(iosurface.get_width() as u64);
-                    texture_descriptor.set_height(iosurface.get_height_of_plane(plane) as u64);
-                    texture_descriptor.set_sample_count(1);
-                    texture_descriptor.set_mipmap_level_count(1);
-                    texture_descriptor.set_storage_mode(metal::MTLStorageMode::Shared);
-                    texture_descriptor.set_cpu_cache_mode(metal::MTLCPUCacheMode::DefaultCache);
-                    let texture_ptr: *mut AnyObject = msg_send![device_ref as *mut AnyObject, newTextureWithDescriptor: texture_descriptor.as_ptr() as *mut AnyObject, iosurface: iosurface.0, plane: plane];
-                    if texture_ptr.is_null() {
-                        Err(MacosVideoFrameError::Other("Failed to create metal texture".to_string()))
-                    } else {
-                        Ok((metal::Texture::from_ptr(texture_ptr as *mut metal::MTLTexture)).to_owned())
-                    }
-                }
-            },
-            _ => Err(MacosVideoFrameError::Other("Unknown pixel format on iosurface".to_string())),
-        }
+        macos_metal_texture_for_video_frame(self, plane)
     }
 }
 

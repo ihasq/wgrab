@@ -138,19 +138,23 @@ impl Error for GetIoSurfaceError {
     }
 }
 
+pub(crate) fn macos_frame_iosurface(frame: &VideoFrame) -> Result<IoSurface, GetIoSurfaceError> {
+    match &frame.impl_video_frame {
+        MacosVideoFrame::SCStream(frame) => match frame.sample_buffer.get_image_buffer() {
+            Some(image_buffer) => match image_buffer.get_iosurface_ptr() {
+                Some(ptr) => Ok(IoSurface::from_ref_unretained(ptr)),
+                None => Err(GetIoSurfaceError::NoIoSurface),
+            },
+            None => Err(GetIoSurfaceError::NoImageBuffer),
+        },
+        MacosVideoFrame::CGDisplayStream(frame) => {
+            Ok(IoSurface::from_ref_unretained(frame.io_surface.0))
+        }
+    }
+}
+
 impl MacosIoSurfaceVideoFrameExt for VideoFrame {
     fn get_iosurface(&self) -> Result<IoSurface, GetIoSurfaceError> {
-        match &self.impl_video_frame {
-            MacosVideoFrame::SCStream(frame) => match frame.sample_buffer.get_image_buffer() {
-                Some(image_buffer) => match image_buffer.get_iosurface_ptr() {
-                    Some(ptr) => Ok(IoSurface::from_ref_unretained(ptr)),
-                    None => Err(GetIoSurfaceError::NoIoSurface),
-                },
-                None => Err(GetIoSurfaceError::NoImageBuffer),
-            },
-            MacosVideoFrame::CGDisplayStream(frame) => {
-                Ok(IoSurface::from_ref_unretained(frame.io_surface.0))
-            }
-        }
+        macos_frame_iosurface(self)
     }
 }

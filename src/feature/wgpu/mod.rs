@@ -12,7 +12,7 @@ pub use gpu_only::{
 };
 
 #[cfg(target_os = "macos")]
-use crate::feature::iosurface::{GetIoSurfaceError, IoSurface, MacosIoSurfaceVideoFrameExt};
+use crate::feature::iosurface::{macos_frame_iosurface, GetIoSurfaceError, IoSurface};
 #[cfg(target_os = "macos")]
 use crate::platform::macos::{capture_stream::MacosCaptureConfig, frame::MacosVideoFrame};
 #[cfg(target_os = "macos")]
@@ -43,7 +43,7 @@ use windows::Win32::System::Threading::{CreateEventA, WaitForSingleObjectEx, INF
 #[cfg(target_os = "windows")]
 use crate::platform::windows::capture_stream::WindowsCaptureConfig;
 #[cfg(target_os = "windows")]
-use crate::feature::dx11::*;
+use crate::feature::dx11::windows_dx11_texture_for_video_frame;
 #[cfg(target_os = "windows")]
 use windows::{core::Interface, Graphics::DirectX::DirectXPixelFormat, Win32::Graphics::{Direct3D11::ID3D11Texture2D, Direct3D11::D3D11_CREATE_DEVICE_BGRA_SUPPORT, Direct3D12::{ID3D12Resource, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET}}};
 
@@ -454,7 +454,7 @@ impl WgpuVideoFrameExt for VideoFrame {
                 MacosVideoFrame::SCStream(sc_stream_frame) => sc_stream_frame.wgpu_device.clone(),
                 MacosVideoFrame::CGDisplayStream(cg_display_stream_frame) => cg_display_stream_frame.wgpu_device.clone(),
             }.ok_or(WgpuVideoFrameError::NoWgpuDevice)?;
-            let io_surface = MacosIoSurfaceVideoFrameExt::get_iosurface(self)
+            let io_surface = macos_frame_iosurface(self)
                 .map_err(|error| match error {
                     GetIoSurfaceError::NoImageBuffer | GetIoSurfaceError::NoIoSurface => {
                         WgpuVideoFrameError::NoBackendTexture
@@ -519,7 +519,7 @@ impl WgpuVideoFrameExt for VideoFrame {
                 .ok_or(WgpuVideoFrameError::NoWgpuDevice)?.clone();
             let d3d11_5_device = self.impl_video_frame.device.cast::<ID3D11Device5>()
                 .map_err(|error| WgpuVideoFrameError::Other(format!("Device is incompatible with resource sharing interface: {}", error)))?;
-            let (frame_texture, pixel_format) = WindowsDx11VideoFrame::get_dx11_texture(self)
+            let (frame_texture, pixel_format) = windows_dx11_texture_for_video_frame(self)
                 .map_err(|_| WgpuVideoFrameError::NoBackendTexture)?;
             
             let wgpu_format = match pixel_format {

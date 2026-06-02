@@ -1,5 +1,6 @@
 #![cfg(target_os = "windows")]
 #![cfg(feature = "dxgi")]
+#![allow(deprecated)]
 
 use crate::prelude::{CaptureStream, VideoFrame};
 
@@ -41,20 +42,30 @@ impl Error for WindowsDxgiVideoFrameError {
 /// A video frame which can inter-operate with DXGI
 pub trait WindowsDxgiVideoFrame {
     /// Get the surface texture for this video frame
+    #[deprecated(
+        since = "0.5.0",
+        note = "raw DXGI capture output is planned to become an internal implementation detail. Prefer WgpuCaptureFrame for GPU-only capture output."
+    )]
     fn get_dxgi_surface(&self) -> Result<(windows::Win32::Graphics::Dxgi::IDXGISurface, DirectXPixelFormat), WindowsDxgiVideoFrameError>; 
+}
+
+pub(crate) fn windows_dxgi_surface_for_video_frame(
+    frame: &VideoFrame,
+) -> Result<(windows::Win32::Graphics::Dxgi::IDXGISurface, DirectXPixelFormat), WindowsDxgiVideoFrameError> {
+    let d3d11_surface = frame.impl_video_frame.frame.Surface()
+        .map_err(|e| WindowsDxgiVideoFrameError::Other(format!("Failed to get frame surface: {}", e.to_string())))?;
+    let interface_access: IDirect3DDxgiInterfaceAccess = d3d11_surface.cast()
+        .map_err(|e| WindowsDxgiVideoFrameError::Other(format!("Failed to cast d3d11 surface to dxgi interface access: {}", e.to_string())))?;
+    let d3d11_texture: ID3D11Texture2D = unsafe {
+        interface_access.GetInterface::<ID3D11Texture2D>()
+    }.map_err(|e| WindowsDxgiVideoFrameError::Other(format!("Failed to get ID3D11Texture2D interface from to IDirect3DSurface(IDirect3DDxgiInterfaceAccess): {}", e.to_string())))?;
+    d3d11_texture.cast().map_err(|e| WindowsDxgiVideoFrameError::Other(format!("Failed to cast ID3D11Texture2D to IDXGISurface: {}", e.to_string())))
+        .map(|texture| (texture, frame.impl_video_frame.pixel_format))
 }
 
 impl WindowsDxgiVideoFrame for VideoFrame {
     fn get_dxgi_surface(&self) -> Result<(windows::Win32::Graphics::Dxgi::IDXGISurface, DirectXPixelFormat), WindowsDxgiVideoFrameError> {
-        let d3d11_surface = self.impl_video_frame.frame.Surface()
-            .map_err(|e| WindowsDxgiVideoFrameError::Other(format!("Failed to get frame surface: {}", e.to_string())))?;
-        let interface_access: IDirect3DDxgiInterfaceAccess = d3d11_surface.cast()
-            .map_err(|e| WindowsDxgiVideoFrameError::Other(format!("Failed to cast d3d11 surface to dxgi interface access: {}", e.to_string())))?;
-        let d3d11_texture: ID3D11Texture2D = unsafe {
-            interface_access.GetInterface::<ID3D11Texture2D>()
-        }.map_err(|e| WindowsDxgiVideoFrameError::Other(format!("Failed to get ID3D11Texture2D interface from to IDirect3DSurface(IDirect3DDxgiInterfaceAccess): {}", e.to_string())))?;
-        d3d11_texture.cast().map_err(|e| WindowsDxgiVideoFrameError::Other(format!("Failed to cast ID3D11Texture2D to IDXGISurface: {}", e.to_string())))
-            .map(|texture| (texture, self.impl_video_frame.pixel_format))
+        windows_dxgi_surface_for_video_frame(self)
     }
 }
 

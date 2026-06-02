@@ -39,3 +39,20 @@ Internal:
 - D3D12 resource
 - DXGI shared handles
 - platform synchronization
+
+## Phase 15I boundary
+
+Public boundary:
+
+- `WgpuCaptureFrame`
+- `WgpuVideoFrameGpuOnlyExt`
+
+Compatibility boundary:
+
+- deprecated bitmap/raw platform shims
+
+Internal boundary:
+
+- IOSurface bridge
+- Metal bridge
+- D3D/DXGI resource bridge

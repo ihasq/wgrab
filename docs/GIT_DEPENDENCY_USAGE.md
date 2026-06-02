@@ -5,13 +5,13 @@ Until package publishing strategy is finalized, downstream users can depend on t
 ## Branch-based dependency
 
 ```toml
-crabgrab = { git = "https://github.com/ihasq/wgrab", branch = "wgrab-gpu-only-api-design" }
+wgrab = { git = "https://github.com/ihasq/wgrab", branch = "wgrab-crates-io-prep" }
 ```
 
 ## Revision-pinned dependency
 
 ```toml
-crabgrab = { git = "https://github.com/ihasq/wgrab", rev = "<commit>" }
+wgrab = { git = "https://github.com/ihasq/wgrab", rev = "<commit>" }
 ```
 
 ## Future package alias example
@@ -34,13 +34,20 @@ The GPU-only API is centered on:
 Until registry publishing is decided, use a Git dependency.
 
 ```toml
-crabgrab = { git = "https://github.com/ihasq/wgrab", branch = "wgrab-gpu-only-api-design" }
+wgrab = { git = "https://github.com/ihasq/wgrab", branch = "wgrab-crates-io-prep" }
 ```
 
 For reproducible builds, pin a revision:
 
 ```toml
-crabgrab = { git = "https://github.com/ihasq/wgrab", rev = "<commit>" }
+wgrab = { git = "https://github.com/ihasq/wgrab", rev = "<commit>" }
+```
+
+If a downstream project wants to keep `crabgrab::` imports temporarily, use a
+Cargo dependency alias:
+
+```toml
+crabgrab = { package = "wgrab", git = "https://github.com/ihasq/wgrab", branch = "wgrab-crates-io-prep" }
 ```
 
 ## Current API direction

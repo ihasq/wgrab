@@ -27,7 +27,7 @@
 //! 
 //! ```
 //! use std::time::Duration;
-//! use crabgrab::prelude::*;
+//! use wgrab::prelude::*;
 //! 
 //! // spin up the async runtime
 //! let runtime = tokio::runtime::Builder::new_multi_thread().build().unwrap();

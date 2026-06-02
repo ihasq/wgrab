@@ -1,7 +1,7 @@
 [package]
-name = "crabgrab"
-description = "A cross-platform screen/window capture crate"
-version = "0.4.0"
+name = "wgrab"
+description = "GPU-only screen capture library exposing captured frames as wgpu textures"
+version = "0.1.0"
 edition = "2021"
 rust-version = "1.87"
 authors = ["Augmend, Inc. <https://github.com/AugmendTech>", "Liam Taylor <https://github.com/OutOfTheVoid>", "Tim Misiak <https://github.com/TimMisiak>"]
@@ -12,7 +12,16 @@ repository = "https://github.com/ihasq/wgrab"
 license = "MIT OR Apache-2.0"
 keywords = ["capture", "graphics", "window", "screen", "media"]
 categories = ["graphics", "hardware-support", "multimedia", "os"]
-exclude = ["spellcheck/", "update_doc_copy.ps1", "update_doc_copy.sh", "docs/", ".gitignore", ".vscode/"]
+exclude = [
+    "spellcheck/",
+    "update_doc_copy.ps1",
+    "update_doc_copy.sh",
+    "docs/",
+    "logs/",
+    ".github/",
+    ".gitignore",
+    ".vscode/",
+]
 
 [package.metadata.docs.rs]
 features = ["iosurface", "metal", "dxgi", "dx11", "bitmap", "screenshot", "wgpu"]

@@ -111,3 +111,16 @@ The branch should remain Git-only until the owner decides:
 2. version number
 3. registry publish policy
 4. compatibility messaging
+
+## Phase 21P owner decision
+
+The project goal is to publish as `wgrab` on crates.io.
+
+Selected package identity:
+
+- package name: `wgrab`
+- initial version candidate: `0.1.0`
+- crate path: `wgrab`
+
+The old `crabgrab` package identity is not used for the GPU-only registry
+release.

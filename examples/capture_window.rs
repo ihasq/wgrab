@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use crabgrab::prelude::*;
+use wgrab::prelude::*;
 
 fn main() { 
     let runtime = tokio::runtime::Builder::new_multi_thread()

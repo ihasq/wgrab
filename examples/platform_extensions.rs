@@ -1,12 +1,12 @@
 use std::time::Duration;
 
 #[cfg(target_os = "macos")]
-use crabgrab::platform::macos::MacosCapturableWindowExt as _;
+use wgrab::platform::macos::MacosCapturableWindowExt as _;
 
 #[cfg(target_os = "windows")]
-use crabgrab::platform::windows::WindowsCapturableWindowExt as _;
+use wgrab::platform::windows::WindowsCapturableWindowExt as _;
 
-use crabgrab::prelude::*;
+use wgrab::prelude::*;
 
 fn main() { 
     let runtime = tokio::runtime::Builder::new_multi_thread()

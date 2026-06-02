@@ -19,11 +19,29 @@ from the GPU-only branch. Use
 
 ### Current distribution
 
-The GPU-only branch is currently intended for Git dependency usage. Registry
-publishing and final package naming are not yet decided.
+The GPU-only branch is being prepared for crates.io publication as `wgrab`.
+Real publishing still requires explicit owner approval.
 
-[![Crates.io Version](https://img.shields.io/crates/v/crabgrab)](https://crates.io/crates/crabgrab)
-[![docs.rs](https://img.shields.io/docsrs/crabgrab)](https://docs.rs/crabgrab/)
+## Installation
+
+`wgrab` is being prepared for crates.io publication.
+
+Until publication, use Git:
+
+```toml
+wgrab = { git = "https://github.com/ihasq/wgrab", branch = "wgrab-crates-io-prep" }
+```
+
+After registry publication:
+
+```toml
+wgrab = "0.1"
+```
+
+The primary API is GPU-only and centered on `WgpuCaptureFrame`.
+
+[![Crates.io Version](https://img.shields.io/crates/v/wgrab)](https://crates.io/crates/wgrab)
+[![docs.rs](https://img.shields.io/docsrs/wgrab)](https://docs.rs/wgrab/)
 [MacOS Documentation](https://augmendtech.github.io/CrabGrab/macos_docs/crabgrab/index.html)
 
 

@@ -2,9 +2,9 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use futures::executor::block_on;
-use crabgrab::prelude::*;
-use crabgrab::feature::wgpu::WgpuCaptureConfigExt as _;
-use crabgrab::feature::wgpu::WgpuVideoFrameExt as _;
+use wgrab::feature::wgpu::WgpuCaptureConfigExt as _;
+use wgrab::feature::wgpu::WgpuVideoFrameExt as _;
+use wgrab::prelude::*;
 
 #[allow(unused)]
 struct Gfx {
@@ -95,7 +95,7 @@ fn main() {
         match frame_opt {
             Some(frame) => {
                 println!("Got frame! getting wgpu texture...");
-                let wgpu_texture = frame.get_wgpu_texture(crabgrab::feature::wgpu::WgpuVideoFramePlaneTexture::Rgba, Some("wgpu video frame"))
+                let wgpu_texture = frame.get_wgpu_texture(wgrab::feature::wgpu::WgpuVideoFramePlaneTexture::Rgba, Some("wgpu video frame"))
                     .expect("Expected wgpu texture from video frame");
                 println!("Got wgpu texture! Size: {:?}, Format: {:?}", wgpu_texture.size(), wgpu_texture.format());
             },

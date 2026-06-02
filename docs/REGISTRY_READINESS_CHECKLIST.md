@@ -38,3 +38,13 @@
 - [ ] dry-run package check performed.
 - [ ] package contents reviewed.
 - [ ] owner approves irreversible registry publish.
+
+## Phase 21P status
+
+- [ ] Confirm `wgrab` availability on crates.io UI.
+- [x] Rename package to `wgrab`.
+- [x] Set initial version to `0.1.0`.
+- [x] Run `cargo package`.
+- [x] Run `cargo publish --dry-run`.
+- [x] Review package contents.
+- [ ] Get owner approval before real publish.

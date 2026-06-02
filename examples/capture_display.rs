@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use crabgrab::prelude::*;
+use wgrab::prelude::*;
 
 #[tokio::main]
 async fn main() { 

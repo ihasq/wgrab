@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use crabgrab::{feature::diagnostic::FrameDiagnosticExt, prelude::*};
+use wgrab::{feature::diagnostic::FrameDiagnosticExt, prelude::*};
 
 fn main() { 
     let runtime = tokio::runtime::Builder::new_multi_thread()

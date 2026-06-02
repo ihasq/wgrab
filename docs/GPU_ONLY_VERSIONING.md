@@ -128,3 +128,13 @@ Meaning:
 - higher compatibility risk for existing users
 
 Current branch remains Git-only.
+
+## Phase 21P decision
+
+The first crates.io release candidate is:
+
+- package: `wgrab`
+- version: `0.1.0`
+
+This reflects a new successor crate identity rather than a continuation of the
+`crabgrab 0.4.x` package line.

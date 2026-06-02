@@ -6,11 +6,11 @@ use std::sync::Arc;
 use std::time::Duration;
 
 #[cfg(any(target_os = "macos", target_os = "windows"))]
-use crabgrab::feature::wgpu::{
+use wgrab::feature::wgpu::{
     WgpuCaptureConfigExt as _, WgpuVideoFrameExt as _, WgpuVideoFramePlaneTexture,
 };
 #[cfg(any(target_os = "macos", target_os = "windows"))]
-use crabgrab::prelude::*;
+use wgrab::prelude::*;
 #[cfg(any(target_os = "macos", target_os = "windows"))]
 use futures::{channel::mpsc, executor::block_on, StreamExt as _};
 

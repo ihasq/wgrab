@@ -45,6 +45,9 @@ jobs:
       - name: Check audio CPAL probe example
         run: cargo check --example audio_cpal_probe --features audio
 
+      - name: Check audio input smoke example
+        run: cargo check --example audio_cpal_input_smoke --features audio
+
       - name: Run audio CPAL probe
         shell: bash
         if: runner.os != 'Windows'
@@ -98,6 +101,63 @@ jobs:
           }
 
           "audio_marker=MISSING" >> $env:GITHUB_STEP_SUMMARY
+          Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+          exit 1
+
+      - name: Run audio input smoke
+        shell: bash
+        if: runner.os != 'Windows'
+        run: |
+          set +e
+          LOG="audio_cpal_input_smoke.log"
+          cargo run --example audio_cpal_input_smoke --features audio -- --ci --duration-ms 250 \
+            2>&1 | tee "$LOG"
+
+          if grep -q "CI_WGRAB_AUDIO_INPUT_OK" "$LOG"; then
+            echo "audio_input_marker=CI_WGRAB_AUDIO_INPUT_OK" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if grep -q "CI_WGRAB_AUDIO_INPUT_UNAVAILABLE" "$LOG"; then
+            echo "audio_input_marker=CI_WGRAB_AUDIO_INPUT_UNAVAILABLE" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if grep -q "CI_WGRAB_AUDIO_INPUT_FAILED" "$LOG"; then
+            echo "audio_input_marker=CI_WGRAB_AUDIO_INPUT_FAILED" >> "$GITHUB_STEP_SUMMARY"
+            tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+          echo "audio_input_marker=MISSING" >> "$GITHUB_STEP_SUMMARY"
+          tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+      - name: Run audio input smoke Windows
+        shell: pwsh
+        if: runner.os == 'Windows'
+        run: |
+          $Log = "audio_cpal_input_smoke.log"
+          cargo run --example audio_cpal_input_smoke --features audio -- --ci --duration-ms 250 `
+            2>&1 | Tee-Object -FilePath $Log
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_AUDIO_INPUT_OK" -Quiet) {
+            "audio_input_marker=CI_WGRAB_AUDIO_INPUT_OK" >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_AUDIO_INPUT_UNAVAILABLE" -Quiet) {
+            "audio_input_marker=CI_WGRAB_AUDIO_INPUT_UNAVAILABLE" >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_AUDIO_INPUT_FAILED" -Quiet) {
+            "audio_input_marker=CI_WGRAB_AUDIO_INPUT_FAILED" >> $env:GITHUB_STEP_SUMMARY
+            Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+            exit 1
+          }
+
+          "audio_input_marker=MISSING" >> $env:GITHUB_STEP_SUMMARY
           Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
           exit 1
 

@@ -112,3 +112,9 @@ for capture input.
 
 wgrab's web audio backend should be designed around Web Audio / AudioWorklet
 directly, with CPAL integration only if it fits the capture pipeline.
+
+## CPAL input stream prototype
+
+The first implementation target is CPAL default input stream capture.
+
+System audio loopback remains future work.

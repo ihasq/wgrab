@@ -41,8 +41,9 @@ pub struct WgrabAudioFrame {
 
 impl WgrabAudioFrame {
     pub fn format(&self) -> WgrabAudioFormat;
-    pub fn timestamp(&self) -> WgrabTimestamp;
+    pub fn timestamp(&self) -> Option<WgrabTimestamp>;
     pub fn frames(&self) -> usize;
+    pub fn samples_f32(&self) -> &[f32];
 }
 ```
 
@@ -81,3 +82,15 @@ pub struct WgrabTimestamp {
   timestamp behavior.
 - Web Audio and native CPAL capture may need different frame types until a common
   timestamp and sample format model is stable.
+
+## Phase 28A prototype
+
+`WgrabAudioFrame` stores interleaved `f32` samples.
+
+This is a prototype format. Future phases may add:
+
+- planar audio
+- explicit channel layout
+- resampling policy
+- lock-free ring buffer
+- A/V synchronization timestamps

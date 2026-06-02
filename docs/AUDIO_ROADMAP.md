@@ -107,3 +107,10 @@ getDisplayMedia / getUserMedia
 CPAL may be used on wasm for Web Audio / AudioWorklet processing, but wgrab's
 browser capture setup must remain web-specific because permissions and
 MediaStream setup are asynchronous browser APIs.
+
+## Phase 28A
+
+The first native audio prototype uses CPAL default input streams.
+
+This is not system audio loopback. It is a default input-device capture
+prototype.

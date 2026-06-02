@@ -1,4 +1,3 @@
-    Checking crabgrab v0.4.0 (/home/ihasq/code/wgrab)
 warning: `extern` declarations without an explicit ABI are deprecated
     --> src/platform/macos/objc_wrap.rs:1308:1
      |
@@ -113,4 +112,4 @@ help: replace this with
     |
 
 warning: `crabgrab` (lib) generated 16 warnings (run `cargo fix --lib -p crabgrab` to apply 16 suggestions)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.29s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s

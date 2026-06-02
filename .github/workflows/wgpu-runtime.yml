@@ -124,7 +124,10 @@ jobs:
           cargo run --example wgpu_texture_only_capture --features wgpu,wgpu-debug-descriptor -- --ci --frames 1 --allow-capture-unavailable `
             2>&1 | Tee-Object -FilePath $Log
 
+          $Status = $LASTEXITCODE
+
           "### GPU-only texture probe Windows" >> $env:GITHUB_STEP_SUMMARY
+          "exit_status=$Status" >> $env:GITHUB_STEP_SUMMARY
 
           if (Select-String -Path $Log -Pattern "CI_WGRAB_TEXTURE_ONLY_OK" -Quiet) {
             "texture_only_marker=CI_WGRAB_TEXTURE_ONLY_OK" >> $env:GITHUB_STEP_SUMMARY

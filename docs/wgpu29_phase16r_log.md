@@ -29,6 +29,10 @@
 - texture view: `WgpuCaptureFrame::create_view`
 - descriptor/debug: `CRABGRAB_WGPU_DEBUG_DESCRIPTOR=1` で descriptor summary を出力
 - CPU readback: 追加なし
+- capability classification: texture wrapping 前の adapter/device setup 不可は
+  `--allow-capture-unavailable` 時に `CI_WGRAB_TEXTURE_ONLY_UNAVAILABLE`
+  として扱う。`get_wgpu_capture_frame` 以降の失敗は
+  `CI_WGRAB_TEXTURE_ONLY_FAILED` のまま。
 
 ## Local checks
 

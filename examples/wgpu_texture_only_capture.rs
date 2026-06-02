@@ -165,10 +165,17 @@ async fn run(args: &Args) -> Result<(), String> {
             force_fallback_adapter: false,
         })
         .await
-        .map_err(|error| format!("request_adapter failed: {error:?}"))?;
+        .map_err(|error| format!("request_adapter failed: {error:?}"));
+    let adapter = match adapter {
+        Ok(adapter) => adapter,
+        Err(reason) => {
+            capture_unavailable(args, reason)?;
+            return Ok(());
+        }
+    };
     println!("wgpu adapter: {:#?}", adapter.get_info());
 
-    let (device, queue) = adapter
+    let device_result = adapter
         .request_device(&wgpu::DeviceDescriptor {
             label: Some("wgrab-texture-only-capture-device"),
             required_features: wgpu::Features::empty(),
@@ -178,7 +185,14 @@ async fn run(args: &Args) -> Result<(), String> {
             trace: wgpu::Trace::Off,
         })
         .await
-        .map_err(|error| format!("request_device failed: {error:?}"))?;
+        .map_err(|error| format!("request_device failed: {error:?}"));
+    let (device, queue) = match device_result {
+        Ok(device_and_queue) => device_and_queue,
+        Err(reason) => {
+            capture_unavailable(args, reason)?;
+            return Ok(());
+        }
+    };
     device.on_uncaptured_error(Arc::new(|error| {
         eprintln!("wgpu uncaptured error: {error:?}");
     }));

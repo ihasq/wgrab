@@ -45,4 +45,4 @@ warning: field `frame_size` is never read
    |                ^^^^^^^^^^
 
 warning: `crabgrab` (lib) generated 4 warnings (run `cargo fix --lib -p crabgrab` to apply 1 suggestion)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s

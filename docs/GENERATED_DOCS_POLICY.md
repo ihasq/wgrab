@@ -47,3 +47,14 @@ They are audited and classified only.
 |---|---:|---|
 | `docs/macos_docs` | 5.3M | keep temporarily, pending generated docs ownership review |
 | `docs/windows_docs` | 4.8M | keep temporarily, pending generated docs ownership review |
+
+## Phase 20P decision
+
+Generated docs are kept temporarily.
+
+Current classification:
+
+- `docs/macos_docs`: stale pending review
+- `docs/windows_docs`: stale pending review
+
+No generated docs are removed or regenerated in Phase 20P.

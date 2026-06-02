@@ -17,6 +17,11 @@ CPU-readable bitmap APIs and raw platform capture output APIs have been removed
 from the GPU-only branch. Use
 `WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame` for new code.
 
+### Current distribution
+
+The GPU-only branch is currently intended for Git dependency usage. Registry
+publishing and final package naming are not yet decided.
+
 [![Crates.io Version](https://img.shields.io/crates/v/crabgrab)](https://crates.io/crates/crabgrab)
 [![docs.rs](https://img.shields.io/docsrs/crabgrab)](https://docs.rs/crabgrab/)
 [MacOS Documentation](https://augmendtech.github.io/CrabGrab/macos_docs/crabgrab/index.html)

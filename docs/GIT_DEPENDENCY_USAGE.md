@@ -28,3 +28,32 @@ The GPU-only API is centered on:
 
 - `WgpuCaptureFrame`
 - `WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame`
+
+## Recommended current usage
+
+Until registry publishing is decided, use a Git dependency.
+
+```toml
+crabgrab = { git = "https://github.com/ihasq/wgrab", branch = "wgrab-gpu-only-api-design" }
+```
+
+For reproducible builds, pin a revision:
+
+```toml
+crabgrab = { git = "https://github.com/ihasq/wgrab", rev = "<commit>" }
+```
+
+## Current API direction
+
+Use:
+
+- `WgpuCaptureFrame`
+- `WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame`
+
+Do not use removed legacy APIs:
+
+- CPU bitmap output
+- raw IOSurface output
+- raw Metal output
+- raw D3D11 frame output
+- raw DXGI frame surface output

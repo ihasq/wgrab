@@ -100,3 +100,31 @@ Package name and version remain unchanged until the owner decides the release
 channel.
 
 Distribution strategy remains Option C: Git dependency only.
+
+## Phase 20P owner decision
+
+No version bump in Phase 20P.
+
+Future candidates:
+
+### `wgrab 0.1.0`
+
+Use if publishing as a new successor crate.
+
+Meaning:
+
+- clean successor identity
+- GPU-only API from first registry release
+- migration from CrabGrab documented separately
+
+### `crabgrab 0.5.0`
+
+Use only if continuing the original crate lineage.
+
+Meaning:
+
+- breaking GPU-only release under the original crate name
+- requires crates.io ownership / maintainer access
+- higher compatibility risk for existing users
+
+Current branch remains Git-only.

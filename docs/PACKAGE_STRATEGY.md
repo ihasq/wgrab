@@ -86,3 +86,28 @@ The owner selected Option C: Git dependency only.
 
 No package name, version, crates.io publishing, tag, GitHub Release, or generated
 docs change is made in Phase 19X.
+
+## Phase 20P owner decision
+
+Current distribution mode:
+
+- Git dependency only
+
+Registry package candidate:
+
+- first choice: `wgrab`
+- fallback: `crabgrab` only if ownership and compatibility concerns are resolved
+
+No package metadata is changed in Phase 20P.
+
+## Why Git-only now
+
+The GPU-only branch removed deprecated CPU-readable and raw platform output APIs.
+This is a breaking API direction.
+
+The branch should remain Git-only until the owner decides:
+
+1. final package name
+2. version number
+3. registry publish policy
+4. compatibility messaging

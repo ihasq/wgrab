@@ -60,18 +60,55 @@ jobs:
         shell: pwsh
         run: |
           $env:RUST_BACKTRACE = "1"
+          $Log = "wgpu_backend_dx12.log"
           cargo run --example wgpu_backend_smoke --features wgpu -- --backend dx12 --require-hal `
-            2>&1 | Tee-Object -FilePath wgpu_backend_dx12.log
-          Select-String -Path wgpu_backend_dx12.log -Pattern "CI_BACKEND_SMOKE_OK"
+            2>&1 | Tee-Object -FilePath $Log
+
+          if (Select-String -Path $Log -Pattern "CI_BACKEND_SMOKE_OK" -Quiet) {
+            "### Backend smoke: OK" >> $env:GITHUB_STEP_SUMMARY
+            Select-String -Path $Log -Pattern "CI_BACKEND_SMOKE_OK|backend=|adapter_" | ForEach-Object { $_.Line } >> $env:GITHUB_STEP_SUMMARY
+          } else {
+            "### Backend smoke: FAILED" >> $env:GITHUB_STEP_SUMMARY
+            Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+            exit 1
+          }
 
       - name: Run Windows capture probe
         shell: pwsh
-        continue-on-error: true
         run: |
           $env:RUST_BACKTRACE = "1"
           $env:CRABGRAB_WGPU_DEBUG_DESCRIPTOR = "1"
+
+          $Log = "wgpu_capture_windows_probe.log"
+
           cargo run --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor -- --ci --frames 1 --allow-capture-unavailable `
-            2>&1 | Tee-Object -FilePath wgpu_capture_windows_probe.log
+            2>&1 | Tee-Object -FilePath $Log
+
+          $Status = $LASTEXITCODE
+
+          "### Capture probe Windows" >> $env:GITHUB_STEP_SUMMARY
+          "exit_status=$Status" >> $env:GITHUB_STEP_SUMMARY
+
+          if (Select-String -Path $Log -Pattern "CI_CAPTURE_SMOKE_OK" -Quiet) {
+            "capture_marker=CI_CAPTURE_SMOKE_OK" >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_CAPTURE_UNAVAILABLE" -Quiet) {
+            "capture_marker=CI_CAPTURE_UNAVAILABLE" >> $env:GITHUB_STEP_SUMMARY
+            Select-String -Path $Log -Pattern "CI_CAPTURE_UNAVAILABLE|reason=" | ForEach-Object { $_.Line } >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_CAPTURE_SMOKE_FAILED" -Quiet) {
+            "capture_marker=CI_CAPTURE_SMOKE_FAILED" >> $env:GITHUB_STEP_SUMMARY
+            Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+            exit 1
+          }
+
+          "capture_marker=MISSING" >> $env:GITHUB_STEP_SUMMARY
+          Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+          exit 1
 
       - name: Upload Windows logs
         if: always()
@@ -120,24 +157,59 @@ jobs:
       - name: Run Metal backend smoke
         shell: bash
         run: |
-          set -o pipefail
+          set +e
           export RUST_BACKTRACE=1
+          LOG="wgpu_backend_metal_${{ matrix.label }}.log"
           cargo run --example wgpu_backend_smoke --features wgpu -- --backend metal --require-hal \
-            2>&1 | tee wgpu_backend_metal_${{ matrix.label }}.log
-          grep -E "CI_BACKEND_SMOKE_OK|CI_BACKEND_SMOKE_UNAVAILABLE" wgpu_backend_metal_${{ matrix.label }}.log
-          if grep -q "CI_BACKEND_SMOKE_FAILED" wgpu_backend_metal_${{ matrix.label }}.log; then
+            2>&1 | tee "$LOG"
+          STATUS=${PIPESTATUS[0]}
+
+          echo "backend_exit_status=$STATUS" >> "$GITHUB_STEP_SUMMARY"
+          if grep -q "CI_BACKEND_SMOKE_OK" "$LOG"; then
+            echo "### Backend smoke: OK" >> "$GITHUB_STEP_SUMMARY"
+            grep -E "CI_BACKEND_SMOKE_OK|backend=|adapter_" "$LOG" >> "$GITHUB_STEP_SUMMARY" || true
+          else
+            echo "### Backend smoke: FAILED" >> "$GITHUB_STEP_SUMMARY"
+            tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
 
       - name: Run macOS capture probe
         shell: bash
-        continue-on-error: true
         run: |
-          set -o pipefail
+          set +e
           export RUST_BACKTRACE=1
           export CRABGRAB_WGPU_DEBUG_DESCRIPTOR=1
+          LOG="wgpu_capture_macos_${{ matrix.label }}_probe.log"
+
           cargo run --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor -- --ci --frames 1 --allow-capture-unavailable \
-            2>&1 | tee wgpu_capture_macos_${{ matrix.label }}_probe.log
+            2>&1 | tee "$LOG"
+
+          STATUS=${PIPESTATUS[0]}
+
+          echo "### Capture probe ${{ matrix.label }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "exit_status=$STATUS" >> "$GITHUB_STEP_SUMMARY"
+
+          if grep -q "CI_CAPTURE_SMOKE_OK" "$LOG"; then
+            echo "capture_marker=CI_CAPTURE_SMOKE_OK" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if grep -q "CI_CAPTURE_UNAVAILABLE" "$LOG"; then
+            echo "capture_marker=CI_CAPTURE_UNAVAILABLE" >> "$GITHUB_STEP_SUMMARY"
+            grep -E "CI_CAPTURE_UNAVAILABLE|reason=" "$LOG" >> "$GITHUB_STEP_SUMMARY" || true
+            exit 0
+          fi
+
+          if grep -q "CI_CAPTURE_SMOKE_FAILED" "$LOG"; then
+            echo "capture_marker=CI_CAPTURE_SMOKE_FAILED" >> "$GITHUB_STEP_SUMMARY"
+            tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+          echo "capture_marker=MISSING" >> "$GITHUB_STEP_SUMMARY"
+          tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
 
       - name: Upload macOS logs
         if: always()

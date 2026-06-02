@@ -125,3 +125,38 @@ GitHub Actions UI または認証済み artifact download で確認する。
 1. macOS Metal backend smoke の `CI_BACKEND_SMOKE_UNAVAILABLE` を初回は許容する現在の workflow 判定でよいか。
 2. Ubuntu Vulkan は CrabGrab 本体 Linux build ではなく、standalone backend smoke で代替する方針でよいか。
 3. 初回 CI 実行後、capture probe の `CI_CAPTURE_UNAVAILABLE` を docs に分類して cleanup フェーズへ進むか。
+
+## 第5C-R marker hardening
+
+### 目的
+
+artifact を手動取得しなくても、Actions の通常ログと job summary だけで
+backend smoke / capture probe を判定できるようにした。
+
+### 判定規則
+
+- backend smoke は `CI_BACKEND_SMOKE_OK` 必須
+- backend smoke の `CI_BACKEND_SMOKE_UNAVAILABLE` は失敗扱い
+- capture probe は `CI_CAPTURE_SMOKE_OK` または `CI_CAPTURE_UNAVAILABLE` を許容
+- capture probe の `CI_CAPTURE_SMOKE_FAILED` は失敗
+- marker 欠落は失敗
+- crash / panic / validation error は失敗
+
+### 実施した hardening
+
+- `continue-on-error: true` を capture probe から削除
+- capture probe step 内で exit status と marker を分類
+- backend smoke / capture probe の marker を `$GITHUB_STEP_SUMMARY` に出力
+- CI mode の Rust panic を `CI_CAPTURE_SMOKE_FAILED` marker に変換
+- segfault など marker を出せない crash は marker missing として workflow 失敗
+
+### CI結果
+
+- run URL: 未実行
+- Windows backend marker: 未実行
+- Windows capture marker: 未実行
+- macOS arm64 backend marker: 未実行
+- macOS arm64 capture marker: 未実行
+- macOS Intel backend marker: 未実行
+- macOS Intel capture marker: 未実行
+- Ubuntu Vulkan marker: 未実行

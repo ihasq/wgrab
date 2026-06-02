@@ -1,0 +1,1 @@
+cargo fmt --all --check was not used as the phase gate because existing src/util.rs formatting differs from rustfmt output. The touched file was checked separately with rustfmt --edition 2021 --check examples/wgpu_capture_smoke.rs.

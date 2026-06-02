@@ -92,9 +92,10 @@ fn main() -> ExitCode {
         }
     };
 
-    match block_on(run(&args)) {
-        Ok(()) => ExitCode::SUCCESS,
-        Err(reason) => {
+    let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| block_on(run(&args))));
+    match result {
+        Ok(Ok(())) => ExitCode::SUCCESS,
+        Ok(Err(reason)) => {
             if args.ci {
                 println!("CI_CAPTURE_SMOKE_FAILED");
                 println!("reason={reason}");
@@ -103,6 +104,27 @@ fn main() -> ExitCode {
             }
             ExitCode::from(1)
         }
+        Err(payload) => {
+            let reason = panic_reason(payload);
+            if args.ci {
+                println!("CI_CAPTURE_SMOKE_FAILED");
+                println!("reason=panic: {reason}");
+            } else {
+                eprintln!("wgpu capture smoke panicked: {reason}");
+            }
+            ExitCode::from(1)
+        }
+    }
+}
+
+#[cfg(any(target_os = "macos", target_os = "windows"))]
+fn panic_reason(payload: Box<dyn std::any::Any + Send>) -> String {
+    if let Some(reason) = payload.downcast_ref::<&'static str>() {
+        (*reason).to_string()
+    } else if let Some(reason) = payload.downcast_ref::<String>() {
+        reason.clone()
+    } else {
+        "unknown panic payload".to_string()
     }
 }
 
@@ -178,7 +200,8 @@ async fn run(args: &Args) -> Result<(), String> {
         .map_err(|error| format!("with_wgpu_device failed: {error}"))?;
 
     let (tx, mut rx) = mpsc::unbounded::<Result<VideoFrame, String>>();
-    let mut stream = match CaptureStream::new(token, config, move |event_result| match event_result {
+    let mut stream = match CaptureStream::new(token, config, move |event_result| match event_result
+    {
         Ok(StreamEvent::Video(frame)) => {
             let _ = tx.unbounded_send(Ok(frame));
         }
@@ -210,7 +233,10 @@ async fn run(args: &Args) -> Result<(), String> {
             }
         };
         let texture = frame
-            .get_wgpu_texture(WgpuVideoFramePlaneTexture::Rgba, Some("crabgrab wgpu smoke"))
+            .get_wgpu_texture(
+                WgpuVideoFramePlaneTexture::Rgba,
+                Some("crabgrab wgpu smoke"),
+            )
             .map_err(|error| format!("get_wgpu_texture failed: {error}"))?;
         let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
         println!(

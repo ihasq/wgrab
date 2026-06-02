@@ -55,7 +55,7 @@ jobs:
 
       - name: Run Vulkan backend smoke
         run: |
-          set -o pipefail
+          set +e
           export RUST_BACKTRACE=1
           export WGPU_BACKEND=vulkan
 
@@ -67,7 +67,17 @@ jobs:
 
           cargo run --manifest-path target/wgpu-backend-smoke-standalone/Cargo.toml -- --backend vulkan \
             2>&1 | tee wgpu_backend_vulkan.log
-          grep "CI_BACKEND_SMOKE_OK" wgpu_backend_vulkan.log
+          STATUS=${PIPESTATUS[0]}
+
+          echo "backend_exit_status=$STATUS" >> "$GITHUB_STEP_SUMMARY"
+          if grep -q "CI_BACKEND_SMOKE_OK" wgpu_backend_vulkan.log; then
+            echo "### Backend smoke: OK" >> "$GITHUB_STEP_SUMMARY"
+            grep -E "CI_BACKEND_SMOKE_OK|backend=|adapter_" wgpu_backend_vulkan.log >> "$GITHUB_STEP_SUMMARY" || true
+          else
+            echo "### Backend smoke: FAILED" >> "$GITHUB_STEP_SUMMARY"
+            tail -n 120 wgpu_backend_vulkan.log >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
 
       - name: Upload Vulkan logs
         if: always()

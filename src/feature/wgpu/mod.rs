@@ -3,6 +3,12 @@ use std::{error::Error, fmt::Display};
 
 use crate::prelude::{CaptureConfig, CaptureStream, VideoFrame};
 
+mod gpu_only;
+
+pub use gpu_only::{
+    WgpuCaptureConfig, WgpuCaptureFrame, WgpuCaptureStream, WgpuVideoFrameGpuOnlyExt,
+};
+
 #[cfg(target_os = "macos")]
 use crate::feature::iosurface::{GetIoSurfaceError, IoSurface, MacosIoSurfaceVideoFrameExt};
 #[cfg(target_os = "macos")]

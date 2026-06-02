@@ -62,6 +62,28 @@ A `WgpuCaptureFrame` owns or retains the underlying platform texture/resource fo
 
 The frame must not expose CPU-readable memory.
 
+## Phase 12G implementation status
+
+Implemented skeleton:
+
+- `WgpuCaptureFrame`
+- `WgpuCaptureStream`
+- `WgpuCaptureConfig`
+- texture-only frame accessor
+- texture view helper
+- texture-only example
+
+The first bridge method is `WgpuVideoFrameGpuOnlyExt::get_wgpu_capture_frame`.
+It intentionally builds on the existing `WgpuVideoFrameExt::get_wgpu_texture`
+path so legacy APIs remain available during the transition.
+
+Not implemented yet:
+
+- removal of bitmap APIs
+- removal of raw platform APIs
+- package rename
+- version bump
+
 ## Transitional compatibility
 
 The current `WgpuVideoFrameExt::get_wgpu_texture` API can serve as an intermediate compatibility bridge.

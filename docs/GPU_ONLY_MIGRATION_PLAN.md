@@ -32,3 +32,9 @@
 - Decide package name.
 - Decide version.
 - Decide crates.io strategy.
+
+## Current implementation phase
+
+Phase 2 has started.
+
+The new GPU-only API is being introduced without removing legacy APIs yet.

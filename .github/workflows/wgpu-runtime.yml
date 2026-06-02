@@ -57,6 +57,7 @@ jobs:
         run: |
           cargo check --example wgpu_backend_smoke --features wgpu
           cargo check --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor
+          cargo check --example wgpu_texture_only_capture --features wgpu,wgpu-debug-descriptor
 
       - name: Run DX12 backend smoke
         shell: pwsh
@@ -155,6 +156,7 @@ jobs:
         run: |
           cargo check --example wgpu_backend_smoke --features wgpu
           cargo check --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor
+          cargo check --example wgpu_texture_only_capture --features wgpu,wgpu-debug-descriptor
 
       - name: Run Metal backend smoke
         shell: bash

@@ -1,0 +1,32 @@
+src/frame.rs:94:    pub fn audio_channel_buffer(&mut self, channel: usize) -> Result<AudioChannelData<'_>, AudioBufferError> {
+src/prelude.rs:17:pub use crate::feature::metal::*;
+src/platform/macos/capturable_content.rs:12:    pub windows: Vec<SCWindow>,
+src/platform/macos/capturable_content.rs:13:    pub displays: Vec<SCDisplay>,
+src/platform/macos/objc_wrap.rs:1266:    pub fn call_output(&mut self, sample_buffer: CMSampleBuffer, output_type: SCStreamOutputType) {
+src/platform/macos/objc_wrap.rs:1640:    pub bytes_per_packet: u32,
+src/platform/macos/objc_wrap.rs:1642:    pub bytes_per_frame: u32,
+src/platform/macos/objc_wrap.rs:1759:    pub fn new_with_format_buffer_list_no_copy_deallocator(format: AVAudioFormat, buffer_list_no_copy: *const AudioBufferList) -> Result<Self, ()> {
+src/platform/macos/objc_wrap.rs:1784:    pub fn f32_buffer(&self, channel: usize) -> Option<*const f32> {
+src/platform/macos/objc_wrap.rs:1804:    pub fn i32_buffer(&self, channel: usize) -> Option<*const i32> {
+src/platform/macos/objc_wrap.rs:1824:    pub fn i16_buffer(&self, channel: usize) -> Option<*const i16> {
+src/platform/macos/objc_wrap.rs:2038:    pub fn new(callback: impl Fn(CGDisplayStreamFrameStatus, Duration, IOSurface) + 'static, display_id: u32, size: (usize, usize), pixel_format: SCStreamPixelFormat, options_dict: NSDictionary, dispatch_queue: DispatchQueue) -> Self {
+src/platform/macos/objc_wrap.rs:2154:pub enum IOSurfaceLockError {
+src/platform/macos/objc_wrap.rs:2159:pub struct IOSurfaceLockGaurd(IOSurfaceRef, u32);
+src/platform/macos/objc_wrap.rs:2195:pub enum IOSurfaceComponentName {
+src/platform/macos/objc_wrap.rs:2216:pub enum IOSurfaceComponentType {
+src/platform/macos/objc_wrap.rs:2231:pub enum IOSurfaceCacheMode {
+src/platform/macos/objc_wrap.rs:2645:    pub fn get_iosurface(&self) -> Option<IOSurface> {
+src/platform/macos/objc_wrap.rs:2792:    pub fn bytes_per_row(&self) -> usize {
+src/platform/macos/objc_wrap.rs:3233:    pub fn capture_image_with_filter_and_configuration(filter: &SCContentFilter, config: &SCStreamConfiguration, completion_handler: impl FnMut(Result<CGImage, NSError>) + Send + 'static) {
+src/platform/macos/objc_wrap.rs:3252:    pub fn capture_samplebuffer_with_filter_and_configuration(filter: SCContentFilter, config: SCStreamConfiguration, completion_handler: impl FnMut(Result<CMSampleBuffer, String>) + Send + 'static) {
+src/capture_stream.rs:244:    pub fn with_buffer_count(self, buffer_count: usize) -> Self {
+src/feature/content_picker/mod.rs:22:    pub excluded_apps: Vec<CapturableApplication>,
+src/feature/iosurface/mod.rs:21:pub struct IoSurface(IOSurfaceRef);
+src/feature/bitmap/mod.rs:194:pub trait BitmapDataLuma: Sized + AsRef<[u8]> {}
+src/feature/diagnostic/mod.rs:11:pub struct FrameIOSurfaceComponentInfo {
+src/feature/diagnostic/mod.rs:20:pub struct FrameIOSurfacePlaneInfo {
+src/feature/diagnostic/mod.rs:29:pub struct FrameIOSurfaceInfo {
+src/feature/diagnostic/mod.rs:49:    pub iosurface_info: Option<FrameIOSurfaceInfo>,
+src/feature/diagnostic/mod.rs:51:    pub info_dictionary: Vec<(String, String)>,
+src/feature/wgpu/mod.rs:114:pub enum WgpuVideoFramePlaneTexture {
+src/feature/metal/mod.rs:21:pub enum MetalVideoFramePlaneTexture {

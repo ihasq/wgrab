@@ -1,0 +1,5 @@
+src/platform/macos/objc_wrap.rs:1640:    pub bytes_per_packet: u32,
+src/platform/macos/objc_wrap.rs:1642:    pub bytes_per_frame: u32,
+src/platform/macos/objc_wrap.rs:2792:    pub fn bytes_per_row(&self) -> usize {
+src/feature/bitmap/mod.rs:31:use windows::Win32::Graphics::Direct3D11::{D3D11_CPU_ACCESS_READ, D3D11_MAPPED_SUBRESOURCE, D3D11_MAP_READ, D3D11_TEXTURE2D_DESC, D3D11_USAGE_STAGING};
+src/feature/bitmap/mod.rs:416:                        let map_result = device.Map(&staging_texture, 0, D3D11_MAP_READ, 0, Some(&mut mapped_resource as *mut _));

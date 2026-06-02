@@ -53,6 +53,16 @@
 - GitHub Release UI draft: owner action required
 - crates.io publish: deferred
 
+## Post-tag direction update
+
+After `wgrab-wgpu29-rc1`, the owner decided to narrow the future wgrab API surface.
+
+The tag remains as a CrabGrab-compatible wgpu29 modernization baseline.
+
+GitHub Release draft creation is paused.
+
+Future wgrab API direction is GPU-only capture output centered on `wgpu::Texture`.
+
 ## Deferred
 
 - GitHub Release draft UI creation

@@ -152,11 +152,21 @@ backend smoke / capture probe を判定できるようにした。
 
 ### CI結果
 
-- run URL: 未実行
-- Windows backend marker: 未実行
-- Windows capture marker: 未実行
-- macOS arm64 backend marker: 未実行
-- macOS arm64 capture marker: 未実行
-- macOS Intel backend marker: 未実行
-- macOS Intel capture marker: 未実行
-- Ubuntu Vulkan marker: 未実行
+- run URL:
+  - https://github.com/ihasq/wgrab/actions/runs/26806516230
+  - https://github.com/ihasq/wgrab/actions/runs/26806516788
+- Windows backend marker: `CI_BACKEND_SMOKE_OK`
+- Windows capture marker: `CI_CAPTURE_SMOKE_OK` または `CI_CAPTURE_UNAVAILABLE`
+- macOS arm64 backend marker: `CI_BACKEND_SMOKE_OK`
+- macOS arm64 capture marker: `CI_CAPTURE_SMOKE_OK` または `CI_CAPTURE_UNAVAILABLE`
+- macOS Intel backend marker: `CI_BACKEND_SMOKE_OK`
+- macOS Intel capture marker: `CI_CAPTURE_SMOKE_OK` または `CI_CAPTURE_UNAVAILABLE`
+- Ubuntu Vulkan marker: `CI_BACKEND_SMOKE_OK`
+
+上記 run はいずれも completed successfully。capture marker は workflow の
+分類 script 上、`CI_CAPTURE_SMOKE_OK` または `CI_CAPTURE_UNAVAILABLE`
+がログに存在した場合のみ job success になる。marker 欠落、panic marker、
+`CI_CAPTURE_SMOKE_FAILED`、segfault などの marker 欠落 crash は失敗扱い。
+
+未認証の GitHub HTML / API では job summary と artifact 本文を取得できず、
+capture marker が OK / unavailable のどちらだったかまでは機械確認できなかった。

@@ -1,0 +1,6 @@
+total 100K
+drwxr-xr-x 4 ihasq ihasq 4.0K Jun  2 14:35 .
+drwxr-xr-x 7 ihasq ihasq 4.0K Jun  2 14:35 ..
+drwxr-xr-x 2 ihasq ihasq 4.0K Jun  2 14:35 tmp-crate
+drwxr-xr-x 4 ihasq ihasq 4.0K Jun  2 14:35 wgrab-0.1.0
+-rw-r--r-- 1 ihasq ihasq  81K Jun  2 14:35 wgrab-0.1.0.crate

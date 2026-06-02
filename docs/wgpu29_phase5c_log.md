@@ -170,3 +170,27 @@ backend smoke / capture probe を判定できるようにした。
 
 未認証の GitHub HTML / API では job summary と artifact 本文を取得できず、
 capture marker が OK / unavailable のどちらだったかまでは機械確認できなかった。
+
+## PR CI marker summary
+
+- PR: 未作成
+- Actions run: PR 作成後に確認
+
+### Windows
+
+- backend: `CI_BACKEND_SMOKE_OK`
+- capture: PR job summary で確認
+
+### macOS arm64
+
+- backend: `CI_BACKEND_SMOKE_OK`
+- capture: PR job summary で確認
+
+### macOS Intel
+
+- backend: `CI_BACKEND_SMOKE_OK`
+- capture: PR job summary で確認
+
+### Ubuntu
+
+- backend: `CI_BACKEND_SMOKE_OK`

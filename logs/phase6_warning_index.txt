@@ -1,0 +1,39 @@
+logs/phase6_check_macos_arm.txt:1:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_arm.txt:9:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_arm.txt:15:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_arm.txt:21:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_arm.txt:27:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_arm.txt:33:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_arm.txt:39:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_arm.txt:45:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_arm.txt:51:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_arm.txt:57:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_arm.txt:63:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_arm.txt:69:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_arm.txt:75:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_arm.txt:81:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_arm.txt:87:warning: unnecessary transmute
+logs/phase6_check_macos_arm.txt:101:warning: unnecessary transmute
+logs/phase6_check_macos_arm.txt:114:warning: `crabgrab` (lib) generated 16 warnings (run `cargo fix --lib -p crabgrab` to apply 16 suggestions)
+logs/phase6_check_macos_x86.txt:1:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_x86.txt:9:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_x86.txt:15:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_x86.txt:21:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_x86.txt:27:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_x86.txt:33:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_x86.txt:39:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_x86.txt:45:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_x86.txt:51:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_x86.txt:57:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_x86.txt:63:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_x86.txt:69:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_x86.txt:75:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_x86.txt:81:warning: `extern` declarations without an explicit ABI are deprecated
+logs/phase6_check_macos_x86.txt:87:warning: unnecessary transmute
+logs/phase6_check_macos_x86.txt:101:warning: unnecessary transmute
+logs/phase6_check_macos_x86.txt:114:warning: `crabgrab` (lib) generated 16 warnings (run `cargo fix --lib -p crabgrab` to apply 16 suggestions)
+logs/phase6_check_windows.txt:2:warning: unused import: `HWND`
+logs/phase6_check_windows.txt:10:warning: field `0` is never read
+logs/phase6_check_windows.txt:25:warning: field `0` is never read
+logs/phase6_check_windows.txt:39:warning: field `frame_size` is never read
+logs/phase6_check_windows.txt:48:warning: `crabgrab` (lib) generated 4 warnings (run `cargo fix --lib -p crabgrab` to apply 1 suggestion)

@@ -36,7 +36,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Show environment
         shell: pwsh
@@ -112,7 +112,7 @@ jobs:
 
       - name: Upload Windows logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-dx12-wgpu-logs
           path: "*.log"
@@ -132,7 +132,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Show environment
         shell: bash
@@ -213,7 +213,7 @@ jobs:
 
       - name: Upload macOS logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: macos-metal-${{ matrix.label }}-wgpu-logs
           path: "*.log"
@@ -239,7 +239,7 @@ jobs:
     timeout-minutes: 45
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Strict backend smoke
         shell: bash
@@ -283,7 +283,7 @@ jobs:
 
       - name: Upload strict logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: strict-capture-${{ matrix.label }}-logs
           path: "*.log"

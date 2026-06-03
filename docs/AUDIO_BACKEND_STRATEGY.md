@@ -135,3 +135,9 @@ System audio capture is investigated separately:
 - macOS: ScreenCaptureKit audio candidate
 
 Both should feed `WgrabAudioFrame`.
+
+## Phase 32A decision
+
+Try CPAL system-audio candidate streams first.
+
+If insufficient, proceed to direct platform backends.

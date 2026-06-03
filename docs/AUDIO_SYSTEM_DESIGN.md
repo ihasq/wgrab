@@ -99,3 +99,13 @@ uses a name/config heuristic to classify possible loopback candidates.
 If useful candidates appear, the next CPAL phase can try building
 `WgrabAudioFrame` streams from those candidates. If not, direct WASAPI or
 ScreenCaptureKit backends should be prioritized.
+
+## SystemAudioCandidate
+
+`SystemAudioCandidate` is a CPAL-based attempt to capture system-audio-like
+input.
+
+It is not a final platform guarantee.
+
+The stream reports `WgrabAudioSource::SystemAudioCandidate` so examples and
+future APIs can distinguish it from default microphone/input-device capture.

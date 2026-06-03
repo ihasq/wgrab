@@ -1,0 +1,43 @@
+   Packaging wgrab v0.1.0 (/home/ihasq/code/wgrab)
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Updating crates.io index
+    Packaged 56 files, 446.1KiB (89.3KiB compressed)
+   Verifying wgrab v0.1.0 (/home/ihasq/code/wgrab)
+   Compiling wgrab v0.1.0 (/home/ihasq/code/wgrab/target/package/wgrab-0.1.0)
+warning: multiple fields are never read
+   --> src/capture_stream.rs:167:16
+    |
+166 | pub struct CaptureConfig {
+    |            ------------- fields in this struct
+167 |     pub(crate) target: Capturable,
+    |                ^^^^^^
+168 |     pub(crate) output_size: Size,
+    |                ^^^^^^^^^^^
+169 |     pub(crate) show_cursor: bool,
+    |                ^^^^^^^^^^^
+170 |     pub(crate) pixel_format: CapturePixelFormat,
+    |                ^^^^^^^^^^^^
+171 |     pub(crate) capture_audio: Option<AudioCaptureConfig>,
+    |                ^^^^^^^^^^^^^
+172 |     pub(crate) impl_capture_config: ImplCaptureConfig,
+    |                ^^^^^^^^^^^^^^^^^^^
+173 |     pub(crate) buffer_count: usize,
+    |                ^^^^^^^^^^^^
+    |
+    = note: `CaptureConfig` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `impl_capturable_content_filter` is never read
+  --> src/capturable_content.rs:56:16
+   |
+50 | pub struct CapturableContentFilter {
+   |            ----------------------- field in this struct
+...
+56 |     pub(crate) impl_capturable_content_filter: ImplCapturableContentFilter,
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `CapturableContentFilter` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+
+warning: `wgrab` (lib) generated 2 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.03s

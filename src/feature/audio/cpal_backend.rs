@@ -3,7 +3,8 @@ use std::sync::{Arc, Mutex};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 
 use crate::feature::audio::{
-    WgrabAudioDeviceReport, WgrabAudioError, WgrabAudioFormat, WgrabAudioStream, WgrabSampleFormat,
+    WgrabAudioDeviceReport, WgrabAudioError, WgrabAudioFormat, WgrabAudioSource, WgrabAudioStream,
+    WgrabSampleFormat,
 };
 
 pub struct CpalAudioBackend {
@@ -67,6 +68,7 @@ impl CpalAudioBackend {
             buffer,
             format,
             device_name,
+            WgrabAudioSource::DefaultInput,
         ))
     }
 
@@ -84,7 +86,7 @@ impl CpalAudioBackend {
                         default_input_name.as_deref() == Some(name.as_str()),
                         default_output_name.as_deref() == Some(name.as_str()),
                         supports_input(&device),
-                        false,
+                        supports_output(&device),
                     );
                 }
             }
@@ -98,7 +100,7 @@ impl CpalAudioBackend {
                         &name,
                         default_input_name.as_deref() == Some(name.as_str()),
                         default_output_name.as_deref() == Some(name.as_str()),
-                        false,
+                        supports_input(&device),
                         supports_output(&device),
                     );
                 }
@@ -117,6 +119,47 @@ impl CpalAudioBackend {
         self.host
             .default_output_device()
             .and_then(|device| device_name(&device))
+    }
+
+    pub fn loopback_candidates(&self) -> Vec<WgrabAudioDeviceReport> {
+        let mut candidates: Vec<_> = self
+            .device_reports()
+            .into_iter()
+            .filter(|report| report.loopback_candidate && report.supports_input)
+            .collect();
+
+        candidates.sort_by(|left, right| {
+            right
+                .is_default_output
+                .cmp(&left.is_default_output)
+                .then_with(|| right.supports_output.cmp(&left.supports_output))
+                .then_with(|| left.name.cmp(&right.name))
+        });
+
+        candidates
+    }
+
+    pub fn build_loopback_candidate_stream(&self) -> Result<WgrabAudioStream, WgrabAudioError> {
+        for candidate in self.loopback_candidates() {
+            for device in self.devices_matching_name(&candidate.name) {
+                let Ok((stream, buffer, format)) = build_stream_for_device(&device) else {
+                    continue;
+                };
+                stream
+                    .play()
+                    .map_err(|error| WgrabAudioError::PlayStreamFailed(error.to_string()))?;
+
+                return Ok(WgrabAudioStream::new(
+                    Some(stream),
+                    buffer,
+                    format,
+                    Some(candidate.name),
+                    WgrabAudioSource::SystemAudioCandidate,
+                ));
+            }
+        }
+
+        Err(WgrabAudioError::NoLoopbackCandidate)
     }
 
     pub fn probe_input_stream_for_device_name(

@@ -51,6 +51,9 @@ jobs:
       - name: Check audio CPAL loopback probe example
         run: cargo check --example audio_cpal_loopback_probe --features audio
 
+      - name: Check audio CPAL system audio smoke example
+        run: cargo check --example audio_cpal_system_audio_smoke --features audio
+
       - name: Run audio CPAL probe
         shell: bash
         if: runner.os != 'Windows'
@@ -161,6 +164,63 @@ jobs:
           }
 
           "audio_loopback_marker=MISSING" >> $env:GITHUB_STEP_SUMMARY
+          Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+          exit 1
+
+      - name: Run audio CPAL system audio smoke
+        shell: bash
+        if: runner.os != 'Windows'
+        run: |
+          set +e
+          LOG="audio_cpal_system_audio_smoke.log"
+          cargo run --example audio_cpal_system_audio_smoke --features audio -- --ci --duration-ms 250 --allow-unavailable \
+            2>&1 | tee "$LOG"
+
+          if grep -q "CI_WGRAB_AUDIO_SYSTEM_OK" "$LOG"; then
+            echo "audio_system_marker=CI_WGRAB_AUDIO_SYSTEM_OK" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if grep -q "CI_WGRAB_AUDIO_SYSTEM_UNAVAILABLE" "$LOG"; then
+            echo "audio_system_marker=CI_WGRAB_AUDIO_SYSTEM_UNAVAILABLE" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if grep -q "CI_WGRAB_AUDIO_SYSTEM_FAILED" "$LOG"; then
+            echo "audio_system_marker=CI_WGRAB_AUDIO_SYSTEM_FAILED" >> "$GITHUB_STEP_SUMMARY"
+            tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+          echo "audio_system_marker=MISSING" >> "$GITHUB_STEP_SUMMARY"
+          tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+      - name: Run audio CPAL system audio smoke Windows
+        shell: pwsh
+        if: runner.os == 'Windows'
+        run: |
+          $Log = "audio_cpal_system_audio_smoke.log"
+          cargo run --example audio_cpal_system_audio_smoke --features audio -- --ci --duration-ms 250 --allow-unavailable `
+            2>&1 | Tee-Object -FilePath $Log
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_AUDIO_SYSTEM_OK" -Quiet) {
+            "audio_system_marker=CI_WGRAB_AUDIO_SYSTEM_OK" >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_AUDIO_SYSTEM_UNAVAILABLE" -Quiet) {
+            "audio_system_marker=CI_WGRAB_AUDIO_SYSTEM_UNAVAILABLE" >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_AUDIO_SYSTEM_FAILED" -Quiet) {
+            "audio_system_marker=CI_WGRAB_AUDIO_SYSTEM_FAILED" >> $env:GITHUB_STEP_SUMMARY
+            Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+            exit 1
+          }
+
+          "audio_system_marker=MISSING" >> $env:GITHUB_STEP_SUMMARY
           Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
           exit 1
 

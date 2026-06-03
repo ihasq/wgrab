@@ -64,3 +64,18 @@ This is not a final loopback detector.
 
 A direct WASAPI or ScreenCaptureKit backend remains a candidate if CPAL does not
 provide sufficient system audio capture.
+
+## Phase 32A CPAL system-audio candidate stream
+
+This phase attempts to build an input stream from CPAL loopback candidates.
+
+A candidate stream is considered a prototype only.
+
+It may not guarantee true system audio. The candidate may be silent, may be a
+virtual input device, or may not correspond to the active screen capture source.
+
+If CPAL cannot reliably expose system audio, wgrab should use
+platform-specific backends:
+
+- Windows: WASAPI loopback
+- macOS: ScreenCaptureKit audio

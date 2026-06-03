@@ -33,6 +33,12 @@ pub struct WgrabAudioDeviceReport {
     pub loopback_candidate: bool,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum WgrabAudioSource {
+    DefaultInput,
+    SystemAudioCandidate,
+}
+
 /// Monotonic capture timestamp used for audio/video synchronization.
 ///
 /// This timestamp is not wall-clock time. It represents elapsed time on
@@ -130,6 +136,7 @@ impl Default for WgrabAudioContext {
 #[derive(Debug)]
 pub enum WgrabAudioError {
     NoInputDevice,
+    NoLoopbackCandidate,
     DefaultInputConfigFailed(String),
     BuildStreamFailed(String),
     PlayStreamFailed(String),
@@ -141,6 +148,7 @@ impl fmt::Display for WgrabAudioError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::NoInputDevice => write!(f, "no default input device is available"),
+            Self::NoLoopbackCandidate => write!(f, "no CPAL loopback candidate is available"),
             Self::DefaultInputConfigFailed(error) => {
                 write!(f, "default input config failed: {error}")
             }
@@ -165,6 +173,7 @@ pub struct WgrabAudioStream {
     pub(crate) buffer: Arc<Mutex<Vec<f32>>>,
     format: WgrabAudioFormat,
     device_name: Option<String>,
+    source: WgrabAudioSource,
     clock: WgrabCaptureClock,
 }
 
@@ -174,6 +183,7 @@ impl WgrabAudioStream {
         buffer: Arc<Mutex<Vec<f32>>>,
         format: WgrabAudioFormat,
         device_name: Option<String>,
+        source: WgrabAudioSource,
     ) -> Self {
         Self {
             #[cfg(feature = "audio-cpal")]
@@ -181,6 +191,7 @@ impl WgrabAudioStream {
             buffer,
             format,
             device_name,
+            source,
             clock: WgrabCaptureClock::start_now(),
         }
     }
@@ -191,6 +202,10 @@ impl WgrabAudioStream {
 
     pub fn device_name(&self) -> Option<&str> {
         self.device_name.as_deref()
+    }
+
+    pub fn source(&self) -> WgrabAudioSource {
+        self.source
     }
 
     pub fn try_next_frame(&self) -> Result<Option<WgrabAudioFrame>, WgrabAudioError> {

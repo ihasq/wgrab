@@ -80,5 +80,8 @@ The public API should normalize these to `WgrabTimestamp`.
 
 ScreenCaptureKit audio sample buffers may provide timing metadata.
 
+The Phase 35L prototype forwards the sample-buffer presentation timestamp when
+the f32 sample conversion path succeeds.
+
 Future wgrab A/V sync should prefer sample buffer timestamps over dequeue-time
 timestamps when available.

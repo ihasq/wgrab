@@ -106,18 +106,20 @@ src/platform/macos/objc_wrap.rs:1396:struct SCStreamOutput(*mut AnyObject);
 src/platform/macos/objc_wrap.rs:1398:unsafe impl Encode for SCStreamOutput {
 src/platform/macos/objc_wrap.rs:1402:impl SCStream {
 src/platform/macos/objc_wrap.rs:1422:    pub fn new(filter: SCContentFilter, config: SCStreamConfiguration, handler_queue: DispatchQueue, handler: SCStreamHandler) -> Result<Self, String> {
-src/platform/macos/objc_wrap.rs:1424:            let instance: *mut AnyObject = msg_send![class!(SCStream), alloc];
-src/platform/macos/objc_wrap.rs:1425:            let instance: *mut AnyObject = msg_send![instance, initWithFilter: filter.0 configuration: config.0 delegate: SCStreamDelegate(handler.0)];
-src/platform/macos/objc_wrap.rs:1427:            let result: bool = msg_send![instance, addStreamOutput: SCStreamOutput(handler.0) type: SCStreamOutputType::Screen.to_encoded() sampleHandlerQueue: handler_queue error: &mut error as *mut _];
-src/platform/macos/objc_wrap.rs:1431:                return Err(format!("SCStream error: {}, reason: {}", error.description(), error.reason()));
-src/platform/macos/objc_wrap.rs:1433:            Ok(SCStream(instance))
-src/platform/macos/objc_wrap.rs:2038:    pub fn new(callback: impl Fn(CGDisplayStreamFrameStatus, Duration, IOSurface) + 'static, display_id: u32, size: (usize, usize), pixel_format: SCStreamPixelFormat, options_dict: NSDictionary, dispatch_queue: DispatchQueue) -> Self {
-src/platform/macos/objc_wrap.rs:3109:    DidUpdate {filter: SCContentFilter, stream: Option<SCStream> },
-src/platform/macos/objc_wrap.rs:3125:    pub fn call_cancelled(&mut self, picker: SCContentSharingPicker, stream: Option<SCStream>) {
-src/platform/macos/objc_wrap.rs:3128:    pub fn call_did_update_with_filter(&mut self, picker: SCContentSharingPicker, filter: SCContentFilter, stream: Option<SCStream>) {
-src/platform/macos/objc_wrap.rs:3199:    pub fn set_configuration_for_stream(&self, configuration: SCContentSharingPickerConfiguration, for_stream: Option<&SCStream>) {
-src/platform/macos/objc_wrap.rs:3233:    pub fn capture_image_with_filter_and_configuration(filter: &SCContentFilter, config: &SCStreamConfiguration, completion_handler: impl FnMut(Result<CGImage, NSError>) + Send + 'static) {
-src/platform/macos/objc_wrap.rs:3252:    pub fn capture_samplebuffer_with_filter_and_configuration(filter: SCContentFilter, config: SCStreamConfiguration, completion_handler: impl FnMut(Result<CMSampleBuffer, String>) + Send + 'static) {
+src/platform/macos/objc_wrap.rs:1423:        Self::new_with_output_type(filter, config, handler_queue, handler, SCStreamOutputType::Screen)
+src/platform/macos/objc_wrap.rs:1426:    pub fn new_with_output_type(filter: SCContentFilter, config: SCStreamConfiguration, handler_queue: DispatchQueue, handler: SCStreamHandler, output_type: SCStreamOutputType) -> Result<Self, String> {
+src/platform/macos/objc_wrap.rs:1428:            let instance: *mut AnyObject = msg_send![class!(SCStream), alloc];
+src/platform/macos/objc_wrap.rs:1429:            let instance: *mut AnyObject = msg_send![instance, initWithFilter: filter.0 configuration: config.0 delegate: SCStreamDelegate(handler.0)];
+src/platform/macos/objc_wrap.rs:1431:            let result: bool = msg_send![instance, addStreamOutput: SCStreamOutput(handler.0) type: output_type.to_encoded() sampleHandlerQueue: handler_queue error: &mut error as *mut _];
+src/platform/macos/objc_wrap.rs:1435:                return Err(format!("SCStream error: {}, reason: {}", error.description(), error.reason()));
+src/platform/macos/objc_wrap.rs:1437:            Ok(SCStream(instance))
+src/platform/macos/objc_wrap.rs:2119:    pub fn new(callback: impl Fn(CGDisplayStreamFrameStatus, Duration, IOSurface) + 'static, display_id: u32, size: (usize, usize), pixel_format: SCStreamPixelFormat, options_dict: NSDictionary, dispatch_queue: DispatchQueue) -> Self {
+src/platform/macos/objc_wrap.rs:3190:    DidUpdate {filter: SCContentFilter, stream: Option<SCStream> },
+src/platform/macos/objc_wrap.rs:3206:    pub fn call_cancelled(&mut self, picker: SCContentSharingPicker, stream: Option<SCStream>) {
+src/platform/macos/objc_wrap.rs:3209:    pub fn call_did_update_with_filter(&mut self, picker: SCContentSharingPicker, filter: SCContentFilter, stream: Option<SCStream>) {
+src/platform/macos/objc_wrap.rs:3280:    pub fn set_configuration_for_stream(&self, configuration: SCContentSharingPickerConfiguration, for_stream: Option<&SCStream>) {
+src/platform/macos/objc_wrap.rs:3314:    pub fn capture_image_with_filter_and_configuration(filter: &SCContentFilter, config: &SCStreamConfiguration, completion_handler: impl FnMut(Result<CGImage, NSError>) + Send + 'static) {
+src/platform/macos/objc_wrap.rs:3333:    pub fn capture_samplebuffer_with_filter_and_configuration(filter: SCContentFilter, config: SCStreamConfiguration, completion_handler: impl FnMut(Result<CMSampleBuffer, String>) + Send + 'static) {
 src/platform/macos/capture_stream.rs:4:use objc2::runtime::AnyObject;
 src/platform/macos/capture_stream.rs:7:use crate::{capture_stream::{CaptureConfig, StreamCreateError, StreamError, StreamEvent}, platform::platform_impl::{frame::MacosSCStreamVideoFrame, objc_wrap::NSNumber}, prelude::{AudioCaptureConfig, AudioFrame, Capturable, CaptureConfigError, CapturePixelFormat, Point, StreamStopError, VideoFrame}, util::{Rect, Size}};
 src/platform/macos/capture_stream.rs:8:use super::{frame::{MacosAudioFrame, MacosCGDisplayStreamVideoFrame, MacosVideoFrame}, objc_wrap::{kCFBooleanFalse, kCFBooleanTrue, kCGDisplayStreamDestinationRect, kCGDisplayStreamMinimumFrameTime, kCGDisplayStreamPreserveAspectRatio, kCGDisplayStreamQueueDepth, kCGDisplayStreamShowCursor, kCGDisplayStreamSourceRect, CFNumber, CGDisplayStream, CGDisplayStreamFrameStatus, CGPoint, CGRect, CGSize, CMSampleBuffer, CMTime, DispatchQueue, IOSurface, NSArray, NSDictionary, NSString, SCCaptureResolutionType, SCContentFilter, SCFrameStatus, SCStream, SCStreamCallbackError, SCStreamColorMatrix, SCStreamConfiguration, SCStreamFrameInfoStatus, SCStreamHandler, SCStreamOutputType, SCStreamPixelFormat, SCStreamSampleRate}};
@@ -154,6 +156,33 @@ src/platform/macos/capture_stream.rs:401:                    CapturePixelFormat:
 src/platform/macos/capture_stream.rs:402:                    CapturePixelFormat::V420 =>        (SCStreamPixelFormat::V420, true),
 src/platform/macos/capture_stream.rs:403:                    CapturePixelFormat::F420 =>        (SCStreamPixelFormat::F420, true),
 src/feature/iosurface/mod.rs:118:        MacosVideoFrame::SCStream(frame) => match frame.sample_buffer.get_image_buffer() {
+src/feature/audio/screencapturekit_audio.rs:12:    DispatchQueue, NSArray, SCContentFilter, SCShareableContent, SCStream, SCStreamConfiguration,
+src/feature/audio/screencapturekit_audio.rs:13:    SCStreamHandler, SCStreamOutputType, SCStreamSampleRate,
+src/feature/audio/screencapturekit_audio.rs:16:pub(crate) struct ScreenCaptureKitAudioStream {
+src/feature/audio/screencapturekit_audio.rs:17:    stream: SCStream,
+src/feature/audio/screencapturekit_audio.rs:20:impl Drop for ScreenCaptureKitAudioStream {
+src/feature/audio/screencapturekit_audio.rs:28:    if !SCStream::preflight_access() {
+src/feature/audio/screencapturekit_audio.rs:29:        return Err(WgrabAudioError::ScreenCaptureKitUnavailable(
+src/feature/audio/screencapturekit_audio.rs:36:        WgrabAudioError::ScreenCaptureKitUnavailable("no shareable display found".to_string())
+src/feature/audio/screencapturekit_audio.rs:40:    let mut config = SCStreamConfiguration::new();
+src/feature/audio/screencapturekit_audio.rs:43:    config.set_sample_rate(SCStreamSampleRate::R48000);
+src/feature/audio/screencapturekit_audio.rs:58:    let handler = SCStreamHandler::new(move |stream_result| match stream_result {
+src/feature/audio/screencapturekit_audio.rs:59:        Ok((sample_buffer, SCStreamOutputType::Audio)) => {
+src/feature/audio/screencapturekit_audio.rs:78:        Ok((_sample_buffer, SCStreamOutputType::Screen)) => {}
+src/feature/audio/screencapturekit_audio.rs:82:    let mut stream = SCStream::new_with_output_type(
+src/feature/audio/screencapturekit_audio.rs:87:        SCStreamOutputType::Audio,
+src/feature/audio/screencapturekit_audio.rs:89:    .map_err(WgrabAudioError::ScreenCaptureKitUnavailable)?;
+src/feature/audio/screencapturekit_audio.rs:93:        ScreenCaptureKitAudioStream { stream },
+src/feature/audio/screencapturekit_audio.rs:101:        Some("ScreenCaptureKit default display audio".to_string()),
+src/feature/audio/screencapturekit_audio.rs:116:        Ok(Err(error)) => Err(WgrabAudioError::ScreenCaptureKitUnavailable(format!(
+src/feature/audio/screencapturekit_audio.rs:122:        Err(error) => Err(WgrabAudioError::ScreenCaptureKitUnavailable(format!(
+src/feature/audio/mod.rs:61:    ScreenCaptureKitAudio,
+src/feature/audio/mod.rs:203:    ScreenCaptureKitUnavailable(String),
+src/feature/audio/mod.rs:224:            Self::ScreenCaptureKitUnavailable(error) => {
+src/feature/audio/mod.rs:225:                write!(f, "ScreenCaptureKit audio unavailable: {error}")
+src/feature/audio/mod.rs:244:    screencapturekit_audio_stream: Option<screencapturekit_audio::ScreenCaptureKitAudioStream>,
+src/feature/audio/mod.rs:301:        stream: screencapturekit_audio::ScreenCaptureKitAudioStream,
+src/feature/audio/mod.rs:317:            source: WgrabAudioSource::ScreenCaptureKitAudio,
 src/feature/diagnostic/mod.rs:7:use crate::platform::platform_impl::objc_wrap::{IOSurface, CGRect, NSDictionary, NSNumber, NSString, SCStreamFrameInfoBoundingRect, SCStreamFrameInfoContentRect, SCStreamFrameInfoContentScale, SCStreamFrameInfoScaleFactor, SCStreamFrameInfoStatus};
 src/feature/diagnostic/mod.rs:108:                crate::platform::platform_impl::ImplVideoFrame::SCStream(sc_stream_frame) => {
 src/feature/diagnostic/mod.rs:112:                        let bounding_rect_dict_raw = info_dict.get_value(SCStreamFrameInfoBoundingRect as *const _);

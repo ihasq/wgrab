@@ -2,7 +2,7 @@
 warning: crate wgrab@0.1.0 already exists on crates.io index
    Packaging wgrab v0.1.0 (/home/ihasq/code/wgrab)
     Updating crates.io index
-    Packaged 60 files, 482.9KiB (95.4KiB compressed)
+    Packaged 60 files, 484.8KiB (95.6KiB compressed)
    Verifying wgrab v0.1.0 (/home/ihasq/code/wgrab)
    Compiling wgrab v0.1.0 (/home/ihasq/code/wgrab/target/package/wgrab-0.1.0)
 warning: multiple fields are never read
@@ -40,6 +40,6 @@ warning: field `impl_capturable_content_filter` is never read
    = note: `CapturableContentFilter` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
 
 warning: `wgrab` (lib) generated 2 warnings
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.07s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.20s
    Uploading wgrab v0.1.0 (/home/ihasq/code/wgrab)
 warning: aborting upload due to dry run

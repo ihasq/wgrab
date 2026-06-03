@@ -63,6 +63,10 @@ wgrab adds a ScreenCaptureKit audio prototype.
 The prototype enables `SCStreamConfiguration.capturesAudio` and attempts to
 receive audio sample buffers.
 
+When f32 PCM audio buffers are available, the prototype records sample rate,
+channel count, frame count, interleaved samples, and sample-buffer presentation
+timestamp metadata before emitting `WgrabAudioFrame`.
+
 The public output remains `WgrabAudioFrame`.
 
 CI may only prove that the backend compiles or reports unavailable. Real system

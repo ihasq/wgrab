@@ -1,10 +1,12 @@
+use std::collections::VecDeque;
 use std::sync::{Arc, Mutex};
 
 use futures::channel::oneshot;
 use parking_lot::Mutex as ParkingMutex;
 
 use crate::feature::audio::{
-    WgrabAudioError, WgrabAudioFormat, WgrabAudioStream, WgrabSampleFormat,
+    WgrabAudioError, WgrabAudioFormat, WgrabAudioStream, WgrabQueuedAudioFrame, WgrabSampleFormat,
+    WgrabTimestamp,
 };
 use crate::platform::platform_impl::objc_wrap::{
     DispatchQueue, NSArray, SCContentFilter, SCShareableContent, SCStream, SCStreamConfiguration,
@@ -50,14 +52,26 @@ pub(crate) fn build_default_screencapturekit_audio_stream(
     );
     let handler_queue =
         DispatchQueue::make_serial("com.ihasq.wgrab.screencapturekit.audio".to_string());
-    let buffer = Arc::new(Mutex::new(Vec::new()));
-    let callback_buffer = Arc::clone(&buffer);
+    let queued_frames = Arc::new(Mutex::new(VecDeque::new()));
+    let callback_frames = Arc::clone(&queued_frames);
 
     let handler = SCStreamHandler::new(move |stream_result| match stream_result {
         Ok((sample_buffer, SCStreamOutputType::Audio)) => {
             if let Ok(audio_data) = sample_buffer.copy_audio_samples_f32() {
-                if let Ok(mut samples) = callback_buffer.lock() {
-                    samples.extend_from_slice(&audio_data.samples);
+                if let Ok(mut frames) = callback_frames.lock() {
+                    let timestamp = Some(WgrabTimestamp::from_nanos(
+                        audio_data.presentation_timestamp_nanos,
+                    ));
+                    frames.push_back(WgrabQueuedAudioFrame::new(
+                        WgrabAudioFormat {
+                            sample_rate: audio_data.sample_rate,
+                            channels: audio_data.channels,
+                            sample_format: WgrabSampleFormat::F32,
+                        },
+                        timestamp,
+                        audio_data.frames,
+                        audio_data.samples,
+                    ));
                 }
             }
         }
@@ -77,7 +91,8 @@ pub(crate) fn build_default_screencapturekit_audio_stream(
 
     Ok(WgrabAudioStream::new_screencapturekit_audio(
         ScreenCaptureKitAudioStream { stream },
-        buffer,
+        Arc::new(Mutex::new(Vec::new())),
+        queued_frames,
         WgrabAudioFormat {
             sample_rate: 48_000,
             channels: 2,

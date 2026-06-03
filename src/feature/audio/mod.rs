@@ -10,6 +10,7 @@ mod wasapi_loopback;
 #[cfg(feature = "audio-cpal")]
 pub use cpal_backend::CpalAudioBackend;
 
+use std::collections::VecDeque;
 use std::fmt;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
@@ -135,6 +136,30 @@ impl WgrabAudioFrame {
     }
 }
 
+pub(crate) struct WgrabQueuedAudioFrame {
+    format: WgrabAudioFormat,
+    timestamp: Option<WgrabTimestamp>,
+    frames: usize,
+    samples: Vec<f32>,
+}
+
+impl WgrabQueuedAudioFrame {
+    #[cfg_attr(not(target_os = "macos"), allow(dead_code))]
+    pub(crate) fn new(
+        format: WgrabAudioFormat,
+        timestamp: Option<WgrabTimestamp>,
+        frames: usize,
+        samples: Vec<f32>,
+    ) -> Self {
+        Self {
+            format,
+            timestamp,
+            frames,
+            samples,
+        }
+    }
+}
+
 pub struct WgrabAudioContext;
 
 impl WgrabAudioContext {
@@ -218,6 +243,7 @@ pub struct WgrabAudioStream {
     #[allow(dead_code)]
     screencapturekit_audio_stream: Option<screencapturekit_audio::ScreenCaptureKitAudioStream>,
     pub(crate) buffer: Arc<Mutex<Vec<f32>>>,
+    pub(crate) queued_frames: Arc<Mutex<VecDeque<WgrabQueuedAudioFrame>>>,
     format: WgrabAudioFormat,
     device_name: Option<String>,
     source: WgrabAudioSource,
@@ -240,6 +266,7 @@ impl WgrabAudioStream {
             #[cfg(target_os = "macos")]
             screencapturekit_audio_stream: None,
             buffer,
+            queued_frames: Arc::new(Mutex::new(VecDeque::new())),
             format,
             device_name,
             source,
@@ -261,6 +288,7 @@ impl WgrabAudioStream {
             #[cfg(target_os = "macos")]
             screencapturekit_audio_stream: None,
             buffer,
+            queued_frames: Arc::new(Mutex::new(VecDeque::new())),
             format,
             device_name,
             source: WgrabAudioSource::WasapiLoopback,
@@ -272,6 +300,7 @@ impl WgrabAudioStream {
     pub(crate) fn new_screencapturekit_audio(
         stream: screencapturekit_audio::ScreenCaptureKitAudioStream,
         buffer: Arc<Mutex<Vec<f32>>>,
+        queued_frames: Arc<Mutex<VecDeque<WgrabQueuedAudioFrame>>>,
         format: WgrabAudioFormat,
         device_name: Option<String>,
     ) -> Self {
@@ -282,6 +311,7 @@ impl WgrabAudioStream {
             wasapi_loopback_stream: None,
             screencapturekit_audio_stream: Some(stream),
             buffer,
+            queued_frames,
             format,
             device_name,
             source: WgrabAudioSource::ScreenCaptureKitAudio,
@@ -302,6 +332,20 @@ impl WgrabAudioStream {
     }
 
     pub fn try_next_frame(&self) -> Result<Option<WgrabAudioFrame>, WgrabAudioError> {
+        if let Some(frame) = self
+            .queued_frames
+            .lock()
+            .map_err(|_| WgrabAudioError::BufferUnavailable)?
+            .pop_front()
+        {
+            return Ok(Some(WgrabAudioFrame::new(
+                frame.format,
+                frame.timestamp,
+                frame.frames,
+                frame.samples,
+            )));
+        }
+
         let mut buffer = self
             .buffer
             .lock()

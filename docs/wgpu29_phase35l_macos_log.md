@@ -2,10 +2,10 @@
 
 ## 結論
 
-- ScreenCaptureKit audio backend: prototype backend skeleton added
+- ScreenCaptureKit audio backend: prototype backend skeleton added with metadata frame queue
 - example: `examples/audio_sck_audio_smoke.rs`
 - CI: macOS-only ScreenCaptureKit audio smoke check and marker gate added
-- package/dry-run: success
+- package/dry-run: success with `--allow-dirty` for pre-commit verification logs
 - ready for A/V sync integration: pending pushed CI
 
 ## Branch
@@ -20,8 +20,8 @@
 - capturesAudio: enabled with 48 kHz stereo prototype settings
 - stream output: `SCStreamOutputType::Audio`
 - sample conversion: `CMSampleBuffer` to `AVAudioPCMBuffer` to interleaved f32
-- timestamp: sample buffer timestamp is read by the wrapper; stream frame API still uses dequeue-time fallback
-- WgrabAudioFrame: existing `WgrabAudioStream::try_next_frame()` path
+- timestamp: sample buffer presentation timestamp is forwarded for ScreenCaptureKit audio frames; dequeue-time timestamp remains the fallback for aggregate-buffer backends
+- WgrabAudioFrame: ScreenCaptureKit audio uses the internal metadata queue before the aggregate fallback
 
 ## CI result
 

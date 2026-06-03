@@ -63,3 +63,15 @@ Phase 29S does not implement:
 - frame scheduling
 - A/V muxing
 - encoding
+
+## System audio timestamps
+
+System audio capture may provide better timestamps than generic input capture.
+
+Future backend timestamp sources:
+
+- WASAPI capture timestamps
+- ScreenCaptureKit sample buffer timestamps
+- browser media timestamps
+
+The public API should normalize these to `WgrabTimestamp`.

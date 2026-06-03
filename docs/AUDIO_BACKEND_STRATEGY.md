@@ -124,3 +124,14 @@ System audio loopback remains future work.
 CPAL input stream prototype uses a wgrab monotonic capture clock first.
 
 Backend-native stream timestamps are future work.
+
+## Phase 30L decision
+
+CPAL remains the generic native audio backend.
+
+System audio capture is investigated separately:
+
+- Windows: WASAPI loopback candidate
+- macOS: ScreenCaptureKit audio candidate
+
+Both should feed `WgrabAudioFrame`.

@@ -85,3 +85,17 @@ dequeue-time timestamps:
 - ScreenCaptureKit: `CMSampleBuffer` timing
 
 All timestamp sources must be converted into the wgrab capture timeline.
+
+## CPAL loopback probe
+
+The CPAL loopback probe is not a final system audio backend.
+
+It determines whether CPAL can expose useful system-audio candidates on each
+platform.
+
+The probe reports input/output devices, marks default input/output devices, and
+uses a name/config heuristic to classify possible loopback candidates.
+
+If useful candidates appear, the next CPAL phase can try building
+`WgrabAudioFrame` streams from those candidates. If not, direct WASAPI or
+ScreenCaptureKit backends should be prioritized.

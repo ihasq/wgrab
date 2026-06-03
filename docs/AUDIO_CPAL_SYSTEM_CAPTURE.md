@@ -42,3 +42,25 @@ If system audio requires platform APIs, those APIs should feed into the same
 
 - CPAL README: <https://github.com/RustAudio/cpal>
 - CPAL releases: <https://github.com/RustAudio/cpal/releases>
+
+## Phase 31A CPAL loopback capability probe
+
+wgrab first investigates whether CPAL can expose system-audio-like devices
+through normal host/device enumeration.
+
+This phase uses heuristics only.
+
+The loopback heuristic treats the following as possible signals:
+
+- device name contains `loopback`
+- device name contains `monitor`
+- device name contains `what u hear`
+- device name contains `stereo mix`
+- device name contains `output`
+- device name contains `speaker`
+- device is the default output and also supports input configs
+
+This is not a final loopback detector.
+
+A direct WASAPI or ScreenCaptureKit backend remains a candidate if CPAL does not
+provide sufficient system audio capture.

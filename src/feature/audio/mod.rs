@@ -23,6 +23,16 @@ pub struct WgrabAudioFormat {
     pub sample_format: WgrabSampleFormat,
 }
 
+#[derive(Debug, Clone)]
+pub struct WgrabAudioDeviceReport {
+    pub name: String,
+    pub is_default_input: bool,
+    pub is_default_output: bool,
+    pub supports_input: bool,
+    pub supports_output: bool,
+    pub loopback_candidate: bool,
+}
+
 /// Monotonic capture timestamp used for audio/video synchronization.
 ///
 /// This timestamp is not wall-clock time. It represents elapsed time on

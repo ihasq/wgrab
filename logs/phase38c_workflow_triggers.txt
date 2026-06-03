@@ -1,0 +1,16 @@
+.github/workflows/wgpu-runtime.yml:4:  pull_request:
+.github/workflows/wgpu-runtime.yml:5:  push:
+.github/workflows/wgpu-runtime.yml:9:      - "wgpu29-*"
+.github/workflows/wgpu-runtime.yml:10:      - "wgrab-*"
+.github/workflows/wgpu-runtime.yml:12:  workflow_dispatch:
+.github/workflows/wgpu-runtime.yml:304:    if: github.event_name == 'workflow_dispatch' && inputs.strict_capture == 'true'
+.github/workflows/wgpu-linux-vulkan.yml:4:  pull_request:
+.github/workflows/wgpu-linux-vulkan.yml:5:  push:
+.github/workflows/wgpu-linux-vulkan.yml:9:      - "wgpu29-*"
+.github/workflows/wgpu-linux-vulkan.yml:10:      - "wgrab-*"
+.github/workflows/wgpu-linux-vulkan.yml:12:  workflow_dispatch:
+.github/workflows/audio-runtime.yml:4:  pull_request:
+.github/workflows/audio-runtime.yml:5:  push:
+.github/workflows/audio-runtime.yml:9:      - "wgrab-*"
+.github/workflows/audio-runtime.yml:10:      - "wgpu29-*"
+.github/workflows/audio-runtime.yml:11:  workflow_dispatch:

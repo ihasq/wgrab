@@ -1,0 +1,58 @@
+* remote origin
+  Fetch URL: git@github.com:ihasq/wgrab
+  Push  URL: git@github.com:ihasq/wgrab
+  HEAD branch: main
+  Remote branches:
+    main                                   tracked
+    wgpu29-phase5c-github-actions-runtime  tracked
+    wgpu29-phase5c-marker-hardening        tracked
+    wgrab-av-sync-hardening                tracked
+    wgrab-av-sync-integration              tracked
+    wgrab-av-sync-model                    tracked
+    wgrab-cpal-audio-backend               tracked
+    wgrab-cpal-input-stream-prototype      tracked
+    wgrab-cpal-loopback-capability         tracked
+    wgrab-cpal-system-audio-hardening      tracked
+    wgrab-cpal-system-audio-prototype      tracked
+    wgrab-crates-io-prep                   tracked
+    wgrab-gpu-only-api-design              tracked
+    wgrab-screencapturekit-audio-prototype tracked
+    wgrab-system-audio-investigation       tracked
+    wgrab-wasapi-loopback-prototype        tracked
+    wgrab-web-audio-worklet-design         tracked
+  Local branches configured for 'git pull':
+    main                                   merges with remote main
+    wgpu29-phase5c-github-actions-runtime  merges with remote wgpu29-phase5c-github-actions-runtime
+    wgpu29-phase5c-marker-hardening        merges with remote wgpu29-phase5c-marker-hardening
+    wgrab-av-sync-hardening                merges with remote wgrab-av-sync-hardening
+    wgrab-av-sync-integration              merges with remote wgrab-av-sync-integration
+    wgrab-av-sync-model                    merges with remote wgrab-av-sync-model
+    wgrab-cpal-audio-backend               merges with remote wgrab-cpal-audio-backend
+    wgrab-cpal-input-stream-prototype      merges with remote wgrab-cpal-input-stream-prototype
+    wgrab-cpal-loopback-capability         merges with remote wgrab-cpal-loopback-capability
+    wgrab-cpal-system-audio-hardening      merges with remote wgrab-cpal-system-audio-hardening
+    wgrab-cpal-system-audio-prototype      merges with remote wgrab-cpal-system-audio-prototype
+    wgrab-crates-io-prep                   merges with remote wgrab-crates-io-prep
+    wgrab-gpu-only-api-design              merges with remote wgrab-gpu-only-api-design
+    wgrab-screencapturekit-audio-prototype merges with remote wgrab-screencapturekit-audio-prototype
+    wgrab-system-audio-investigation       merges with remote wgrab-system-audio-investigation
+    wgrab-wasapi-loopback-prototype        merges with remote wgrab-wasapi-loopback-prototype
+    wgrab-web-audio-worklet-design         merges with remote wgrab-web-audio-worklet-design
+  Local refs configured for 'git push':
+    main                                   pushes to main                                   (up to date)
+    wgpu29-phase5c-github-actions-runtime  pushes to wgpu29-phase5c-github-actions-runtime  (up to date)
+    wgpu29-phase5c-marker-hardening        pushes to wgpu29-phase5c-marker-hardening        (up to date)
+    wgrab-av-sync-hardening                pushes to wgrab-av-sync-hardening                (up to date)
+    wgrab-av-sync-integration              pushes to wgrab-av-sync-integration              (up to date)
+    wgrab-av-sync-model                    pushes to wgrab-av-sync-model                    (up to date)
+    wgrab-cpal-audio-backend               pushes to wgrab-cpal-audio-backend               (up to date)
+    wgrab-cpal-input-stream-prototype      pushes to wgrab-cpal-input-stream-prototype      (up to date)
+    wgrab-cpal-loopback-capability         pushes to wgrab-cpal-loopback-capability         (up to date)
+    wgrab-cpal-system-audio-hardening      pushes to wgrab-cpal-system-audio-hardening      (up to date)
+    wgrab-cpal-system-audio-prototype      pushes to wgrab-cpal-system-audio-prototype      (up to date)
+    wgrab-crates-io-prep                   pushes to wgrab-crates-io-prep                   (up to date)
+    wgrab-gpu-only-api-design              pushes to wgrab-gpu-only-api-design              (up to date)
+    wgrab-screencapturekit-audio-prototype pushes to wgrab-screencapturekit-audio-prototype (up to date)
+    wgrab-system-audio-investigation       pushes to wgrab-system-audio-investigation       (up to date)
+    wgrab-wasapi-loopback-prototype        pushes to wgrab-wasapi-loopback-prototype        (up to date)
+    wgrab-web-audio-worklet-design         pushes to wgrab-web-audio-worklet-design         (up to date)

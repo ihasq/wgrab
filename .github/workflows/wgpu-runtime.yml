@@ -1,0 +1,391 @@
+name: wgpu runtime
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+      - "wgpu29-*"
+      - "wgrab-*"
+      - "successor/**"
+  workflow_dispatch:
+    inputs:
+      strict_capture:
+        description: "Fail job if capture runtime is unavailable"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+      frames:
+        description: "Capture frames for strict/manual runtime test"
+        required: false
+        default: "30"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wgpu-runtime-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-dx12:
+    name: Windows DX12 wgpu runtime
+    runs-on: windows-2022
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Show environment
+        shell: pwsh
+        run: |
+          rustc -Vv
+          cargo -V
+          git rev-parse HEAD
+          systeminfo | Select-String "OS Name","OS Version","System Type"
+
+      - name: Check crate
+        shell: pwsh
+        run: cargo check --features wgpu
+
+      - name: Check examples
+        shell: pwsh
+        run: |
+          cargo check --example wgpu_backend_smoke --features wgpu
+          cargo check --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor
+          cargo check --example wgpu_texture_only_capture --features wgpu,wgpu-debug-descriptor
+
+      - name: Run DX12 backend smoke
+        shell: pwsh
+        run: |
+          $env:RUST_BACKTRACE = "1"
+          $Log = "wgpu_backend_dx12.log"
+          cargo run --example wgpu_backend_smoke --features wgpu -- --backend dx12 --require-hal `
+            2>&1 | Tee-Object -FilePath $Log
+
+          if (Select-String -Path $Log -Pattern "CI_BACKEND_SMOKE_OK" -Quiet) {
+            "### Backend smoke: OK" >> $env:GITHUB_STEP_SUMMARY
+            Select-String -Path $Log -Pattern "CI_BACKEND_SMOKE_OK|backend=|adapter_" | ForEach-Object { $_.Line } >> $env:GITHUB_STEP_SUMMARY
+          } else {
+            "### Backend smoke: FAILED" >> $env:GITHUB_STEP_SUMMARY
+            Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+            exit 1
+          }
+
+      - name: Run Windows capture probe
+        shell: pwsh
+        run: |
+          $env:RUST_BACKTRACE = "1"
+          $env:CRABGRAB_WGPU_DEBUG_DESCRIPTOR = "1"
+
+          $Log = "wgpu_capture_windows_probe.log"
+
+          cargo run --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor -- --ci --frames 1 --allow-capture-unavailable `
+            2>&1 | Tee-Object -FilePath $Log
+
+          $Status = $LASTEXITCODE
+
+          "### Capture probe Windows" >> $env:GITHUB_STEP_SUMMARY
+          "exit_status=$Status" >> $env:GITHUB_STEP_SUMMARY
+
+          if (Select-String -Path $Log -Pattern "CI_CAPTURE_SMOKE_OK" -Quiet) {
+            "capture_marker=CI_CAPTURE_SMOKE_OK" >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_CAPTURE_UNAVAILABLE" -Quiet) {
+            "capture_marker=CI_CAPTURE_UNAVAILABLE" >> $env:GITHUB_STEP_SUMMARY
+            Select-String -Path $Log -Pattern "CI_CAPTURE_UNAVAILABLE|reason=" | ForEach-Object { $_.Line } >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_CAPTURE_SMOKE_FAILED" -Quiet) {
+            "capture_marker=CI_CAPTURE_SMOKE_FAILED" >> $env:GITHUB_STEP_SUMMARY
+            Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+            exit 1
+          }
+
+          "capture_marker=MISSING" >> $env:GITHUB_STEP_SUMMARY
+          Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+          exit 1
+
+      - name: Run GPU-only texture probe
+        shell: pwsh
+        run: |
+          $env:RUST_BACKTRACE = "1"
+          $env:CRABGRAB_WGPU_DEBUG_DESCRIPTOR = "1"
+
+          $Log = "wgrab_texture_only_windows_probe.log"
+
+          cargo run --example wgpu_texture_only_capture --features wgpu,wgpu-debug-descriptor -- --ci --frames 1 --allow-capture-unavailable `
+            2>&1 | Tee-Object -FilePath $Log
+
+          $Status = $LASTEXITCODE
+
+          "### GPU-only texture probe Windows" >> $env:GITHUB_STEP_SUMMARY
+          "exit_status=$Status" >> $env:GITHUB_STEP_SUMMARY
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_TEXTURE_ONLY_OK" -Quiet) {
+            "texture_only_marker=CI_WGRAB_TEXTURE_ONLY_OK" >> $env:GITHUB_STEP_SUMMARY
+            Select-String -Path $Log -Pattern "CI_WGRAB_TEXTURE_ONLY_OK|frame_count=|texture_width=|texture_height=|texture_format=|texture_usage=|view_created=" | ForEach-Object { $_.Line } >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_TEXTURE_ONLY_UNAVAILABLE" -Quiet) {
+            "texture_only_marker=CI_WGRAB_TEXTURE_ONLY_UNAVAILABLE" >> $env:GITHUB_STEP_SUMMARY
+            Select-String -Path $Log -Pattern "CI_WGRAB_TEXTURE_ONLY_UNAVAILABLE|reason=" | ForEach-Object { $_.Line } >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_TEXTURE_ONLY_FAILED" -Quiet) {
+            "texture_only_marker=CI_WGRAB_TEXTURE_ONLY_FAILED" >> $env:GITHUB_STEP_SUMMARY
+            Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+            exit 1
+          }
+
+          "texture_only_marker=MISSING" >> $env:GITHUB_STEP_SUMMARY
+          Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+          exit 1
+
+      - name: Upload Windows logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-dx12-wgpu-logs
+          path: "*.log"
+
+  macos-metal:
+    name: macOS Metal wgpu runtime
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            label: macos-arm64
+          - runner: macos-15-intel
+            label: macos-intel
+
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Show environment
+        shell: bash
+        run: |
+          rustc -Vv
+          cargo -V
+          git rev-parse HEAD
+          sw_vers
+          uname -a
+          system_profiler SPDisplaysDataType || true
+
+      - name: Check crate
+        shell: bash
+        run: cargo check --features wgpu
+
+      - name: Check examples
+        shell: bash
+        run: |
+          cargo check --example wgpu_backend_smoke --features wgpu
+          cargo check --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor
+          cargo check --example wgpu_texture_only_capture --features wgpu,wgpu-debug-descriptor
+
+      - name: Run Metal backend smoke
+        shell: bash
+        run: |
+          set +e
+          export RUST_BACKTRACE=1
+          LOG="wgpu_backend_metal_${{ matrix.label }}.log"
+          cargo run --example wgpu_backend_smoke --features wgpu -- --backend metal --require-hal \
+            2>&1 | tee "$LOG"
+          STATUS=${PIPESTATUS[0]}
+
+          echo "backend_exit_status=$STATUS" >> "$GITHUB_STEP_SUMMARY"
+          if grep -q "CI_BACKEND_SMOKE_OK" "$LOG"; then
+            echo "### Backend smoke: OK" >> "$GITHUB_STEP_SUMMARY"
+            grep -E "CI_BACKEND_SMOKE_OK|backend=|adapter_" "$LOG" >> "$GITHUB_STEP_SUMMARY" || true
+          else
+            echo "### Backend smoke: FAILED" >> "$GITHUB_STEP_SUMMARY"
+            tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+      - name: Run macOS capture probe
+        shell: bash
+        run: |
+          set +e
+          export RUST_BACKTRACE=1
+          export CRABGRAB_WGPU_DEBUG_DESCRIPTOR=1
+          LOG="wgpu_capture_macos_${{ matrix.label }}_probe.log"
+
+          cargo run --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor -- --ci --frames 1 --allow-capture-unavailable \
+            2>&1 | tee "$LOG"
+
+          STATUS=${PIPESTATUS[0]}
+
+          echo "### Capture probe ${{ matrix.label }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "exit_status=$STATUS" >> "$GITHUB_STEP_SUMMARY"
+
+          if grep -q "CI_CAPTURE_SMOKE_OK" "$LOG"; then
+            echo "capture_marker=CI_CAPTURE_SMOKE_OK" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if grep -q "CI_CAPTURE_UNAVAILABLE" "$LOG"; then
+            echo "capture_marker=CI_CAPTURE_UNAVAILABLE" >> "$GITHUB_STEP_SUMMARY"
+            grep -E "CI_CAPTURE_UNAVAILABLE|reason=" "$LOG" >> "$GITHUB_STEP_SUMMARY" || true
+            exit 0
+          fi
+
+          if grep -q "CI_CAPTURE_SMOKE_FAILED" "$LOG"; then
+            echo "capture_marker=CI_CAPTURE_SMOKE_FAILED" >> "$GITHUB_STEP_SUMMARY"
+            tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+          echo "capture_marker=MISSING" >> "$GITHUB_STEP_SUMMARY"
+          tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+      - name: Run GPU-only texture probe
+        shell: bash
+        run: |
+          set +e
+          export RUST_BACKTRACE=1
+          export CRABGRAB_WGPU_DEBUG_DESCRIPTOR=1
+
+          LOG="wgrab_texture_only_${{ matrix.label }}_probe.log"
+
+          cargo run --example wgpu_texture_only_capture --features wgpu,wgpu-debug-descriptor -- --ci --frames 1 --allow-capture-unavailable \
+            2>&1 | tee "$LOG"
+
+          STATUS=${PIPESTATUS[0]}
+
+          echo "### GPU-only texture probe ${{ matrix.label }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "exit_status=$STATUS" >> "$GITHUB_STEP_SUMMARY"
+
+          if grep -q "CI_WGRAB_TEXTURE_ONLY_OK" "$LOG"; then
+            echo "texture_only_marker=CI_WGRAB_TEXTURE_ONLY_OK" >> "$GITHUB_STEP_SUMMARY"
+            grep -E "CI_WGRAB_TEXTURE_ONLY_OK|frame_count=|texture_width=|texture_height=|texture_format=|texture_usage=|view_created=" "$LOG" >> "$GITHUB_STEP_SUMMARY" || true
+            exit 0
+          fi
+
+          if grep -q "CI_WGRAB_TEXTURE_ONLY_UNAVAILABLE" "$LOG"; then
+            echo "texture_only_marker=CI_WGRAB_TEXTURE_ONLY_UNAVAILABLE" >> "$GITHUB_STEP_SUMMARY"
+            grep -E "CI_WGRAB_TEXTURE_ONLY_UNAVAILABLE|reason=" "$LOG" >> "$GITHUB_STEP_SUMMARY" || true
+            exit 0
+          fi
+
+          if grep -q "CI_WGRAB_TEXTURE_ONLY_FAILED" "$LOG"; then
+            echo "texture_only_marker=CI_WGRAB_TEXTURE_ONLY_FAILED" >> "$GITHUB_STEP_SUMMARY"
+            tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+          echo "texture_only_marker=MISSING" >> "$GITHUB_STEP_SUMMARY"
+          tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+      - name: Upload macOS logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: macos-metal-${{ matrix.label }}-wgpu-logs
+          path: "*.log"
+
+  manual-strict-capture:
+    name: Manual strict capture runtime
+    if: github.event_name == 'workflow_dispatch' && inputs.strict_capture == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-2022
+            backend: dx12
+            label: windows
+          - os: macos-15
+            backend: metal
+            label: macos-arm64
+          - os: macos-15-intel
+            backend: metal
+            label: macos-intel
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Strict backend smoke
+        shell: bash
+        if: runner.os != 'Windows'
+        run: |
+          set -o pipefail
+          export RUST_BACKTRACE=1
+          cargo run --example wgpu_backend_smoke --features wgpu -- --backend ${{ matrix.backend }} --require-hal \
+            2>&1 | tee strict_backend_${{ matrix.label }}.log
+          grep "CI_BACKEND_SMOKE_OK" strict_backend_${{ matrix.label }}.log
+
+      - name: Strict backend smoke Windows
+        shell: pwsh
+        if: runner.os == 'Windows'
+        run: |
+          $env:RUST_BACKTRACE = "1"
+          cargo run --example wgpu_backend_smoke --features wgpu -- --backend ${{ matrix.backend }} --require-hal `
+            2>&1 | Tee-Object -FilePath strict_backend_${{ matrix.label }}.log
+          Select-String -Path strict_backend_${{ matrix.label }}.log -Pattern "CI_BACKEND_SMOKE_OK"
+
+      - name: Strict capture
+        shell: bash
+        if: runner.os != 'Windows'
+        run: |
+          set -o pipefail
+          export RUST_BACKTRACE=1
+          export CRABGRAB_WGPU_DEBUG_DESCRIPTOR=1
+          cargo run --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor -- --ci --frames "${{ inputs.frames }}" --strict-capture \
+            2>&1 | tee strict_capture_${{ matrix.label }}.log
+          grep "CI_CAPTURE_SMOKE_OK" strict_capture_${{ matrix.label }}.log
+
+      - name: Strict GPU-only texture capture
+        shell: bash
+        if: runner.os != 'Windows'
+        run: |
+          set -o pipefail
+          export RUST_BACKTRACE=1
+          export CRABGRAB_WGPU_DEBUG_DESCRIPTOR=1
+          cargo run --example wgpu_texture_only_capture --features wgpu,wgpu-debug-descriptor -- --ci --frames "${{ inputs.frames }}" --strict-capture \
+            2>&1 | tee strict_texture_only_${{ matrix.label }}.log
+          grep "CI_WGRAB_TEXTURE_ONLY_OK" strict_texture_only_${{ matrix.label }}.log
+
+      - name: Strict capture Windows
+        shell: pwsh
+        if: runner.os == 'Windows'
+        run: |
+          $env:RUST_BACKTRACE = "1"
+          $env:CRABGRAB_WGPU_DEBUG_DESCRIPTOR = "1"
+          cargo run --example wgpu_capture_smoke --features wgpu,wgpu-debug-descriptor -- --ci --frames "${{ inputs.frames }}" --strict-capture `
+            2>&1 | Tee-Object -FilePath strict_capture_${{ matrix.label }}.log
+          Select-String -Path strict_capture_${{ matrix.label }}.log -Pattern "CI_CAPTURE_SMOKE_OK"
+
+      - name: Strict GPU-only texture capture Windows
+        shell: pwsh
+        if: runner.os == 'Windows'
+        run: |
+          $env:RUST_BACKTRACE = "1"
+          $env:CRABGRAB_WGPU_DEBUG_DESCRIPTOR = "1"
+          cargo run --example wgpu_texture_only_capture --features wgpu,wgpu-debug-descriptor -- --ci --frames "${{ inputs.frames }}" --strict-capture `
+            2>&1 | Tee-Object -FilePath strict_texture_only_${{ matrix.label }}.log
+          Select-String -Path strict_texture_only_${{ matrix.label }}.log -Pattern "CI_WGRAB_TEXTURE_ONLY_OK"
+
+      - name: Upload strict logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: strict-capture-${{ matrix.label }}-logs
+          path: "*.log"

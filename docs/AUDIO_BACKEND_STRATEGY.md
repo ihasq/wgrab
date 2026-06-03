@@ -118,3 +118,9 @@ directly, with CPAL integration only if it fits the capture pipeline.
 The first implementation target is CPAL default input stream capture.
 
 System audio loopback remains future work.
+
+## Timestamp strategy
+
+CPAL input stream prototype uses a wgrab monotonic capture clock first.
+
+Backend-native stream timestamps are future work.

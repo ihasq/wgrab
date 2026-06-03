@@ -6,6 +6,7 @@ pub use cpal_backend::CpalAudioBackend;
 
 use std::fmt;
 use std::sync::{Arc, Mutex};
+use std::time::Instant;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum WgrabSampleFormat {
@@ -22,10 +23,40 @@ pub struct WgrabAudioFormat {
     pub sample_format: WgrabSampleFormat,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+/// Monotonic capture timestamp used for audio/video synchronization.
+///
+/// This timestamp is not wall-clock time. It represents elapsed time on
+/// wgrab's capture timeline.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct WgrabTimestamp {
-    // Placeholder; a concrete clock model will be designed later.
     pub nanos: u64,
+}
+
+impl WgrabTimestamp {
+    pub fn from_nanos(nanos: u64) -> Self {
+        Self { nanos }
+    }
+
+    pub fn as_nanos(self) -> u64 {
+        self.nanos
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct WgrabCaptureClock {
+    start: Instant,
+}
+
+impl WgrabCaptureClock {
+    pub fn start_now() -> Self {
+        Self {
+            start: Instant::now(),
+        }
+    }
+
+    pub fn now(&self) -> WgrabTimestamp {
+        WgrabTimestamp::from_nanos(self.start.elapsed().as_nanos() as u64)
+    }
 }
 
 pub struct WgrabAudioFrame {
@@ -124,6 +155,7 @@ pub struct WgrabAudioStream {
     pub(crate) buffer: Arc<Mutex<Vec<f32>>>,
     format: WgrabAudioFormat,
     device_name: Option<String>,
+    clock: WgrabCaptureClock,
 }
 
 impl WgrabAudioStream {
@@ -139,6 +171,7 @@ impl WgrabAudioStream {
             buffer,
             format,
             device_name,
+            clock: WgrabCaptureClock::start_now(),
         }
     }
 
@@ -167,10 +200,15 @@ impl WgrabAudioStream {
         } else {
             samples.len() / channels
         };
+        // NOTE:
+        // This prototype timestamps the frame at dequeue time. Future phases
+        // should use backend-provided stream timing where available, e.g. CPAL
+        // callback timestamps or platform-specific capture timestamps.
+        let timestamp = Some(self.clock.now());
 
         Ok(Some(WgrabAudioFrame::new(
             self.format,
-            None,
+            timestamp,
             frames,
             samples,
         )))

@@ -114,3 +114,10 @@ The first native audio prototype uses CPAL default input streams.
 
 This is not system audio loopback. It is a default input-device capture
 prototype.
+
+## A/V synchronization
+
+A/V sync starts with a shared timestamp model.
+
+System audio and Web Audio integration should attach timestamps compatible with
+`WgrabTimestamp`.

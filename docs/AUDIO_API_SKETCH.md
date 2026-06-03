@@ -94,3 +94,11 @@ This is a prototype format. Future phases may add:
 - resampling policy
 - lock-free ring buffer
 - A/V synchronization timestamps
+
+## Phase 29S timestamp model
+
+`WgrabAudioFrame` carries `Option<WgrabTimestamp>`.
+
+The first prototype uses a monotonic `WgrabCaptureClock`.
+
+Precise backend timestamps are deferred.

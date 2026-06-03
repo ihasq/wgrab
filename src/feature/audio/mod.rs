@@ -1,6 +1,9 @@
 #[cfg(feature = "audio-cpal")]
 mod cpal_backend;
 
+#[cfg(windows)]
+mod wasapi_loopback;
+
 #[cfg(feature = "audio-cpal")]
 pub use cpal_backend::CpalAudioBackend;
 
@@ -136,6 +139,11 @@ impl WgrabAudioContext {
     pub fn cpal_backend(&self) -> CpalAudioBackend {
         CpalAudioBackend::default_host()
     }
+
+    #[cfg(windows)]
+    pub fn build_system_audio_stream(&self) -> Result<WgrabAudioStream, WgrabAudioError> {
+        wasapi_loopback::build_default_loopback_stream()
+    }
 }
 
 impl Default for WgrabAudioContext {
@@ -153,6 +161,8 @@ pub enum WgrabAudioError {
     PlayStreamFailed(String),
     UnsupportedSampleFormat(String),
     BufferUnavailable,
+    WasapiUnavailable(String),
+    WasapiInitializationFailed(String),
 }
 
 impl fmt::Display for WgrabAudioError {
@@ -169,6 +179,10 @@ impl fmt::Display for WgrabAudioError {
                 write!(f, "unsupported sample format: {format}")
             }
             Self::BufferUnavailable => write!(f, "audio sample buffer is unavailable"),
+            Self::WasapiUnavailable(error) => write!(f, "WASAPI loopback unavailable: {error}"),
+            Self::WasapiInitializationFailed(error) => {
+                write!(f, "WASAPI initialization failed: {error}")
+            }
         }
     }
 }
@@ -181,6 +195,9 @@ pub struct WgrabAudioStream {
     #[cfg(feature = "audio-cpal")]
     #[allow(dead_code)]
     pub(crate) stream: Option<cpal::Stream>,
+    #[cfg(windows)]
+    #[allow(dead_code)]
+    wasapi_loopback_stream: Option<wasapi_loopback::WasapiLoopbackStream>,
     pub(crate) buffer: Arc<Mutex<Vec<f32>>>,
     format: WgrabAudioFormat,
     device_name: Option<String>,
@@ -199,10 +216,31 @@ impl WgrabAudioStream {
         Self {
             #[cfg(feature = "audio-cpal")]
             stream,
+            #[cfg(windows)]
+            wasapi_loopback_stream: None,
             buffer,
             format,
             device_name,
             source,
+            clock: WgrabCaptureClock::start_now(),
+        }
+    }
+
+    #[cfg(windows)]
+    pub(crate) fn new_wasapi_loopback(
+        stream: wasapi_loopback::WasapiLoopbackStream,
+        buffer: Arc<Mutex<Vec<f32>>>,
+        format: WgrabAudioFormat,
+        device_name: Option<String>,
+    ) -> Self {
+        Self {
+            #[cfg(feature = "audio-cpal")]
+            stream: None,
+            wasapi_loopback_stream: Some(stream),
+            buffer,
+            format,
+            device_name,
+            source: WgrabAudioSource::SystemAudioCandidate,
             clock: WgrabCaptureClock::start_now(),
         }
     }

@@ -151,3 +151,10 @@ If not, wgrab should use:
 
 - Windows: direct WASAPI loopback
 - macOS: ScreenCaptureKit audio
+
+## Windows system audio backend
+
+CPAL remains the generic native audio backend.
+
+Windows system audio uses direct WASAPI loopback when CPAL candidates are
+insufficient or ambiguous.

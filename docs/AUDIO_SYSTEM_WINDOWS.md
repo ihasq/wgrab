@@ -49,3 +49,13 @@ System audio should surface as `WgrabAudioFrame`.
 
 - Microsoft Learn: <https://learn.microsoft.com/en-us/windows/win32/coreaudio/loopback-recording>
 - CPAL README: <https://github.com/RustAudio/cpal>
+
+## Phase 34L-Windows prototype
+
+wgrab adds a direct WASAPI loopback prototype.
+
+The prototype uses the default render endpoint and captures loopback audio into
+`WgrabAudioFrame`.
+
+CI may only prove that the backend initializes or reports unavailable.
+Non-silent audio requires a real environment with active playback.

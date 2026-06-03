@@ -54,6 +54,10 @@ jobs:
       - name: Check audio CPAL system audio smoke example
         run: cargo check --example audio_cpal_system_audio_smoke --features audio
 
+      - name: Check WASAPI loopback smoke example
+        if: runner.os == 'Windows'
+        run: cargo check --example audio_wasapi_loopback_smoke --features audio
+
       - name: Run audio CPAL probe
         shell: bash
         if: runner.os != 'Windows'
@@ -221,6 +225,34 @@ jobs:
           }
 
           "audio_system_marker=MISSING" >> $env:GITHUB_STEP_SUMMARY
+          Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+          exit 1
+
+      - name: Run WASAPI loopback smoke
+        shell: pwsh
+        if: runner.os == 'Windows'
+        run: |
+          $Log = "audio_wasapi_loopback_smoke.log"
+          cargo run --example audio_wasapi_loopback_smoke --features audio -- --ci --duration-ms 250 --allow-unavailable `
+            2>&1 | Tee-Object -FilePath $Log
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_AUDIO_WASAPI_OK" -Quiet) {
+            "audio_wasapi_marker=CI_WGRAB_AUDIO_WASAPI_OK" >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_AUDIO_WASAPI_UNAVAILABLE" -Quiet) {
+            "audio_wasapi_marker=CI_WGRAB_AUDIO_WASAPI_UNAVAILABLE" >> $env:GITHUB_STEP_SUMMARY
+            exit 0
+          }
+
+          if (Select-String -Path $Log -Pattern "CI_WGRAB_AUDIO_WASAPI_FAILED" -Quiet) {
+            "audio_wasapi_marker=CI_WGRAB_AUDIO_WASAPI_FAILED" >> $env:GITHUB_STEP_SUMMARY
+            Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+            exit 1
+          }
+
+          "audio_wasapi_marker=MISSING" >> $env:GITHUB_STEP_SUMMARY
           Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
           exit 1
 

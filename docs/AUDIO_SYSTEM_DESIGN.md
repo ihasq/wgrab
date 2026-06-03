@@ -86,6 +86,12 @@ dequeue-time timestamps:
 
 All timestamp sources must be converted into the wgrab capture timeline.
 
+## A/V sync boundary
+
+All audio backends should normalize backend timestamps to `WgrabTimestamp`.
+
+Video backends should do the same when frame timestamps are available.
+
 ## CPAL loopback probe
 
 The CPAL loopback probe is not a final system audio backend.

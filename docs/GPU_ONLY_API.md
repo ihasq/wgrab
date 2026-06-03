@@ -82,6 +82,12 @@ Capability probe:
 
 This is the preferred GPU-only capture output.
 
+## Timestamp
+
+`WgpuCaptureFrame` may carry an optional `WgrabTimestamp`.
+
+The timestamp is intended for pairing video frames with `WgrabAudioFrame`.
+
 ### Advanced lower-level GPU API
 
 - `WgpuVideoFrameExt::get_wgpu_texture`

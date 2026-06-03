@@ -1,6 +1,7 @@
 use std::fmt;
 
 use crate::prelude::VideoFrame;
+use crate::time::WgrabTimestamp;
 
 use super::{WgpuVideoFrameError, WgpuVideoFrameExt, WgpuVideoFramePlaneTexture};
 
@@ -44,6 +45,7 @@ pub struct WgpuCaptureFrame {
     size: wgpu::Extent3d,
     format: wgpu::TextureFormat,
     usage: wgpu::TextureUsages,
+    timestamp: Option<WgrabTimestamp>,
 }
 
 impl fmt::Debug for WgpuCaptureFrame {
@@ -52,6 +54,7 @@ impl fmt::Debug for WgpuCaptureFrame {
             .field("size", &self.size)
             .field("format", &self.format)
             .field("usage", &self.usage)
+            .field("timestamp", &self.timestamp)
             .finish_non_exhaustive()
     }
 }
@@ -77,6 +80,11 @@ impl WgpuCaptureFrame {
         self.usage
     }
 
+    /// Returns the normalized video frame timestamp when the backend provides one.
+    pub fn timestamp(&self) -> Option<WgrabTimestamp> {
+        self.timestamp
+    }
+
     /// Creates a view of the captured texture.
     pub fn create_view(
         &self,
@@ -95,12 +103,14 @@ impl WgpuCaptureFrame {
         size: wgpu::Extent3d,
         format: wgpu::TextureFormat,
         usage: wgpu::TextureUsages,
+        timestamp: Option<WgrabTimestamp>,
     ) -> Self {
         Self {
             texture,
             size,
             format,
             usage,
+            timestamp,
         }
     }
 }
@@ -125,9 +135,22 @@ impl WgpuVideoFrameGpuOnlyExt for VideoFrame {
         let size = texture.size();
         let format = texture.format();
         let usage = texture.usage();
+        let timestamp = video_frame_timestamp(self);
 
         Ok(WgpuCaptureFrame::from_wgpu_texture(
-            texture, size, format, usage,
+            texture, size, format, usage, timestamp,
         ))
     }
+}
+
+fn video_frame_timestamp(frame: &VideoFrame) -> Option<WgrabTimestamp> {
+    let nanos = frame.origin_time().as_nanos();
+    if nanos > u128::from(u64::MAX) {
+        return Some(timestamp_from_duration_nanos(u64::MAX));
+    }
+    Some(timestamp_from_duration_nanos(nanos as u64))
+}
+
+fn timestamp_from_duration_nanos(nanos: u64) -> WgrabTimestamp {
+    WgrabTimestamp::from_nanos(nanos)
 }

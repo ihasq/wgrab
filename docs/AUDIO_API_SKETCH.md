@@ -102,3 +102,8 @@ This is a prototype format. Future phases may add:
 The first prototype uses a monotonic `WgrabCaptureClock`.
 
 Precise backend timestamps are deferred.
+
+## Video pairing
+
+`WgrabAudioFrame::timestamp()` is intended to be comparable with
+`WgpuCaptureFrame::timestamp()`.

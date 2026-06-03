@@ -1,34 +1,34 @@
 //! A cross-platform screen/window/audio capture library
-//! 
+//!
 //! ## MacOS Docs
-//! 
+//!
 //! Since we depend on the metal crate, our docs won't build for macos under docs.rs's linux containers. As a workaround, you can see our build of the docs for MacOS here:
 //! [MacOS Documentation](https://augmendtech.github.io/CrabGrab/macos_docs/crabgrab/index.html)
-//! 
+//!
 //! ## Feature flags
-//! 
+//!
 //! ### GPU Inter-op
-//! 
+//!
 //! - **`dx11`** - enables retrieving the surface of a video frame and getting the DX11 device instance for the stream (Windows only)
 //! - **`dxgi`** - enables retrieving the surface of a video frame and getting the DXGI device instance for the stream (Windows only)
 //! - **`metal`** - enables retrieving the Metal textures for a video frame and getting the Metal device instance for the stream (MacOS only)
 //! - **`iosurface`** - enables retrieving the IOSurface for a video frame (MacOS only)
 //! - **`wgpu`** - enables retrieving a Wgpu texture from a video frame and getting the Wgpu device instance wrapper for the stream
-//! 
+//!
 //! ### Bitmap output
-//! 
+//!
 //! - **`bitmap`** - enables creating raw bitmap copies of frames in system memory
-//! 
+//!
 //! ### Screenshots
-//! 
+//!
 //! - **`screenshot`** - provides an easy-to-use function wrapping `CaptureStream` for single-frame capture
-//! 
+//!
 //! ## Example
-//! 
+//!
 //! ```
 //! use std::time::Duration;
 //! use wgrab::prelude::*;
-//! 
+//!
 //! // spin up the async runtime
 //! let runtime = tokio::runtime::Builder::new_multi_thread().build().unwrap();
 //! // run our capture code in an async context
@@ -49,7 +49,7 @@
 //!     }).next();
 //!     match window {
 //!         Some(window) => {
-//!             println!("capturing window: {}", window.title()); 
+//!             println!("capturing window: {}", window.title());
 //!             // create a captuere config using the first supported pixel format
 //!             let config = CaptureConfig::with_window(window, CaptureStream::supported_pixel_formats()[0]).unwrap();
 //!             // create a capture stream with an event handler callback
@@ -80,21 +80,23 @@
 //! // shutdown the async runtime
 //! runtime.shutdown_timeout(Duration::from_millis(10000));
 //! ````
-//! 
+//!
 
-/// Platform-specific extensions
-pub mod platform;
 /// Extension features
 pub mod feature;
+/// Platform-specific extensions
+pub mod platform;
 
-/// Geometry types
-pub mod util;
-/// Audio and video frames
-pub mod frame;
-/// The actual capture stream and related constructs
-pub mod capture_stream;
 /// Enumeration of capturable items
 pub mod capturable_content;
+/// The actual capture stream and related constructs
+pub mod capture_stream;
+/// Audio and video frames
+pub mod frame;
+/// Shared capture timeline types
+pub mod time;
+/// Geometry types
+pub mod util;
 
 /// Everything
 pub mod prelude;

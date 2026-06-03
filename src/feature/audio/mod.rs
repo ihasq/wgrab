@@ -15,6 +15,8 @@ use std::fmt;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
+pub use crate::time::{WgrabAvSyncTolerance, WgrabTimestamp};
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum WgrabSampleFormat {
     F32,
@@ -59,25 +61,6 @@ pub enum WgrabAudioSource {
     WasapiLoopback,
     #[cfg(target_os = "macos")]
     ScreenCaptureKitAudio,
-}
-
-/// Monotonic capture timestamp used for audio/video synchronization.
-///
-/// This timestamp is not wall-clock time. It represents elapsed time on
-/// wgrab's capture timeline.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub struct WgrabTimestamp {
-    pub nanos: u64,
-}
-
-impl WgrabTimestamp {
-    pub fn from_nanos(nanos: u64) -> Self {
-        Self { nanos }
-    }
-
-    pub fn as_nanos(self) -> u64 {
-        self.nanos
-    }
 }
 
 #[derive(Debug, Clone)]

@@ -30,9 +30,7 @@ Future phases should use backend-provided timing when available:
 
 ## Video frame timestamp
 
-Future `WgpuCaptureFrame` should expose a timestamp.
-
-Candidate API:
+`WgpuCaptureFrame` exposes an optional timestamp:
 
 ```rust
 impl WgpuCaptureFrame {
@@ -40,7 +38,7 @@ impl WgpuCaptureFrame {
 }
 ```
 
-This is not added in Phase 29S because it would touch the existing video API.
+The timestamp is normalized from backend video frame timing when available.
 
 ## Drift
 
@@ -85,3 +83,41 @@ the f32 sample conversion path succeeds.
 
 Future wgrab A/V sync should prefer sample buffer timestamps over dequeue-time
 timestamps when available.
+
+## Phase 36S integration
+
+Both video and audio frames can expose `Option<WgrabTimestamp>`.
+
+- `WgpuCaptureFrame::timestamp()`
+- `WgrabAudioFrame::timestamp()`
+
+A frame with `None` timestamp can still be used, but cannot be precisely paired.
+
+`WgrabTimestamp` is still available through the audio feature for compatibility,
+and is also exposed from the shared `wgrab::time` module. Future phases may
+move more capture-clock helpers into the shared module.
+
+## Pairing policy
+
+A future pairing helper may use nearest-neighbor matching:
+
+```text
+video timestamp t_v
+audio frame timestamp t_a
+pair if abs(t_v - t_a) <= tolerance
+```
+
+Initial tolerance candidates:
+
+- 16 ms for 60 Hz video
+- 33 ms for 30 Hz video
+- configurable in future
+
+## Phase 36S non-goals
+
+Phase 36S does not implement:
+
+- drift correction
+- resampling
+- muxing
+- scheduling

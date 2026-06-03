@@ -85,14 +85,16 @@ fn run_probe(try_stream: bool) -> ProbeResult {
         };
     }
 
-    let candidates: Vec<_> = reports
-        .iter()
-        .filter(|report| report.loopback_candidate)
-        .collect();
+    let candidates = backend.loopback_candidates();
 
     let mut lines = Vec::new();
-    for (index, report) in candidates.iter().enumerate() {
+    for (index, candidate) in candidates.iter().enumerate() {
+        let report = &candidate.report;
         lines.push(format!("candidate[{index}].name={}", report.name));
+        lines.push(format!("candidate[{index}].score={}", candidate.score));
+        for reason in &candidate.reasons {
+            lines.push(format!("candidate[{index}].reason={reason}"));
+        }
         lines.push(format!(
             "candidate[{index}].is_default_input={}",
             report.is_default_input
@@ -108,6 +110,22 @@ fn run_probe(try_stream: bool) -> ProbeResult {
         lines.push(format!(
             "candidate[{index}].supports_output={}",
             report.supports_output
+        ));
+        lines.push(format!(
+            "candidate[{index}].input_config_count={}",
+            report.input_config_count
+        ));
+        lines.push(format!(
+            "candidate[{index}].output_config_count={}",
+            report.output_config_count
+        ));
+        lines.push(format!(
+            "candidate[{index}].default_input_format={}",
+            format_audio_format(report.default_input_format)
+        ));
+        lines.push(format!(
+            "candidate[{index}].default_output_format={}",
+            format_audio_format(report.default_output_format)
         ));
 
         if try_stream {
@@ -137,4 +155,15 @@ fn run_probe(try_stream: bool) -> ProbeResult {
         loopback_candidate_count: candidates.len(),
         lines,
     }
+}
+
+fn format_audio_format(format: Option<wgrab::feature::audio::WgrabAudioFormat>) -> String {
+    format
+        .map(|format| {
+            format!(
+                "sample_rate:{},channels:{},sample_format:{:?}",
+                format.sample_rate, format.channels, format.sample_format
+            )
+        })
+        .unwrap_or_else(|| "none".to_string())
 }

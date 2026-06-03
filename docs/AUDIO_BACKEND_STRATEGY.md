@@ -141,3 +141,13 @@ Both should feed `WgrabAudioFrame`.
 Try CPAL system-audio candidate streams first.
 
 If insufficient, proceed to direct platform backends.
+
+## CPAL sufficiency criteria
+
+CPAL remains sufficient for system audio only if real devices expose usable
+loopback candidates.
+
+If not, wgrab should use:
+
+- Windows: direct WASAPI loopback
+- macOS: ScreenCaptureKit audio

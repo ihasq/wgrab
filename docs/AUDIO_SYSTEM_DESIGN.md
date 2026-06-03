@@ -109,3 +109,14 @@ It is not a final platform guarantee.
 
 The stream reports `WgrabAudioSource::SystemAudioCandidate` so examples and
 future APIs can distinguish it from default microphone/input-device capture.
+
+## System audio candidate quality
+
+A CPAL `SystemAudioCandidate` is considered useful only if:
+
+- a candidate device can be selected
+- an input stream can be built
+- frames can be produced
+- non-silent samples are observed in a real environment
+
+CI may only prove the first three.

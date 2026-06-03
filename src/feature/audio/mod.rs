@@ -31,6 +31,17 @@ pub struct WgrabAudioDeviceReport {
     pub supports_input: bool,
     pub supports_output: bool,
     pub loopback_candidate: bool,
+    pub input_config_count: usize,
+    pub output_config_count: usize,
+    pub default_input_format: Option<WgrabAudioFormat>,
+    pub default_output_format: Option<WgrabAudioFormat>,
+}
+
+#[derive(Debug, Clone)]
+pub struct WgrabAudioLoopbackCandidate {
+    pub report: WgrabAudioDeviceReport,
+    pub score: i32,
+    pub reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

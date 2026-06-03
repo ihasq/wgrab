@@ -3,8 +3,8 @@ use std::sync::{Arc, Mutex};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 
 use crate::feature::audio::{
-    WgrabAudioDeviceReport, WgrabAudioError, WgrabAudioFormat, WgrabAudioSource, WgrabAudioStream,
-    WgrabSampleFormat,
+    WgrabAudioDeviceReport, WgrabAudioError, WgrabAudioFormat, WgrabAudioLoopbackCandidate,
+    WgrabAudioSource, WgrabAudioStream, WgrabSampleFormat,
 };
 
 pub struct CpalAudioBackend {
@@ -87,6 +87,10 @@ impl CpalAudioBackend {
                         default_output_name.as_deref() == Some(name.as_str()),
                         supports_input(&device),
                         supports_output(&device),
+                        input_config_count(&device),
+                        output_config_count(&device),
+                        default_input_format_for_device(&device),
+                        default_output_format_for_device(&device),
                     );
                 }
             }
@@ -102,13 +106,17 @@ impl CpalAudioBackend {
                         default_output_name.as_deref() == Some(name.as_str()),
                         supports_input(&device),
                         supports_output(&device),
+                        input_config_count(&device),
+                        output_config_count(&device),
+                        default_input_format_for_device(&device),
+                        default_output_format_for_device(&device),
                     );
                 }
             }
         }
 
         for report in &mut reports {
-            report.loopback_candidate = loopback_candidate(report);
+            report.loopback_candidate = has_loopback_signal(report);
         }
 
         reports.sort_by(|left, right| left.name.cmp(&right.name));
@@ -121,27 +129,48 @@ impl CpalAudioBackend {
             .and_then(|device| device_name(&device))
     }
 
-    pub fn loopback_candidates(&self) -> Vec<WgrabAudioDeviceReport> {
+    pub fn loopback_candidates(&self) -> Vec<WgrabAudioLoopbackCandidate> {
         let mut candidates: Vec<_> = self
             .device_reports()
             .into_iter()
-            .filter(|report| report.loopback_candidate && report.supports_input)
+            .map(|report| loopback_candidate_score(&report))
+            .filter(|candidate| {
+                candidate.report.loopback_candidate && candidate.report.supports_input
+            })
             .collect();
 
         candidates.sort_by(|left, right| {
             right
-                .is_default_output
-                .cmp(&left.is_default_output)
-                .then_with(|| right.supports_output.cmp(&left.supports_output))
-                .then_with(|| left.name.cmp(&right.name))
+                .score
+                .cmp(&left.score)
+                .then_with(|| {
+                    right
+                        .report
+                        .is_default_output
+                        .cmp(&left.report.is_default_output)
+                })
+                .then_with(|| {
+                    right
+                        .report
+                        .supports_output
+                        .cmp(&left.report.supports_output)
+                })
+                .then_with(|| left.report.name.cmp(&right.report.name))
         });
 
         candidates
     }
 
     pub fn build_loopback_candidate_stream(&self) -> Result<WgrabAudioStream, WgrabAudioError> {
+        self.build_loopback_candidate_stream_with_candidate()
+            .map(|(stream, _candidate)| stream)
+    }
+
+    pub fn build_loopback_candidate_stream_with_candidate(
+        &self,
+    ) -> Result<(WgrabAudioStream, WgrabAudioLoopbackCandidate), WgrabAudioError> {
         for candidate in self.loopback_candidates() {
-            for device in self.devices_matching_name(&candidate.name) {
+            for device in self.devices_matching_name(&candidate.report.name) {
                 let Ok((stream, buffer, format)) = build_stream_for_device(&device) else {
                     continue;
                 };
@@ -149,13 +178,15 @@ impl CpalAudioBackend {
                     .play()
                     .map_err(|error| WgrabAudioError::PlayStreamFailed(error.to_string()))?;
 
-                return Ok(WgrabAudioStream::new(
+                let stream = WgrabAudioStream::new(
                     Some(stream),
                     buffer,
                     format,
-                    Some(candidate.name),
+                    Some(candidate.report.name.clone()),
                     WgrabAudioSource::SystemAudioCandidate,
-                ));
+                );
+
+                return Ok((stream, candidate));
             }
         }
 
@@ -245,12 +276,24 @@ fn merge_device_report(
     is_default_output: bool,
     supports_input: bool,
     supports_output: bool,
+    input_config_count: usize,
+    output_config_count: usize,
+    default_input_format: Option<WgrabAudioFormat>,
+    default_output_format: Option<WgrabAudioFormat>,
 ) {
     if let Some(report) = reports.iter_mut().find(|report| report.name == name) {
         report.is_default_input |= is_default_input;
         report.is_default_output |= is_default_output;
         report.supports_input |= supports_input;
         report.supports_output |= supports_output;
+        report.input_config_count = report.input_config_count.max(input_config_count);
+        report.output_config_count = report.output_config_count.max(output_config_count);
+        if report.default_input_format.is_none() {
+            report.default_input_format = default_input_format;
+        }
+        if report.default_output_format.is_none() {
+            report.default_output_format = default_output_format;
+        }
         return;
     }
 
@@ -261,24 +304,113 @@ fn merge_device_report(
         supports_input,
         supports_output,
         loopback_candidate: false,
+        input_config_count,
+        output_config_count,
+        default_input_format,
+        default_output_format,
     });
 }
 
-fn supports_input(device: &cpal::Device) -> bool {
+fn input_config_count(device: &cpal::Device) -> usize {
     device
         .supported_input_configs()
-        .map(|mut configs| configs.next().is_some())
-        .unwrap_or(false)
+        .map(|configs| configs.count())
+        .unwrap_or(0)
+}
+
+fn output_config_count(device: &cpal::Device) -> usize {
+    device
+        .supported_output_configs()
+        .map(|configs| configs.count())
+        .unwrap_or(0)
+}
+
+fn supports_input(device: &cpal::Device) -> bool {
+    input_config_count(device) > 0
 }
 
 fn supports_output(device: &cpal::Device) -> bool {
-    device
-        .supported_output_configs()
-        .map(|mut configs| configs.next().is_some())
-        .unwrap_or(false)
+    output_config_count(device) > 0
 }
 
-fn loopback_candidate(report: &WgrabAudioDeviceReport) -> bool {
+fn default_input_format_for_device(device: &cpal::Device) -> Option<WgrabAudioFormat> {
+    device
+        .default_input_config()
+        .ok()
+        .map(|config| WgrabAudioFormat {
+            sample_rate: config.sample_rate(),
+            channels: config.channels(),
+            sample_format: cpal_sample_format_to_wgrab(config.sample_format()),
+        })
+}
+
+fn default_output_format_for_device(device: &cpal::Device) -> Option<WgrabAudioFormat> {
+    device
+        .default_output_config()
+        .ok()
+        .map(|config| WgrabAudioFormat {
+            sample_rate: config.sample_rate(),
+            channels: config.channels(),
+            sample_format: cpal_sample_format_to_wgrab(config.sample_format()),
+        })
+}
+
+fn loopback_candidate_score(report: &WgrabAudioDeviceReport) -> WgrabAudioLoopbackCandidate {
+    let name = report.name.to_ascii_lowercase();
+    let mut score = 0;
+    let mut reasons = Vec::new();
+
+    if report.supports_input {
+        score += 100;
+        reasons.push("supports_input".to_string());
+    } else {
+        score -= 100;
+        reasons.push("no_input_support".to_string());
+    }
+
+    if name.contains("loopback") {
+        score += 50;
+        reasons.push("loopback_keyword".to_string());
+    }
+
+    if name.contains("monitor") {
+        score += 30;
+        reasons.push("monitor_keyword".to_string());
+    }
+
+    if name.contains("stereo mix") {
+        score += 20;
+        reasons.push("stereo_mix_keyword".to_string());
+    }
+
+    if name.contains("what u hear") {
+        score += 20;
+        reasons.push("what_u_hear_keyword".to_string());
+    }
+
+    if report.is_default_output {
+        score += 10;
+        reasons.push("default_output".to_string());
+    }
+
+    if name.contains("output") {
+        score += 5;
+        reasons.push("output_keyword".to_string());
+    }
+
+    if name.contains("speaker") {
+        score += 5;
+        reasons.push("speaker_keyword".to_string());
+    }
+
+    WgrabAudioLoopbackCandidate {
+        report: report.clone(),
+        score,
+        reasons,
+    }
+}
+
+fn has_loopback_signal(report: &WgrabAudioDeviceReport) -> bool {
     let name = report.name.to_ascii_lowercase();
     name.contains("loopback")
         || name.contains("monitor")

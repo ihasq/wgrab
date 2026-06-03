@@ -79,3 +79,16 @@ platform-specific backends:
 
 - Windows: WASAPI loopback
 - macOS: ScreenCaptureKit audio
+
+## Phase 33A hardening
+
+The CPAL system-audio candidate path now records:
+
+- candidate selection score
+- selection reasons
+- input/output config counts
+- default formats
+- audio energy statistics
+- silence detection
+
+Silence is not treated as CI failure because CI runners may not play audio.

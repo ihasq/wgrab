@@ -158,3 +158,9 @@ CPAL remains the generic native audio backend.
 
 Windows system audio uses direct WASAPI loopback when CPAL candidates are
 insufficient or ambiguous.
+
+## macOS system audio backend
+
+CPAL remains the generic native audio backend.
+
+macOS screen-coupled audio uses ScreenCaptureKit audio when available.

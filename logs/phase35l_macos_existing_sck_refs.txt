@@ -1,0 +1,196 @@
+Cargo.toml:56:objc2 = "0.5"
+Cargo.toml:57:objc2_06 = { package = "objc2", version = "0.6.3" }
+Cargo.toml:58:objc2-foundation = "0.3.2"
+Cargo.toml:59:objc2-io-surface = "0.3.2"
+Cargo.toml:60:objc2-metal = { version = "0.3.2", features = ["objc2-io-surface"] }
+src/platform/macos/frame.rs:3:use objc2::runtime::AnyObject;
+src/platform/macos/frame.rs:7:use super::objc_wrap::{kAudioFormatFlagIsBigEndian, kAudioFormatFlagIsPacked, kAudioFormatFlagsCanonical, kAudioFormatNativeEndian, AVAudioFormat, AVAudioPCMBuffer, AudioBufferList, AudioStreamBasicDescription, CFDictionary, CGRect, CGRectMakeWithDictionaryRepresentation, CMBlockBuffer, CMSampleBuffer, IOSurface, NSDictionary, NSNumber, NSScreen, SCStreamFrameInfoBoundingRect, SCStreamFrameInfoContentRect, SCStreamFrameInfoContentScale, SCStreamFrameInfoScaleFactor, SCStreamFrameInfoScreenRect};
+src/platform/macos/frame.rs:9:pub(crate) struct MacosSCStreamVideoFrame {
+src/platform/macos/frame.rs:34:impl MacosSCStreamVideoFrame {
+src/platform/macos/frame.rs:46:    SCStream(MacosSCStreamVideoFrame),
+src/platform/macos/frame.rs:53:            MacosVideoFrame::SCStream(sc_frame) => {
+src/platform/macos/frame.rs:67:            MacosVideoFrame::SCStream(sc_frame) => {
+src/platform/macos/frame.rs:69:                let scale_factor_ptr = unsafe { info_dict.get_value(SCStreamFrameInfoScaleFactor) };
+src/platform/macos/frame.rs:71:                let screen_rect_ptr = unsafe { info_dict.get_value(SCStreamFrameInfoScreenRect) };
+src/platform/macos/frame.rs:90:            MacosVideoFrame::SCStream(sc_frame) => std::time::Duration::from_secs_f64(sc_frame.sample_buffer.get_duration().seconds_f64()),
+src/platform/macos/frame.rs:97:            MacosVideoFrame::SCStream(sc_frame) => std::time::Duration::from_secs_f64(sc_frame.sample_buffer.get_presentation_timestamp().seconds_f64()),
+src/platform/macos/frame.rs:104:            MacosVideoFrame::SCStream(sc_frame) => sc_frame.capture_time,
+src/platform/macos/frame.rs:111:            MacosVideoFrame::SCStream(sc_frame) => sc_frame.frame_id,
+src/platform/macos/frame.rs:118:            MacosVideoFrame::SCStream(sc_frame) => {
+src/platform/macos/frame.rs:120:                let content_rect_ptr = unsafe { info_dict.get_value(SCStreamFrameInfoContentRect) };
+src/platform/macos/frame.rs:121:                let content_scale_ptr = unsafe { info_dict.get_value(SCStreamFrameInfoScaleFactor) };
+src/platform/macos/objc_wrap.rs:4:#[link(name = "ScreenCaptureKit", kind = "framework")]
+src/platform/macos/objc_wrap.rs:20:use objc2::{class, declare::ClassBuilder, ffi::{objc_getClass, objc_getProtocol}, msg_send, rc::Id, runtime::{AnyClass, AnyObject, AnyProtocol, Bool, Ivar, Sel}, sel, Encode, Encoding, RefEncode};
+src/platform/macos/objc_wrap.rs:199:    pub(crate) static SCStreamFrameInfoStatus       : CFStringRef;
+src/platform/macos/objc_wrap.rs:200:    pub(crate) static SCStreamFrameInfoDisplayTime  : CFStringRef;
+src/platform/macos/objc_wrap.rs:201:    pub(crate) static SCStreamFrameInfoScaleFactor  : CFStringRef;
+src/platform/macos/objc_wrap.rs:202:    pub(crate) static SCStreamFrameInfoContentScale : CFStringRef;
+src/platform/macos/objc_wrap.rs:203:    pub(crate) static SCStreamFrameInfoContentRect  : CFStringRef;
+src/platform/macos/objc_wrap.rs:204:    pub(crate) static SCStreamFrameInfoBoundingRect : CFStringRef;
+src/platform/macos/objc_wrap.rs:205:    pub(crate) static SCStreamFrameInfoScreenRect   : CFStringRef;
+src/platform/macos/objc_wrap.rs:206:    pub(crate) static SCStreamFrameInfoDirtyRects   : CFStringRef;
+src/platform/macos/objc_wrap.rs:813:pub(crate) enum SCStreamPixelFormat {
+src/platform/macos/objc_wrap.rs:820:impl SCStreamPixelFormat {
+src/platform/macos/objc_wrap.rs:833:pub(crate) enum SCStreamBackgroundColor {
+src/platform/macos/objc_wrap.rs:840:pub(crate) enum SCStreamColorMatrix {
+src/platform/macos/objc_wrap.rs:846:impl SCStreamColorMatrix {
+src/platform/macos/objc_wrap.rs:872:pub(crate) struct SCStreamConfiguration(pub(crate) *mut AnyObject);
+src/platform/macos/objc_wrap.rs:873:unsafe impl Send for SCStreamConfiguration {}
+src/platform/macos/objc_wrap.rs:874:unsafe impl Sync for SCStreamConfiguration {}
+src/platform/macos/objc_wrap.rs:876:impl SCStreamConfiguration {
+src/platform/macos/objc_wrap.rs:879:            let instance: *mut AnyObject = msg_send![class!(SCStreamConfiguration), alloc];
+src/platform/macos/objc_wrap.rs:909:    pub(crate) fn set_pixel_format(&mut self, format: SCStreamPixelFormat) {
+src/platform/macos/objc_wrap.rs:911:            let pixelformat_ivar = class!(SCStreamConfiguration).instance_variable("_pixelFormat").expect("_pixelFormat ivar on SCStreamConfiguration");
+src/platform/macos/objc_wrap.rs:916:    pub(crate) fn set_color_matrix(&mut self, color_matrix: SCStreamColorMatrix) {
+src/platform/macos/objc_wrap.rs:934:    pub(crate) fn set_background_color(&mut self, bg_color: SCStreamBackgroundColor) {
+src/platform/macos/objc_wrap.rs:937:                SCStreamBackgroundColor::Black => kCGColorBlack,
+src/platform/macos/objc_wrap.rs:938:                SCStreamBackgroundColor::White => kCGColorWhite,
+src/platform/macos/objc_wrap.rs:939:                SCStreamBackgroundColor::Clear => kCGColorClear,
+src/platform/macos/objc_wrap.rs:942:            let bg_color_ivar = class!(SCStreamConfiguration).instance_variable("_backgroundColor").expect("_backgroundColor ivar on SCStreamConfiguration");
+src/platform/macos/objc_wrap.rs:955:            let minimum_frame_interval_ivar = class!(SCStreamConfiguration).instance_variable("_minimumFrameInterval").expect("_minimumFrameInterval ivar on SCStreamConfiguration");
+src/platform/macos/objc_wrap.rs:964:    pub(crate) fn set_sample_rate(&mut self, sample_rate: SCStreamSampleRate) {
+src/platform/macos/objc_wrap.rs:966:            let sample_rate_ivar = class!(SCStreamConfiguration).instance_variable("_sampleRate").expect("_sampleRate ivar on SCStreamConfiguration");
+src/platform/macos/objc_wrap.rs:973:            let show_cursor_ivar = class!(SCStreamConfiguration).instance_variable("_showsCursor").expect("_showsCursor ivar on SCStreamConfiguration");
+src/platform/macos/objc_wrap.rs:980:            let captures_audio_ivar = class!(SCStreamConfiguration).instance_variable("_capturesAudio").expect("_capturesAudio ivar on SCStreamConfiguration");
+src/platform/macos/objc_wrap.rs:987:            let channel_count_ivar = class!(SCStreamConfiguration).instance_variable("_channelCount").expect("_channelCount ivar on SCStreamConfiguration");
+src/platform/macos/objc_wrap.rs:994:            let exclude_current_process_audio_ivar = class!(SCStreamConfiguration).instance_variable("_excludesCurrentProcessAudio").expect("_excludesCurrentProcessAudio ivar on SCStreamConfiguration");
+src/platform/macos/objc_wrap.rs:1000:impl Clone for SCStreamConfiguration {
+src/platform/macos/objc_wrap.rs:1003:        SCStreamConfiguration(self.0)
+src/platform/macos/objc_wrap.rs:1007:impl Drop for SCStreamConfiguration {
+src/platform/macos/objc_wrap.rs:1188:pub(crate) enum SCStreamSampleRate {
+src/platform/macos/objc_wrap.rs:1195:impl SCStreamSampleRate {
+src/platform/macos/objc_wrap.rs:1244:pub(crate) enum SCStreamCallbackError {
+src/platform/macos/objc_wrap.rs:1251:struct SCStreamCallbackContainer {
+src/platform/macos/objc_wrap.rs:1252:    callback: Box<dyn FnMut(Result<(CMSampleBuffer, SCStreamOutputType), SCStreamCallbackError>) + Send + 'static>
+src/platform/macos/objc_wrap.rs:1255:unsafe impl RefEncode for SCStreamCallbackContainer {
+src/platform/macos/objc_wrap.rs:1259:impl SCStreamCallbackContainer {
+src/platform/macos/objc_wrap.rs:1260:    pub fn new(callback: impl FnMut(Result<(CMSampleBuffer, SCStreamOutputType), SCStreamCallbackError>) + Send + 'static) -> Self {
+src/platform/macos/objc_wrap.rs:1266:    pub fn call_output(&mut self, sample_buffer: CMSampleBuffer, output_type: SCStreamOutputType) {
+src/platform/macos/objc_wrap.rs:1270:    pub fn call_error(&mut self, error: SCStreamCallbackError) {
+src/platform/macos/objc_wrap.rs:1276:pub enum SCStreamOutputType {
+src/platform/macos/objc_wrap.rs:1281:impl SCStreamOutputType {
+src/platform/macos/objc_wrap.rs:1282:    fn to_encoded(&self) -> SCStreamOutputTypeEncoded {
+src/platform/macos/objc_wrap.rs:1283:        SCStreamOutputTypeEncoded(match *self {
+src/platform/macos/objc_wrap.rs:1299:struct SCStreamOutputTypeEncoded(isize);
+src/platform/macos/objc_wrap.rs:1301:unsafe impl Encode for SCStreamOutputTypeEncoded {
+src/platform/macos/objc_wrap.rs:1306:struct SCStreamEncoded(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:1308:extern fn sc_stream_output_did_output_sample_buffer_of_type(this: *mut AnyObject, _sel: Sel, stream: SCStream, buffer: CMSampleBufferRef, output_type: SCStreamOutputTypeEncoded) {
+src/platform/macos/objc_wrap.rs:1310:        let callback_container_ivar = SCStreamHandler::get_class().instance_variable("callback_container_ptr").expect("Expected callback_container_ptr ivar on SCStreamHandler");
+src/platform/macos/objc_wrap.rs:1311:        let callback_container: *mut SCStreamCallbackContainer = *callback_container_ivar.load::<*mut c_void>(&mut *this) as *mut _;
+src/platform/macos/objc_wrap.rs:1313:            let output_type = SCStreamOutputType::from_encoded(output_type.0).unwrap();
+src/platform/macos/objc_wrap.rs:1316:            (&mut *callback_container).call_error(SCStreamCallbackError::SampleBufferCopyFailed);
+src/platform/macos/objc_wrap.rs:1322:extern fn sc_stream_handler_did_stop_with_error(this: *mut AnyObject, _sel: Sel, stream: SCStream, error: NSError) -> () {
+src/platform/macos/objc_wrap.rs:1324:        let callback_container_ivar = SCStreamHandler::get_class().instance_variable("callback_container_ptr").expect("Expected callback_container_ptr ivar on SCStreamHandler");
+src/platform/macos/objc_wrap.rs:1325:        let callback_container: *mut SCStreamCallbackContainer = *callback_container_ivar.load(&mut *this);
+src/platform/macos/objc_wrap.rs:1326:        (&mut *callback_container).call_error(SCStreamCallbackError::StreamStopped);
+src/platform/macos/objc_wrap.rs:1334:        let callback_container_ivar = SCStreamHandler::get_class().instance_variable("callback_container_ptr").expect("Expected callback_container_ptr ivar on SCStreamHandler");
+src/platform/macos/objc_wrap.rs:1335:        let callback_container: *mut SCStreamCallbackContainer = *callback_container_ivar.load(&mut *this);
+src/platform/macos/objc_wrap.rs:1336:        let callback_container: Box<SCStreamCallbackContainer> = Box::from_raw(callback_container);
+src/platform/macos/objc_wrap.rs:1342:pub(crate) struct SCStreamHandler(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:1344:impl SCStreamHandler {
+src/platform/macos/objc_wrap.rs:1345:    pub fn new(callback: impl FnMut(Result<(CMSampleBuffer, SCStreamOutputType), SCStreamCallbackError>) + Send + 'static) -> Self {
+src/platform/macos/objc_wrap.rs:1347:        let callback_container_ptr = Box::leak(Box::new(SCStreamCallbackContainer::new(callback)));
+src/platform/macos/objc_wrap.rs:1349:            let instance: *mut AnyObject = msg_send![class!(SCStreamHandler), alloc];
+src/platform/macos/objc_wrap.rs:1351:            let callback_container_ivar = class.instance_variable("callback_container_ptr").expect("Expected callback_container_ptr ivar on SCStreamHandler");
+src/platform/macos/objc_wrap.rs:1359:            if let Some(mut class) = ClassBuilder::new("SCStreamHandler", class!(NSObject)) {
+src/platform/macos/objc_wrap.rs:1360:                class.add_method(sel!(stream:didOutputSampleBuffer:ofType:), sc_stream_output_did_output_sample_buffer_of_type as extern fn (*mut AnyObject, Sel, SCStream, CMSampleBufferRef, SCStreamOutputTypeEncoded));
+src/platform/macos/objc_wrap.rs:1361:                class.add_method(sel!(stream:didStopWithError:), sc_stream_handler_did_stop_with_error as extern fn(*mut AnyObject, Sel, SCStream, NSError));
+src/platform/macos/objc_wrap.rs:1368:                return class!(SCStreamHandler);
+src/platform/macos/objc_wrap.rs:1377:pub struct SCStream(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:1379:unsafe impl Encode for SCStream {
+src/platform/macos/objc_wrap.rs:1383:unsafe impl Sync for SCStream {}
+src/platform/macos/objc_wrap.rs:1384:unsafe impl Send for SCStream {}
+src/platform/macos/objc_wrap.rs:1388:struct SCStreamDelegate(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:1390:unsafe impl Encode for SCStreamDelegate {
+src/platform/macos/objc_wrap.rs:1396:struct SCStreamOutput(*mut AnyObject);
+src/platform/macos/objc_wrap.rs:1398:unsafe impl Encode for SCStreamOutput {
+src/platform/macos/objc_wrap.rs:1402:impl SCStream {
+src/platform/macos/objc_wrap.rs:1422:    pub fn new(filter: SCContentFilter, config: SCStreamConfiguration, handler_queue: DispatchQueue, handler: SCStreamHandler) -> Result<Self, String> {
+src/platform/macos/objc_wrap.rs:1424:            let instance: *mut AnyObject = msg_send![class!(SCStream), alloc];
+src/platform/macos/objc_wrap.rs:1425:            let instance: *mut AnyObject = msg_send![instance, initWithFilter: filter.0 configuration: config.0 delegate: SCStreamDelegate(handler.0)];
+src/platform/macos/objc_wrap.rs:1427:            let result: bool = msg_send![instance, addStreamOutput: SCStreamOutput(handler.0) type: SCStreamOutputType::Screen.to_encoded() sampleHandlerQueue: handler_queue error: &mut error as *mut _];
+src/platform/macos/objc_wrap.rs:1431:                return Err(format!("SCStream error: {}, reason: {}", error.description(), error.reason()));
+src/platform/macos/objc_wrap.rs:1433:            Ok(SCStream(instance))
+src/platform/macos/objc_wrap.rs:2038:    pub fn new(callback: impl Fn(CGDisplayStreamFrameStatus, Duration, IOSurface) + 'static, display_id: u32, size: (usize, usize), pixel_format: SCStreamPixelFormat, options_dict: NSDictionary, dispatch_queue: DispatchQueue) -> Self {
+src/platform/macos/objc_wrap.rs:3109:    DidUpdate {filter: SCContentFilter, stream: Option<SCStream> },
+src/platform/macos/objc_wrap.rs:3125:    pub fn call_cancelled(&mut self, picker: SCContentSharingPicker, stream: Option<SCStream>) {
+src/platform/macos/objc_wrap.rs:3128:    pub fn call_did_update_with_filter(&mut self, picker: SCContentSharingPicker, filter: SCContentFilter, stream: Option<SCStream>) {
+src/platform/macos/objc_wrap.rs:3199:    pub fn set_configuration_for_stream(&self, configuration: SCContentSharingPickerConfiguration, for_stream: Option<&SCStream>) {
+src/platform/macos/objc_wrap.rs:3233:    pub fn capture_image_with_filter_and_configuration(filter: &SCContentFilter, config: &SCStreamConfiguration, completion_handler: impl FnMut(Result<CGImage, NSError>) + Send + 'static) {
+src/platform/macos/objc_wrap.rs:3252:    pub fn capture_samplebuffer_with_filter_and_configuration(filter: SCContentFilter, config: SCStreamConfiguration, completion_handler: impl FnMut(Result<CMSampleBuffer, String>) + Send + 'static) {
+src/platform/macos/capture_stream.rs:4:use objc2::runtime::AnyObject;
+src/platform/macos/capture_stream.rs:7:use crate::{capture_stream::{CaptureConfig, StreamCreateError, StreamError, StreamEvent}, platform::platform_impl::{frame::MacosSCStreamVideoFrame, objc_wrap::NSNumber}, prelude::{AudioCaptureConfig, AudioFrame, Capturable, CaptureConfigError, CapturePixelFormat, Point, StreamStopError, VideoFrame}, util::{Rect, Size}};
+src/platform/macos/capture_stream.rs:8:use super::{frame::{MacosAudioFrame, MacosCGDisplayStreamVideoFrame, MacosVideoFrame}, objc_wrap::{kCFBooleanFalse, kCFBooleanTrue, kCGDisplayStreamDestinationRect, kCGDisplayStreamMinimumFrameTime, kCGDisplayStreamPreserveAspectRatio, kCGDisplayStreamQueueDepth, kCGDisplayStreamShowCursor, kCGDisplayStreamSourceRect, CFNumber, CGDisplayStream, CGDisplayStreamFrameStatus, CGPoint, CGRect, CGSize, CMSampleBuffer, CMTime, DispatchQueue, IOSurface, NSArray, NSDictionary, NSString, SCCaptureResolutionType, SCContentFilter, SCFrameStatus, SCStream, SCStreamCallbackError, SCStreamColorMatrix, SCStreamConfiguration, SCStreamFrameInfoStatus, SCStreamHandler, SCStreamOutputType, SCStreamPixelFormat, SCStreamSampleRate}};
+src/platform/macos/capture_stream.rs:10:pub type MacosPixelFormat = SCStreamPixelFormat;
+src/platform/macos/capture_stream.rs:12:impl TryFrom<CapturePixelFormat> for SCStreamPixelFormat {
+src/platform/macos/capture_stream.rs:17:            CapturePixelFormat::Bgra8888 => Ok(SCStreamPixelFormat::BGRA8888),
+src/platform/macos/capture_stream.rs:18:            CapturePixelFormat::Argb2101010 => Ok(SCStreamPixelFormat::L10R),
+src/platform/macos/capture_stream.rs:19:            CapturePixelFormat::F420 => Ok(SCStreamPixelFormat::F420),
+src/platform/macos/capture_stream.rs:20:            CapturePixelFormat::V420 => Ok(SCStreamPixelFormat::V420),
+src/platform/macos/capture_stream.rs:27:    Window(SCStream),
+src/platform/macos/capture_stream.rs:190:        if SCStream::preflight_access() {
+src/platform/macos/capture_stream.rs:198:        if SCStream::request_access().await {
+src/platform/macos/capture_stream.rs:227:                let mut config = SCStreamConfiguration::new();
+src/platform/macos/capture_stream.rs:229:                    CapturePixelFormat::Bgra8888 =>    (SCStreamPixelFormat::BGRA8888, false),
+src/platform/macos/capture_stream.rs:230:                    CapturePixelFormat::Argb2101010 => (SCStreamPixelFormat::L10R, false),
+src/platform/macos/capture_stream.rs:231:                    CapturePixelFormat::V420 =>        (SCStreamPixelFormat::V420, true),
+src/platform/macos/capture_stream.rs:232:                    CapturePixelFormat::F420 =>        (SCStreamPixelFormat::F420, true),
+src/platform/macos/capture_stream.rs:235:                    config.set_color_matrix(SCStreamColorMatrix::ItuR709_2);
+src/platform/macos/capture_stream.rs:272:                            crate::prelude::AudioSampleRate::Hz8000 =>  SCStreamSampleRate::R8000,
+src/platform/macos/capture_stream.rs:273:                            crate::prelude::AudioSampleRate::Hz16000 => SCStreamSampleRate::R16000,
+src/platform/macos/capture_stream.rs:274:                            crate::prelude::AudioSampleRate::Hz24000 => SCStreamSampleRate::R24000,
+src/platform/macos/capture_stream.rs:275:                            crate::prelude::AudioSampleRate::Hz48000 => SCStreamSampleRate::R48000,
+src/platform/macos/capture_stream.rs:294:                let handler = SCStreamHandler::new(Box::new(move |stream_result: Result<(CMSampleBuffer, SCStreamOutputType), SCStreamCallbackError>| {
+src/platform/macos/capture_stream.rs:300:                                SCStreamOutputType::Audio => {
+src/platform/macos/capture_stream.rs:304:                                SCStreamOutputType::Screen => {
+src/platform/macos/capture_stream.rs:309:                                    let status_nsnumber_ptr = unsafe { attachments[0].get_value(SCStreamFrameInfoStatus) };
+src/platform/macos/capture_stream.rs:325:                                                impl_video_frame: MacosVideoFrame::SCStream(MacosSCStreamVideoFrame {
+src/platform/macos/capture_stream.rs:360:                                SCStreamCallbackError::StreamStopped => {
+src/platform/macos/capture_stream.rs:366:                                SCStreamCallbackError::SampleBufferCopyFailed => Err(StreamError::Other("Failed to copy sample buffer".into())),
+src/platform/macos/capture_stream.rs:367:                                SCStreamCallbackError::Other(e) => Err(StreamError::Other(format!("Internal stream failure: [description: {}, reason: {}, code: {}, domain: {}]", e.description(), e.reason(), e.code(), e.domain()))),
+src/platform/macos/capture_stream.rs:374:                let mut sc_stream = SCStream::new(filter, config, handler_queue, handler)
+src/platform/macos/capture_stream.rs:400:                    CapturePixelFormat::Bgra8888 =>    (SCStreamPixelFormat::BGRA8888, false),
+src/platform/macos/capture_stream.rs:401:                    CapturePixelFormat::Argb2101010 => (SCStreamPixelFormat::L10R, false),
+src/platform/macos/capture_stream.rs:402:                    CapturePixelFormat::V420 =>        (SCStreamPixelFormat::V420, true),
+src/platform/macos/capture_stream.rs:403:                    CapturePixelFormat::F420 =>        (SCStreamPixelFormat::F420, true),
+src/feature/iosurface/mod.rs:118:        MacosVideoFrame::SCStream(frame) => match frame.sample_buffer.get_image_buffer() {
+src/feature/diagnostic/mod.rs:7:use crate::platform::platform_impl::objc_wrap::{IOSurface, CGRect, NSDictionary, NSNumber, NSString, SCStreamFrameInfoBoundingRect, SCStreamFrameInfoContentRect, SCStreamFrameInfoContentScale, SCStreamFrameInfoScaleFactor, SCStreamFrameInfoStatus};
+src/feature/diagnostic/mod.rs:108:                crate::platform::platform_impl::ImplVideoFrame::SCStream(sc_stream_frame) => {
+src/feature/diagnostic/mod.rs:112:                        let bounding_rect_dict_raw = info_dict.get_value(SCStreamFrameInfoBoundingRect as *const _);
+src/feature/diagnostic/mod.rs:116:                            info_dictionary.push((NSString::from_ref_unretained(SCStreamFrameInfoBoundingRect).as_string(), format!("{:?}", bounding_rect)));
+src/feature/diagnostic/mod.rs:118:                        let content_rect_dict_raw = info_dict.get_value(SCStreamFrameInfoContentRect as *const _);
+src/feature/diagnostic/mod.rs:122:                            info_dictionary.push((NSString::from_ref_unretained(SCStreamFrameInfoContentRect).as_string(), format!("{:?}", content_rect)));
+src/feature/diagnostic/mod.rs:124:                        let status_nsnumber_raw = info_dict.get_value(SCStreamFrameInfoStatus as *const _);
+src/feature/diagnostic/mod.rs:127:                            info_dictionary.push((NSString::from_ref_unretained(SCStreamFrameInfoStatus).as_string(), format!("{:?}", status_nsnumber.as_i32())));
+src/feature/diagnostic/mod.rs:129:                        let content_scale_nsnumber_raw = info_dict.get_value(SCStreamFrameInfoContentScale as *const _);
+src/feature/diagnostic/mod.rs:132:                            info_dictionary.push((NSString::from_ref_unretained(SCStreamFrameInfoContentScale).as_string(), format!("{:?}", content_scale_nsnumber.as_f64())));
+src/feature/diagnostic/mod.rs:134:                        let scale_factor_nsnumber_raw = info_dict.get_value(SCStreamFrameInfoScaleFactor as *const _);
+src/feature/diagnostic/mod.rs:137:                            info_dictionary.push((NSString::from_ref_unretained(SCStreamFrameInfoScaleFactor).as_string(), format!("{:?}", scale_factor_nsnumber.as_f64())));
+src/feature/wgpu/mod.rs:19:use objc2_06::{rc::Retained, runtime::ProtocolObject};
+src/feature/wgpu/mod.rs:21:use objc2_metal::{MTLCPUCacheMode, MTLDevice, MTLPixelFormat, MTLResource, MTLStorageMode, MTLTexture, MTLTextureDescriptor, MTLTextureType, MTLTextureUsage};
+src/feature/wgpu/mod.rs:295:fn objc2_iosurface_ref(io_surface: &IoSurface) -> &objc2_io_surface::IOSurfaceRef {
+src/feature/wgpu/mod.rs:299:    unsafe { &*(io_surface.as_ptr() as *const objc2_io_surface::IOSurfaceRef) }
+src/feature/wgpu/mod.rs:303:fn objc2_metal_texture_from_iosurface(
+src/feature/wgpu/mod.rs:355:            objc2_iosurface_ref(io_surface),
+src/feature/wgpu/mod.rs:452:                MacosVideoFrame::SCStream(sc_stream_frame) => sc_stream_frame.wgpu_device.clone(),
+src/feature/wgpu/mod.rs:462:            let (metal_texture, plane_index) = objc2_metal_texture_from_iosurface(
+src/feature/screenshot/platform/macos.rs:6:use crate::platform::macos::frame::{MacosSCStreamVideoFrame, MacosVideoFrame};
+src/feature/screenshot/platform/macos.rs:7:use crate::platform::macos::objc_wrap::{CGSize, NSArray, SCContentFilter, SCScreenshotManager, SCStreamColorMatrix, SCStreamConfiguration, SCStreamPixelFormat};
+src/feature/screenshot/platform/macos.rs:8:use crate::platform::platform_impl::objc_wrap::{CGMainDisplayID, CMTime, DispatchQueue, SCStream, SCStreamCallbackError, SCStreamHandler, SCStreamOutputType};
+src/feature/screenshot/platform/macos.rs:16:    let mut stream_config = SCStreamConfiguration::new();
+src/feature/screenshot/platform/macos.rs:23:        CapturePixelFormat::Bgra8888 =>    (SCStreamPixelFormat::BGRA8888, false),
+src/feature/screenshot/platform/macos.rs:24:        CapturePixelFormat::Argb2101010 => (SCStreamPixelFormat::L10R, false),
+src/feature/screenshot/platform/macos.rs:25:        CapturePixelFormat::V420 =>        (SCStreamPixelFormat::V420, true),
+src/feature/screenshot/platform/macos.rs:26:        CapturePixelFormat::F420 =>        (SCStreamPixelFormat::F420, true),
+src/feature/screenshot/platform/macos.rs:29:        stream_config.set_color_matrix(SCStreamColorMatrix::ItuR709_2);
+src/feature/screenshot/platform/macos.rs:52:                        impl_video_frame: MacosVideoFrame::SCStream(
+src/feature/screenshot/platform/macos.rs:53:                            MacosSCStreamVideoFrame {
+src/feature/screenshot/platform/macos.rs:71:        let handler = SCStreamHandler::new(move |stream_result| {
+src/feature/screenshot/platform/macos.rs:73:                Ok((sample_buffer, SCStreamOutputType::Screen)) => {
+src/feature/screenshot/platform/macos.rs:76:                        impl_video_frame: MacosVideoFrame::SCStream(
+src/feature/screenshot/platform/macos.rs:77:                            MacosSCStreamVideoFrame {
+src/feature/screenshot/platform/macos.rs:92:                        SCStreamCallbackError::Other(error) => error.description(),
+src/feature/screenshot/platform/macos.rs:93:                        SCStreamCallbackError::SampleBufferCopyFailed => "Failed to copy sample buffer".to_string(),
+src/feature/screenshot/platform/macos.rs:94:                        SCStreamCallbackError::StreamStopped => "Stream stopped early".to_string(),
+src/feature/screenshot/platform/macos.rs:104:        let mut stream = match SCStream::new(
+src/feature/screenshot/platform/macos.rs:111:            Err(error) => Err(ScreenshotError::Other(format!("Failed to build SCStream: {}", error)))?,

@@ -55,3 +55,15 @@ System audio should surface as `WgrabAudioFrame`.
 - Apple `SCStreamConfiguration`: <https://developer.apple.com/documentation/screencapturekit/scstreamconfiguration>
 - Apple `SCStreamOutputType.audio`: <https://developer.apple.com/documentation/screencapturekit/scstreamoutputtype/audio>
 - CPAL releases: <https://github.com/RustAudio/cpal/releases>
+
+## Phase 35L-macOS prototype
+
+wgrab adds a ScreenCaptureKit audio prototype.
+
+The prototype enables `SCStreamConfiguration.capturesAudio` and attempts to
+receive audio sample buffers.
+
+The public output remains `WgrabAudioFrame`.
+
+CI may only prove that the backend compiles or reports unavailable. Real system
+audio requires a macOS environment with capture permission and active audio.

@@ -1,6 +1,9 @@
 #[cfg(feature = "audio-cpal")]
 mod cpal_backend;
 
+#[cfg(target_os = "macos")]
+mod screencapturekit_audio;
+
 #[cfg(windows)]
 mod wasapi_loopback;
 
@@ -51,6 +54,10 @@ pub struct WgrabAudioLoopbackCandidate {
 pub enum WgrabAudioSource {
     DefaultInput,
     SystemAudioCandidate,
+    #[cfg(target_os = "windows")]
+    WasapiLoopback,
+    #[cfg(target_os = "macos")]
+    ScreenCaptureKitAudio,
 }
 
 /// Monotonic capture timestamp used for audio/video synchronization.
@@ -144,6 +151,11 @@ impl WgrabAudioContext {
     pub fn build_system_audio_stream(&self) -> Result<WgrabAudioStream, WgrabAudioError> {
         wasapi_loopback::build_default_loopback_stream()
     }
+
+    #[cfg(target_os = "macos")]
+    pub fn build_screencapturekit_audio_stream(&self) -> Result<WgrabAudioStream, WgrabAudioError> {
+        screencapturekit_audio::build_default_screencapturekit_audio_stream()
+    }
 }
 
 impl Default for WgrabAudioContext {
@@ -163,6 +175,7 @@ pub enum WgrabAudioError {
     BufferUnavailable,
     WasapiUnavailable(String),
     WasapiInitializationFailed(String),
+    ScreenCaptureKitUnavailable(String),
 }
 
 impl fmt::Display for WgrabAudioError {
@@ -183,6 +196,9 @@ impl fmt::Display for WgrabAudioError {
             Self::WasapiInitializationFailed(error) => {
                 write!(f, "WASAPI initialization failed: {error}")
             }
+            Self::ScreenCaptureKitUnavailable(error) => {
+                write!(f, "ScreenCaptureKit audio unavailable: {error}")
+            }
         }
     }
 }
@@ -198,6 +214,9 @@ pub struct WgrabAudioStream {
     #[cfg(windows)]
     #[allow(dead_code)]
     wasapi_loopback_stream: Option<wasapi_loopback::WasapiLoopbackStream>,
+    #[cfg(target_os = "macos")]
+    #[allow(dead_code)]
+    screencapturekit_audio_stream: Option<screencapturekit_audio::ScreenCaptureKitAudioStream>,
     pub(crate) buffer: Arc<Mutex<Vec<f32>>>,
     format: WgrabAudioFormat,
     device_name: Option<String>,
@@ -218,6 +237,8 @@ impl WgrabAudioStream {
             stream,
             #[cfg(windows)]
             wasapi_loopback_stream: None,
+            #[cfg(target_os = "macos")]
+            screencapturekit_audio_stream: None,
             buffer,
             format,
             device_name,
@@ -237,10 +258,33 @@ impl WgrabAudioStream {
             #[cfg(feature = "audio-cpal")]
             stream: None,
             wasapi_loopback_stream: Some(stream),
+            #[cfg(target_os = "macos")]
+            screencapturekit_audio_stream: None,
             buffer,
             format,
             device_name,
-            source: WgrabAudioSource::SystemAudioCandidate,
+            source: WgrabAudioSource::WasapiLoopback,
+            clock: WgrabCaptureClock::start_now(),
+        }
+    }
+
+    #[cfg(target_os = "macos")]
+    pub(crate) fn new_screencapturekit_audio(
+        stream: screencapturekit_audio::ScreenCaptureKitAudioStream,
+        buffer: Arc<Mutex<Vec<f32>>>,
+        format: WgrabAudioFormat,
+        device_name: Option<String>,
+    ) -> Self {
+        Self {
+            #[cfg(feature = "audio-cpal")]
+            stream: None,
+            #[cfg(windows)]
+            wasapi_loopback_stream: None,
+            screencapturekit_audio_stream: Some(stream),
+            buffer,
+            format,
+            device_name,
+            source: WgrabAudioSource::ScreenCaptureKitAudio,
             clock: WgrabCaptureClock::start_now(),
         }
     }

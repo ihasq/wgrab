@@ -75,3 +75,10 @@ Future backend timestamp sources:
 - browser media timestamps
 
 The public API should normalize these to `WgrabTimestamp`.
+
+## ScreenCaptureKit audio timestamps
+
+ScreenCaptureKit audio sample buffers may provide timing metadata.
+
+Future wgrab A/V sync should prefer sample buffer timestamps over dequeue-time
+timestamps when available.

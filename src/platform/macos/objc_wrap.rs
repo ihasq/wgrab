@@ -1420,11 +1420,15 @@ impl SCStream {
     }
 
     pub fn new(filter: SCContentFilter, config: SCStreamConfiguration, handler_queue: DispatchQueue, handler: SCStreamHandler) -> Result<Self, String> {
+        Self::new_with_output_type(filter, config, handler_queue, handler, SCStreamOutputType::Screen)
+    }
+
+    pub fn new_with_output_type(filter: SCContentFilter, config: SCStreamConfiguration, handler_queue: DispatchQueue, handler: SCStreamHandler, output_type: SCStreamOutputType) -> Result<Self, String> {
         unsafe {
             let instance: *mut AnyObject = msg_send![class!(SCStream), alloc];
             let instance: *mut AnyObject = msg_send![instance, initWithFilter: filter.0 configuration: config.0 delegate: SCStreamDelegate(handler.0)];
             let mut error: *mut AnyObject = std::ptr::null_mut();
-            let result: bool = msg_send![instance, addStreamOutput: SCStreamOutput(handler.0) type: SCStreamOutputType::Screen.to_encoded() sampleHandlerQueue: handler_queue error: &mut error as *mut _];
+            let result: bool = msg_send![instance, addStreamOutput: SCStreamOutput(handler.0) type: output_type.to_encoded() sampleHandlerQueue: handler_queue error: &mut error as *mut _];
             if !error.is_null() {
                 let error = NSError::from_id_retained(error);
                 let _: () = msg_send![instance, release];
@@ -1488,6 +1492,10 @@ impl CMSampleBuffer {
         unsafe { CMSampleBufferGetDuration(self.0) }
     }
 
+    pub(crate) fn get_num_samples(&self) -> usize {
+        unsafe { CMSampleBufferGetNumSamples(self.0).max(0) as usize }
+    }
+
     pub(crate) fn get_format_description(&self) -> CMFormatDescription {
         let format_desc_ref = unsafe { CMSampleBufferGetFormatDescription(self.0) };
         CMFormatDescription::from_ref_unretained(format_desc_ref)
@@ -1511,6 +1519,67 @@ impl CMSampleBuffer {
             return Err(());
         }
         Ok((audio_buffer_list, CMBlockBuffer::from_ref_retained(block_buffer)))
+    }
+
+    pub(crate) fn copy_audio_samples_f32(&self) -> Result<CMSampleAudioData, String> {
+        let format_description = self
+            .get_format_description()
+            .as_audio_format_description()
+            .ok_or_else(|| "sample buffer is not audio".to_string())?;
+        let stream_description = *format_description.get_basic_stream_description();
+
+        if stream_description.format_flags != kAudioFormatFlagsCanonical {
+            return Err(format!(
+                "unsupported audio format flags: {}",
+                stream_description.format_flags
+            ));
+        }
+
+        let (audio_buffer_list, block_buffer) = unsafe {
+            self.get_audio_buffer_list_with_block_buffer()
+                .map_err(|_| "failed to get audio buffer list".to_string())?
+        };
+        let av_audio_format = AVAudioFormat::new_with_standard_format_sample_rate_channels(
+            stream_description.sample_rate,
+            stream_description.channels_per_frame,
+        );
+        let pcm_audio_buffer = AVAudioPCMBuffer::new_with_format_buffer_list_no_copy_deallocator(
+            av_audio_format,
+            &audio_buffer_list as *const _,
+        )
+        .map_err(|_| "failed to create AVAudioPCMBuffer".to_string())?;
+
+        let channel_count = stream_description.channels_per_frame as usize;
+        let frame_count = self
+            .get_num_samples()
+            .min(pcm_audio_buffer.frame_length())
+            .min(pcm_audio_buffer.frame_capacity());
+        let mut samples = Vec::with_capacity(frame_count * channel_count);
+        for frame in 0..frame_count {
+            for channel in 0..channel_count {
+                let channel_data = pcm_audio_buffer
+                    .f32_buffer(channel)
+                    .ok_or_else(|| "missing f32 channel data".to_string())?;
+                let stride = pcm_audio_buffer.stride();
+                let sample = unsafe { *channel_data.add(frame * stride) };
+                samples.push(sample);
+            }
+        }
+
+        drop(block_buffer);
+        drop(audio_buffer_list);
+
+        Ok(CMSampleAudioData {
+            sample_rate: stream_description.sample_rate.round() as u32,
+            channels: stream_description.channels_per_frame as u16,
+            frames: frame_count,
+            samples,
+            presentation_timestamp_nanos: self
+                .get_presentation_timestamp()
+                .seconds_f64()
+                .max(0.0)
+                .mul_add(1_000_000_000.0, 0.0) as u64,
+        })
     }
 
     pub(crate) fn get_sample_attachment_array(&self) -> Vec<CFDictionary> {
@@ -1538,6 +1607,14 @@ impl CMSampleBuffer {
             }
         }
     }
+}
+
+pub(crate) struct CMSampleAudioData {
+    pub(crate) sample_rate: u32,
+    pub(crate) channels: u16,
+    pub(crate) frames: usize,
+    pub(crate) samples: Vec<f32>,
+    pub(crate) presentation_timestamp_nanos: u64,
 }
 
 impl Clone for CMSampleBuffer {
@@ -1775,6 +1852,10 @@ impl AVAudioPCMBuffer {
 
     pub fn frame_capacity(&self) -> usize {
         unsafe { msg_send![self.0, frameCapacity] }
+    }
+
+    pub fn frame_length(&self) -> usize {
+        unsafe { msg_send![self.0, frameLength] }
     }
 
     pub fn channel_count(&self) -> usize {

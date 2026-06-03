@@ -58,6 +58,10 @@ jobs:
         if: runner.os == 'Windows'
         run: cargo check --example audio_wasapi_loopback_smoke --features audio
 
+      - name: Check ScreenCaptureKit audio smoke example
+        if: runner.os == 'macOS'
+        run: cargo check --example audio_sck_audio_smoke --features audio
+
       - name: Run audio CPAL probe
         shell: bash
         if: runner.os != 'Windows'
@@ -254,6 +258,35 @@ jobs:
 
           "audio_wasapi_marker=MISSING" >> $env:GITHUB_STEP_SUMMARY
           Get-Content $Log -Tail 120 >> $env:GITHUB_STEP_SUMMARY
+          exit 1
+
+      - name: Run ScreenCaptureKit audio smoke
+        shell: bash
+        if: runner.os == 'macOS'
+        run: |
+          set +e
+          LOG="audio_sck_audio_smoke.log"
+          cargo run --example audio_sck_audio_smoke --features audio -- --ci --duration-ms 250 --allow-unavailable \
+            2>&1 | tee "$LOG"
+
+          if grep -q "CI_WGRAB_AUDIO_SCK_OK" "$LOG"; then
+            echo "audio_sck_marker=CI_WGRAB_AUDIO_SCK_OK" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if grep -q "CI_WGRAB_AUDIO_SCK_UNAVAILABLE" "$LOG"; then
+            echo "audio_sck_marker=CI_WGRAB_AUDIO_SCK_UNAVAILABLE" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if grep -q "CI_WGRAB_AUDIO_SCK_FAILED" "$LOG"; then
+            echo "audio_sck_marker=CI_WGRAB_AUDIO_SCK_FAILED" >> "$GITHUB_STEP_SUMMARY"
+            tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+          echo "audio_sck_marker=MISSING" >> "$GITHUB_STEP_SUMMARY"
+          tail -n 120 "$LOG" >> "$GITHUB_STEP_SUMMARY"
           exit 1
 
       - name: Run audio input smoke

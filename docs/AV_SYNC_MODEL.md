@@ -121,3 +121,37 @@ Phase 36S does not implement:
 - resampling
 - muxing
 - scheduling
+
+## Timestamp quality
+
+wgrab classifies timestamp quality as:
+
+- `Backend`: provided by capture/media backend
+- `CaptureClock`: assigned from wgrab monotonic capture clock
+- `DequeueTime`: assigned when samples/frames are dequeued
+- `Unavailable`: no timestamp
+
+This classification is diagnostic information for A/V synchronization. It is
+not a precision guarantee.
+
+## Current quality map
+
+| Source | Quality |
+|---|---|
+| Windows video origin_time | Backend |
+| macOS video origin_time | Backend |
+| CPAL input audio | DequeueTime |
+| CPAL system candidate | DequeueTime |
+| WASAPI loopback prototype | DequeueTime |
+| ScreenCaptureKit audio | Backend if sample-buffer timestamp is available |
+
+## Drift model
+
+Future sync phases should assume audio and video clocks may drift even when both
+timestamps are `Backend` quality.
+
+A pairing implementation should keep drift correction separate from matching:
+
+- pairing chooses nearest timestamps within tolerance
+- drift estimation observes timestamp offset over time
+- resampling or scheduling remains outside Phase 37S

@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::prelude::VideoFrame;
-use crate::time::WgrabTimestamp;
+use crate::time::{WgrabTimestamp, WgrabTimestampQuality};
 
 use super::{WgpuVideoFrameError, WgpuVideoFrameExt, WgpuVideoFramePlaneTexture};
 
@@ -46,6 +46,7 @@ pub struct WgpuCaptureFrame {
     format: wgpu::TextureFormat,
     usage: wgpu::TextureUsages,
     timestamp: Option<WgrabTimestamp>,
+    timestamp_quality: WgrabTimestampQuality,
 }
 
 impl fmt::Debug for WgpuCaptureFrame {
@@ -55,6 +56,7 @@ impl fmt::Debug for WgpuCaptureFrame {
             .field("format", &self.format)
             .field("usage", &self.usage)
             .field("timestamp", &self.timestamp)
+            .field("timestamp_quality", &self.timestamp_quality)
             .finish_non_exhaustive()
     }
 }
@@ -85,6 +87,11 @@ impl WgpuCaptureFrame {
         self.timestamp
     }
 
+    /// Returns the source quality for the normalized video frame timestamp.
+    pub fn timestamp_quality(&self) -> WgrabTimestampQuality {
+        self.timestamp_quality
+    }
+
     /// Creates a view of the captured texture.
     pub fn create_view(
         &self,
@@ -104,6 +111,7 @@ impl WgpuCaptureFrame {
         format: wgpu::TextureFormat,
         usage: wgpu::TextureUsages,
         timestamp: Option<WgrabTimestamp>,
+        timestamp_quality: WgrabTimestampQuality,
     ) -> Self {
         Self {
             texture,
@@ -111,6 +119,7 @@ impl WgpuCaptureFrame {
             format,
             usage,
             timestamp,
+            timestamp_quality,
         }
     }
 }
@@ -135,20 +144,31 @@ impl WgpuVideoFrameGpuOnlyExt for VideoFrame {
         let size = texture.size();
         let format = texture.format();
         let usage = texture.usage();
-        let timestamp = video_frame_timestamp(self);
+        let (timestamp, timestamp_quality) = video_frame_timestamp(self);
 
         Ok(WgpuCaptureFrame::from_wgpu_texture(
-            texture, size, format, usage, timestamp,
+            texture,
+            size,
+            format,
+            usage,
+            timestamp,
+            timestamp_quality,
         ))
     }
 }
 
-fn video_frame_timestamp(frame: &VideoFrame) -> Option<WgrabTimestamp> {
+fn video_frame_timestamp(frame: &VideoFrame) -> (Option<WgrabTimestamp>, WgrabTimestampQuality) {
     let nanos = frame.origin_time().as_nanos();
     if nanos > u128::from(u64::MAX) {
-        return Some(timestamp_from_duration_nanos(u64::MAX));
+        return (
+            Some(timestamp_from_duration_nanos(u64::MAX)),
+            WgrabTimestampQuality::Backend,
+        );
     }
-    Some(timestamp_from_duration_nanos(nanos as u64))
+    (
+        Some(timestamp_from_duration_nanos(nanos as u64)),
+        WgrabTimestampQuality::Backend,
+    )
 }
 
 fn timestamp_from_duration_nanos(nanos: u64) -> WgrabTimestamp {

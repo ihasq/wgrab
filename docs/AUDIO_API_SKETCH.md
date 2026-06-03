@@ -107,3 +107,8 @@ Precise backend timestamps are deferred.
 
 `WgrabAudioFrame::timestamp()` is intended to be comparable with
 `WgpuCaptureFrame::timestamp()`.
+
+## Timestamp quality
+
+`WgrabAudioFrame` exposes timestamp quality so users can distinguish backend
+timestamps from dequeue-time prototype timestamps.

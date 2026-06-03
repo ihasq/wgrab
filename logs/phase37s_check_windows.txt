@@ -1,0 +1,68 @@
+    Checking wgrab v0.1.0 (/home/ihasq/code/wgrab)
+warning: unused import: `HWND`
+ --> src/platform/windows/capture_stream.rs:6:425
+  |
+6 | ...ity, AppCapabilityAccessStatus}, Win32::{Foundation::{HMODULE, HWND}, Graphics::{Direct3D::{D3D_DRIVER_TYPE_UNKNOWN, D3D_FEATURE_L...
+  |                                                                   ^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: glob import doesn't reexport anything with visibility `pub` because no imported item is public enough
+  --> src/prelude.rs:11:9
+   |
+11 | pub use crate::feature::dx11::*;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^
+   |
+note: the most public imported item is `pub(crate)`
+  --> src/prelude.rs:11:9
+   |
+11 | pub use crate::feature::dx11::*;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^
+   = help: reduce the glob import's visibility or increase visibility of imported items
+
+warning: unused import: `crate::feature::dx11::*`
+  --> src/prelude.rs:11:9
+   |
+11 | pub use crate::feature::dx11::*;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `0` is never read
+  --> src/platform/windows/audio_capture_stream.rs:13:11
+   |
+13 |     Other(String),
+   |     ----- ^^^^^^
+   |     |
+   |     field in this variant
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+   |
+13 -     Other(String),
+13 +     Other(()),
+   |
+
+warning: field `0` is never read
+  --> src/platform/windows/audio_capture_stream.rs:22:11
+   |
+22 |     Other(String),
+   |     ----- ^^^^^^
+   |     |
+   |     field in this variant
+   |
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+   |
+22 -     Other(String),
+22 +     Other(()),
+   |
+
+warning: field `frame_size` is never read
+  --> src/platform/windows/frame.rs:10:16
+   |
+ 7 | pub struct WindowsVideoFrame {
+   |            ----------------- field in this struct
+...
+10 |     pub(crate) frame_size       : (usize, usize),
+   |                ^^^^^^^^^^
+
+warning: `wgrab` (lib) generated 6 warnings (run `cargo fix --lib -p wgrab` to apply 2 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.68s

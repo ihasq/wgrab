@@ -281,6 +281,7 @@ async fn run(args: &Args) -> Result<(), String> {
             println!("texture_format={:?}", frame.format());
             println!("texture_usage={:?}", frame.usage());
             println!("timestamp_nanos={}", timestamp_nanos(frame));
+            println!("timestamp_quality={}", timestamp_quality(frame));
             println!("view_created=true");
         }
     } else {
@@ -298,12 +299,13 @@ fn report_frame(frame_index: usize, frame: &WgpuCaptureFrame, view_created: bool
     let _texture = frame.texture();
     let size = frame.size();
     println!(
-        "GPU-only frame {frame_index} OK: texture_width={}, texture_height={}, texture_format={:?}, texture_usage={:?}, timestamp_nanos={}, view_created={view_created}",
+        "GPU-only frame {frame_index} OK: texture_width={}, texture_height={}, texture_format={:?}, texture_usage={:?}, timestamp_nanos={}, timestamp_quality={}, view_created={view_created}",
         size.width,
         size.height,
         frame.format(),
         frame.usage(),
-        timestamp_nanos(frame)
+        timestamp_nanos(frame),
+        timestamp_quality(frame)
     );
     if std::env::var_os("CRABGRAB_WGPU_DEBUG_DESCRIPTOR").is_some() {
         println!("CI_DESCRIPTOR_DUMP_BEGIN");
@@ -323,6 +325,11 @@ fn timestamp_nanos(frame: &WgpuCaptureFrame) -> String {
         .timestamp()
         .map(|timestamp| timestamp.as_nanos().to_string())
         .unwrap_or_else(|| "none".to_string())
+}
+
+#[cfg(any(target_os = "macos", target_os = "windows"))]
+fn timestamp_quality(frame: &WgpuCaptureFrame) -> String {
+    format!("{:?}", frame.timestamp_quality())
 }
 
 #[cfg(not(any(target_os = "macos", target_os = "windows")))]

@@ -20,6 +20,7 @@ fn main() {
             frames,
             samples,
             timestamp_nanos,
+            timestamp_quality,
             max_abs,
             silent,
         } => {
@@ -31,6 +32,7 @@ fn main() {
             println!("max_abs={max_abs:.8}");
             println!("silent={silent}");
             println!("timestamp_nanos={timestamp_nanos}");
+            println!("timestamp_quality={timestamp_quality}");
         }
         SmokeResult::Unavailable { reason } => {
             println!("CI_WGRAB_AUDIO_WASAPI_UNAVAILABLE");
@@ -90,6 +92,7 @@ enum SmokeResult {
         frames: usize,
         samples: usize,
         timestamp_nanos: String,
+        timestamp_quality: String,
         max_abs: f32,
         silent: bool,
     },
@@ -135,6 +138,7 @@ fn run_smoke(duration_ms: u64) -> SmokeResult {
                     .timestamp()
                     .map(|timestamp| timestamp.as_nanos().to_string())
                     .unwrap_or_else(|| "none".to_string()),
+                timestamp_quality: format!("{:?}", frame.timestamp_quality()),
                 max_abs,
                 silent: max_abs < 0.00001,
             }

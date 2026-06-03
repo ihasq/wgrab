@@ -22,6 +22,7 @@ fn main() {
             frames,
             samples,
             timestamp_nanos,
+            timestamp_quality,
             candidate_score,
             candidate_reasons,
             max_abs,
@@ -38,6 +39,7 @@ fn main() {
             println!("samples={samples}");
             println!("sample_count={samples}");
             println!("timestamp_nanos={timestamp_nanos}");
+            println!("timestamp_quality={timestamp_quality}");
             println!("candidate_score={candidate_score}");
             println!("candidate_reasons={candidate_reasons}");
             println!("max_abs={max_abs:.8}");
@@ -116,6 +118,7 @@ enum SmokeResult {
         frames: usize,
         samples: usize,
         timestamp_nanos: String,
+        timestamp_quality: String,
         candidate_score: i32,
         candidate_reasons: String,
         max_abs: f32,
@@ -170,6 +173,7 @@ fn run_smoke(duration_ms: u64) -> SmokeResult {
                     .timestamp()
                     .map(|timestamp| timestamp.as_nanos().to_string())
                     .unwrap_or_else(|| "none".to_string()),
+                timestamp_quality: format!("{:?}", frame.timestamp_quality()),
                 candidate_score: candidate.score,
                 candidate_reasons: candidate.reasons.join(","),
                 max_abs: stats.max_abs,

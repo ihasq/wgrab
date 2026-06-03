@@ -15,7 +15,7 @@ use std::fmt;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
-pub use crate::time::{WgrabAvSyncTolerance, WgrabTimestamp};
+pub use crate::time::{WgrabAvSyncTolerance, WgrabTimestamp, WgrabTimestampQuality};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum WgrabSampleFormat {
@@ -83,6 +83,7 @@ impl WgrabCaptureClock {
 pub struct WgrabAudioFrame {
     format: WgrabAudioFormat,
     timestamp: Option<WgrabTimestamp>,
+    timestamp_quality: WgrabTimestampQuality,
     frames: usize,
     samples: Vec<f32>,
 }
@@ -91,12 +92,14 @@ impl WgrabAudioFrame {
     pub(crate) fn new(
         format: WgrabAudioFormat,
         timestamp: Option<WgrabTimestamp>,
+        timestamp_quality: WgrabTimestampQuality,
         frames: usize,
         samples: Vec<f32>,
     ) -> Self {
         Self {
             format,
             timestamp,
+            timestamp_quality,
             frames,
             samples,
         }
@@ -108,6 +111,10 @@ impl WgrabAudioFrame {
 
     pub fn timestamp(&self) -> Option<WgrabTimestamp> {
         self.timestamp
+    }
+
+    pub fn timestamp_quality(&self) -> WgrabTimestampQuality {
+        self.timestamp_quality
     }
 
     pub fn frames(&self) -> usize {
@@ -122,6 +129,7 @@ impl WgrabAudioFrame {
 pub(crate) struct WgrabQueuedAudioFrame {
     format: WgrabAudioFormat,
     timestamp: Option<WgrabTimestamp>,
+    timestamp_quality: WgrabTimestampQuality,
     frames: usize,
     samples: Vec<f32>,
 }
@@ -131,12 +139,14 @@ impl WgrabQueuedAudioFrame {
     pub(crate) fn new(
         format: WgrabAudioFormat,
         timestamp: Option<WgrabTimestamp>,
+        timestamp_quality: WgrabTimestampQuality,
         frames: usize,
         samples: Vec<f32>,
     ) -> Self {
         Self {
             format,
             timestamp,
+            timestamp_quality,
             frames,
             samples,
         }
@@ -324,6 +334,7 @@ impl WgrabAudioStream {
             return Ok(Some(WgrabAudioFrame::new(
                 frame.format,
                 frame.timestamp,
+                frame.timestamp_quality,
                 frame.frames,
                 frame.samples,
             )));
@@ -354,6 +365,7 @@ impl WgrabAudioStream {
         Ok(Some(WgrabAudioFrame::new(
             self.format,
             timestamp,
+            WgrabTimestampQuality::DequeueTime,
             frames,
             samples,
         )))

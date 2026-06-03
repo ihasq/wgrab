@@ -22,6 +22,7 @@ fn main() {
             max_abs,
             silent,
             timestamp_nanos,
+            timestamp_quality,
         } => {
             println!("CI_WGRAB_AUDIO_SCK_OK");
             println!("sample_rate={sample_rate}");
@@ -31,6 +32,7 @@ fn main() {
             println!("max_abs={max_abs:.8}");
             println!("silent={silent}");
             println!("timestamp_nanos={timestamp_nanos}");
+            println!("timestamp_quality={timestamp_quality}");
         }
         SmokeResult::Unavailable { reason } => {
             println!("CI_WGRAB_AUDIO_SCK_UNAVAILABLE");
@@ -92,6 +94,7 @@ enum SmokeResult {
         max_abs: f32,
         silent: bool,
         timestamp_nanos: String,
+        timestamp_quality: String,
     },
     Unavailable {
         reason: String,
@@ -136,6 +139,7 @@ fn run_smoke(duration_ms: u64) -> SmokeResult {
                     .timestamp()
                     .map(|timestamp| timestamp.as_nanos().to_string())
                     .unwrap_or_else(|| "none".to_string()),
+                timestamp_quality: format!("{:?}", frame.timestamp_quality()),
             }
         }
         Ok(None) => SmokeResult::Unavailable {

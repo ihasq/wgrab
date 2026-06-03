@@ -6,7 +6,7 @@ use parking_lot::Mutex as ParkingMutex;
 
 use crate::feature::audio::{
     WgrabAudioError, WgrabAudioFormat, WgrabAudioStream, WgrabQueuedAudioFrame, WgrabSampleFormat,
-    WgrabTimestamp,
+    WgrabTimestamp, WgrabTimestampQuality,
 };
 use crate::platform::platform_impl::objc_wrap::{
     DispatchQueue, NSArray, SCContentFilter, SCShareableContent, SCStream, SCStreamConfiguration,
@@ -69,6 +69,7 @@ pub(crate) fn build_default_screencapturekit_audio_stream(
                             sample_format: WgrabSampleFormat::F32,
                         },
                         timestamp,
+                        WgrabTimestampQuality::Backend,
                         audio_data.frames,
                         audio_data.samples,
                     ));

@@ -16,6 +16,7 @@ fn main() {
             frames,
             samples,
             timestamp_nanos,
+            timestamp_quality,
         } => {
             println!("CI_WGRAB_AUDIO_INPUT_OK");
             println!("device_name={device_name}");
@@ -25,6 +26,7 @@ fn main() {
             println!("frames={frames}");
             println!("samples={samples}");
             println!("timestamp_nanos={timestamp_nanos}");
+            println!("timestamp_quality={timestamp_quality}");
         }
         SmokeResult::Unavailable { reason } => {
             println!("CI_WGRAB_AUDIO_INPUT_UNAVAILABLE");
@@ -76,6 +78,7 @@ enum SmokeResult {
         frames: usize,
         samples: usize,
         timestamp_nanos: String,
+        timestamp_quality: String,
     },
     Unavailable {
         reason: String,
@@ -119,6 +122,7 @@ fn run_smoke(duration_ms: u64) -> SmokeResult {
                     .timestamp()
                     .map(|timestamp| timestamp.as_nanos().to_string())
                     .unwrap_or_else(|| "none".to_string()),
+                timestamp_quality: format!("{:?}", frame.timestamp_quality()),
             }
         }
         Ok(None) => SmokeResult::Unavailable {

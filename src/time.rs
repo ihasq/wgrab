@@ -17,6 +17,22 @@ impl WgrabTimestamp {
     }
 }
 
+/// Describes the source quality of a capture timestamp.
+///
+/// This is intended for A/V synchronization diagnostics. It is not a precision
+/// guarantee.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum WgrabTimestampQuality {
+    /// Timestamp comes from backend-provided media/capture timing.
+    Backend,
+    /// Timestamp comes from a wgrab monotonic capture clock.
+    CaptureClock,
+    /// Timestamp is assigned when samples/frames are dequeued.
+    DequeueTime,
+    /// Timestamp is not available.
+    Unavailable,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct WgrabAvSyncTolerance {
     pub nanos: u64,
@@ -28,4 +44,12 @@ impl WgrabAvSyncTolerance {
             nanos: ms.saturating_mul(1_000_000),
         }
     }
+
+    pub fn as_nanos(self) -> u64 {
+        self.nanos
+    }
+}
+
+pub fn timestamp_delta_abs_nanos(a: WgrabTimestamp, b: WgrabTimestamp) -> u64 {
+    a.as_nanos().abs_diff(b.as_nanos())
 }

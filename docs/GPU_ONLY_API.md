@@ -88,6 +88,11 @@ This is the preferred GPU-only capture output.
 
 The timestamp is intended for pairing video frames with `WgrabAudioFrame`.
 
+## Video timestamp quality
+
+`WgpuCaptureFrame` exposes timestamp quality for A/V synchronization
+diagnostics.
+
 ### Advanced lower-level GPU API
 
 - `WgpuVideoFrameExt::get_wgpu_texture`

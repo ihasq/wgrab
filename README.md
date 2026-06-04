@@ -51,6 +51,21 @@ video capture.
 The current direction is to investigate a native audio context backed by CPAL and
 a web audio context backed by Web Audio APIs.
 
+## Linux desktop testing
+
+wgrab uses Linux synthetic desktop tests for future Wayland/PipeWire capture
+work.
+
+Current synthetic environments include:
+
+- Xvfb
+- Weston headless
+- Lavapipe Vulkan
+- PipeWire / xdg-desktop-portal probes
+
+These tests do not replace real desktop E2E on a self-hosted Linux desktop
+runner.
+
 [![Crates.io Version](https://img.shields.io/crates/v/wgrab)](https://crates.io/crates/wgrab)
 [![docs.rs](https://img.shields.io/docsrs/wgrab)](https://docs.rs/wgrab/)
 [MacOS Documentation](https://augmendtech.github.io/CrabGrab/macos_docs/crabgrab/index.html)

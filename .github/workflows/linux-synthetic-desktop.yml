@@ -1,0 +1,153 @@
+name: linux synthetic desktop
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+      - "wgrab-*"
+      - "wgpu29-*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: linux-synthetic-desktop-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  xvfb-smoke:
+    name: Ubuntu Xvfb smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install X11 and Vulkan tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            xvfb \
+            x11-apps \
+            x11-utils \
+            mesa-vulkan-drivers \
+            vulkan-tools
+
+      - name: Start Xvfb
+        run: |
+          Xvfb :99 -screen 0 1280x720x24 > xvfb.log 2>&1 &
+          echo "DISPLAY=:99" >> "$GITHUB_ENV"
+          sleep 2
+
+      - name: Probe X11 display
+        run: |
+          xdpyinfo 2>&1 | tee xdpyinfo.log
+          xeyes >/tmp/xeyes.log 2>&1 &
+          sleep 1
+          pkill xeyes || true
+
+      - name: Probe Vulkan
+        run: |
+          vulkaninfo --summary 2>&1 | tee vulkaninfo_xvfb_summary.log
+
+      - name: Upload Xvfb logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: linux-xvfb-smoke-logs
+          path: |
+            *.log
+
+  weston-headless-smoke:
+    name: Ubuntu Weston headless smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Wayland and Vulkan tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            weston \
+            wayland-utils \
+            mesa-vulkan-drivers \
+            vulkan-tools
+
+      - name: Start Weston headless
+        run: |
+          export XDG_RUNTIME_DIR="$RUNNER_TEMP/xdg"
+          mkdir -p "$XDG_RUNTIME_DIR"
+          chmod 700 "$XDG_RUNTIME_DIR"
+          echo "XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR" >> "$GITHUB_ENV"
+          weston --backend=headless-backend.so --socket=wayland-1 --idle-time=0 > weston-headless.log 2>&1 &
+          sleep 3
+          echo "WAYLAND_DISPLAY=wayland-1" >> "$GITHUB_ENV"
+
+      - name: Probe Wayland
+        run: |
+          WAYLAND_DISPLAY=wayland-1 wayland-info 2>&1 | tee wayland-info.log
+
+      - name: Probe Vulkan
+        run: |
+          vulkaninfo --summary 2>&1 | tee vulkaninfo_wayland_summary.log
+
+      - name: Upload Weston logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: linux-weston-headless-smoke-logs
+          path: |
+            *.log
+
+  pipewire-portal-probe:
+    name: Ubuntu PipeWire portal probe
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install PipeWire and portal tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            dbus-user-session \
+            pipewire \
+            wireplumber \
+            xdg-desktop-portal \
+            xdg-desktop-portal-wlr \
+            wayland-utils \
+            weston
+
+      - name: Show versions
+        run: |
+          pipewire --version 2>&1 | tee pipewire_version.log || true
+          wireplumber --version 2>&1 | tee wireplumber_version.log || true
+          xdg-desktop-portal --version 2>&1 | tee xdg_desktop_portal_version.log || true
+
+      - name: Start session services probe
+        run: |
+          export XDG_RUNTIME_DIR="$RUNNER_TEMP/xdg"
+          mkdir -p "$XDG_RUNTIME_DIR"
+          chmod 700 "$XDG_RUNTIME_DIR"
+          echo "XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR" >> "$GITHUB_ENV"
+
+          dbus-run-session -- bash -lc '
+            pipewire > pipewire.log 2>&1 &
+            wireplumber > wireplumber.log 2>&1 &
+            sleep 2
+            ps aux | grep -E "pipewire|wireplumber" | grep -v grep | tee portal_processes.log || true
+          '
+
+      - name: Upload PipeWire portal logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: linux-pipewire-portal-probe-logs
+          path: |
+            *.log

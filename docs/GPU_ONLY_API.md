@@ -93,6 +93,13 @@ The timestamp is intended for pairing video frames with `WgrabAudioFrame`.
 `WgpuCaptureFrame` exposes timestamp quality for A/V synchronization
 diagnostics.
 
+## Linux synthetic desktop testing
+
+Linux Wayland/PipeWire capture work is tested first through synthetic desktop
+probes.
+
+The current target is not real desktop capture yet.
+
 ### Advanced lower-level GPU API
 
 - `WgpuVideoFrameExt::get_wgpu_texture`

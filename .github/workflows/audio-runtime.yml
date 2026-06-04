@@ -62,6 +62,15 @@ jobs:
         if: runner.os == 'macOS'
         run: cargo check --example audio_sck_audio_smoke --features audio
 
+      - name: Check A/V sync pairing smoke
+        run: cargo check --example av_sync_pairing_smoke
+
+      - name: Run A/V sync pairing smoke
+        shell: bash
+        run: |
+          cargo run --example av_sync_pairing_smoke 2>&1 | tee av_sync_pairing_smoke.log
+          grep "CI_WGRAB_AV_SYNC_PAIRING_OK" av_sync_pairing_smoke.log
+
       - name: Run audio CPAL probe
         shell: bash
         if: runner.os != 'Windows'

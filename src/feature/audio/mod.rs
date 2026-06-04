@@ -15,7 +15,10 @@ use std::fmt;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
-pub use crate::time::{WgrabAvSyncTolerance, WgrabTimestamp, WgrabTimestampQuality};
+pub use crate::time::{
+    pair_video_audio_timestamps, WgrabAvPairInfo, WgrabAvPairStatus, WgrabAvSyncTolerance,
+    WgrabTimestamp, WgrabTimestampQuality,
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum WgrabSampleFormat {

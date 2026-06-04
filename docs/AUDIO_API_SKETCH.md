@@ -112,3 +112,8 @@ Precise backend timestamps are deferred.
 
 `WgrabAudioFrame` exposes timestamp quality so users can distinguish backend
 timestamps from dequeue-time prototype timestamps.
+
+## Audio/video pairing
+
+`WgrabAudioFrame` can be paired with `WgpuCaptureFrame` through timestamp
+helpers when both frames provide `WgrabTimestamp`.

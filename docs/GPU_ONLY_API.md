@@ -93,6 +93,12 @@ The timestamp is intended for pairing video frames with `WgrabAudioFrame`.
 `WgpuCaptureFrame` exposes timestamp quality for A/V synchronization
 diagnostics.
 
+## Pairing with audio
+
+`WgpuCaptureFrame::timestamp()` and
+`WgpuCaptureFrame::timestamp_quality()` are intended to work with
+`WgrabAudioFrame` and A/V pairing helpers.
+
 ## Linux synthetic desktop testing
 
 Linux Wayland/PipeWire capture work is tested first through synthetic desktop

@@ -155,3 +155,29 @@ A pairing implementation should keep drift correction separate from matching:
 - pairing chooses nearest timestamps within tolerance
 - drift estimation observes timestamp offset over time
 - resampling or scheduling remains outside Phase 37S
+
+## Phase 40S pairing prototype
+
+wgrab provides a minimal timestamp pairing helper.
+
+The helper compares a video timestamp and an audio timestamp with a tolerance.
+
+Statuses:
+
+- `Paired`
+- `MissingVideoTimestamp`
+- `MissingAudioTimestamp`
+- `OutsideTolerance`
+
+The helper returns timestamp quality metadata for both sides so callers can
+distinguish backend timestamps from dequeue-time prototype timestamps.
+
+The helper does not perform drift correction, resampling, scheduling, muxing, or
+buffering.
+
+## Recommended initial tolerances
+
+- 16 ms for 60 Hz video
+- 33 ms for 30 Hz video
+
+These are initial pairing tolerances, not synchronization guarantees.

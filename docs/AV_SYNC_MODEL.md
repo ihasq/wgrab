@@ -204,3 +204,25 @@ This avoids ownership complexity while validating pairing policy.
 
 The queue is a prototype and does not guarantee synchronized playback or capture
 alignment.
+
+## Phase 42S owning queue prototype
+
+wgrab adds a generic owning A/V frame queue.
+
+The queue owns payloads and matches the latest video payload to the nearest
+audio payload.
+
+A paired result can be popped only if:
+
+- both timestamps exist
+- delta is within tolerance
+
+The queue does not perform:
+
+- drift correction
+- resampling
+- scheduling
+- muxing
+
+The payload type is generic so the same queue can later hold `WgpuCaptureFrame`
+and `WgrabAudioFrame`.

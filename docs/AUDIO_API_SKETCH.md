@@ -121,3 +121,8 @@ helpers when both frames provide `WgrabTimestamp`.
 ## Queue pairing
 
 Audio frames can be inserted into a future sync queue by timestamp and quality.
+
+## Owning sync queue
+
+The A/V sync queue can own audio frames and pair them with video payloads by
+timestamp.

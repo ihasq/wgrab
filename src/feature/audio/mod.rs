@@ -16,9 +16,10 @@ use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
 pub use crate::time::{
-    pair_video_audio_timestamps, WgrabAvPairInfo, WgrabAvPairStatus, WgrabAvQueueMatch,
-    WgrabAvSyncQueue, WgrabAvSyncQueueConfig, WgrabAvSyncTolerance, WgrabTimestamp,
-    WgrabTimestampQuality, WgrabTimestampedFrameInfo,
+    pair_video_audio_timestamps, WgrabAvFrameQueue, WgrabAvOwnedPair, WgrabAvOwnedQueueMatch,
+    WgrabAvPairInfo, WgrabAvPairStatus, WgrabAvQueueMatch, WgrabAvSyncQueue,
+    WgrabAvSyncQueueConfig, WgrabAvSyncTolerance, WgrabTimestamp, WgrabTimestampQuality,
+    WgrabTimestamped, WgrabTimestampedFrameInfo,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

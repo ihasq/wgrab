@@ -103,6 +103,11 @@ diagnostics.
 
 Video frames can be inserted into a future sync queue by timestamp and quality.
 
+## Owning sync queue
+
+The A/V sync queue is generic and can be used with GPU video frames without
+cloning textures.
+
 ## Linux synthetic desktop testing
 
 Linux Wayland/PipeWire capture work is tested first through synthetic desktop

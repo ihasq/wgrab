@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 /// Monotonic capture timestamp used for audio/video synchronization.
 ///
 /// This timestamp is not wall-clock time. It represents elapsed time on
@@ -121,5 +123,148 @@ pub fn pair_video_audio_timestamps(
                 audio_timestamp_quality: audio_quality,
             }
         }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WgrabTimestampedFrameInfo {
+    pub timestamp: Option<WgrabTimestamp>,
+    pub timestamp_quality: WgrabTimestampQuality,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WgrabAvQueueMatch {
+    pub pair: WgrabAvPairInfo,
+    pub audio_index: Option<usize>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WgrabAvSyncQueueConfig {
+    pub tolerance: WgrabAvSyncTolerance,
+    pub max_video_frames: usize,
+    pub max_audio_frames: usize,
+}
+
+impl Default for WgrabAvSyncQueueConfig {
+    fn default() -> Self {
+        Self {
+            tolerance: WgrabAvSyncTolerance::video_60hz(),
+            max_video_frames: 8,
+            max_audio_frames: 64,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct WgrabAvSyncQueue {
+    config: WgrabAvSyncQueueConfig,
+    audio: VecDeque<WgrabTimestampedFrameInfo>,
+    video: VecDeque<WgrabTimestampedFrameInfo>,
+}
+
+impl WgrabAvSyncQueue {
+    pub fn new(config: WgrabAvSyncQueueConfig) -> Self {
+        Self {
+            config,
+            audio: VecDeque::new(),
+            video: VecDeque::new(),
+        }
+    }
+
+    pub fn config(&self) -> WgrabAvSyncQueueConfig {
+        self.config
+    }
+
+    pub fn push_audio_timestamp(
+        &mut self,
+        timestamp: Option<WgrabTimestamp>,
+        quality: WgrabTimestampQuality,
+    ) {
+        self.audio.push_back(WgrabTimestampedFrameInfo {
+            timestamp,
+            timestamp_quality: quality,
+        });
+        truncate_oldest(&mut self.audio, self.config.max_audio_frames);
+    }
+
+    pub fn push_video_timestamp(
+        &mut self,
+        timestamp: Option<WgrabTimestamp>,
+        quality: WgrabTimestampQuality,
+    ) {
+        self.video.push_back(WgrabTimestampedFrameInfo {
+            timestamp,
+            timestamp_quality: quality,
+        });
+        truncate_oldest(&mut self.video, self.config.max_video_frames);
+    }
+
+    pub fn audio_len(&self) -> usize {
+        self.audio.len()
+    }
+
+    pub fn video_len(&self) -> usize {
+        self.video.len()
+    }
+
+    pub fn match_latest_video(&self) -> Option<WgrabAvQueueMatch> {
+        let video = self.video.back()?;
+
+        let Some(video_timestamp) = video.timestamp else {
+            return Some(WgrabAvQueueMatch {
+                pair: pair_video_audio_timestamps(
+                    None,
+                    video.timestamp_quality,
+                    None,
+                    WgrabTimestampQuality::Unavailable,
+                    self.config.tolerance,
+                ),
+                audio_index: None,
+            });
+        };
+
+        let nearest_audio = self
+            .audio
+            .iter()
+            .enumerate()
+            .filter_map(|(index, audio)| {
+                audio.timestamp.map(|audio_timestamp| {
+                    (
+                        index,
+                        audio,
+                        timestamp_delta_abs_nanos(video_timestamp, audio_timestamp),
+                    )
+                })
+            })
+            .min_by_key(|(_, _, delta)| *delta);
+
+        match nearest_audio {
+            Some((audio_index, audio, _)) => Some(WgrabAvQueueMatch {
+                pair: pair_video_audio_timestamps(
+                    Some(video_timestamp),
+                    video.timestamp_quality,
+                    audio.timestamp,
+                    audio.timestamp_quality,
+                    self.config.tolerance,
+                ),
+                audio_index: Some(audio_index),
+            }),
+            None => Some(WgrabAvQueueMatch {
+                pair: pair_video_audio_timestamps(
+                    Some(video_timestamp),
+                    video.timestamp_quality,
+                    None,
+                    WgrabTimestampQuality::Unavailable,
+                    self.config.tolerance,
+                ),
+                audio_index: None,
+            }),
+        }
+    }
+}
+
+fn truncate_oldest(queue: &mut VecDeque<WgrabTimestampedFrameInfo>, max_len: usize) {
+    while queue.len() > max_len {
+        queue.pop_front();
     }
 }

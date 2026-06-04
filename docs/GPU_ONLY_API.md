@@ -99,6 +99,10 @@ diagnostics.
 `WgpuCaptureFrame::timestamp_quality()` are intended to work with
 `WgrabAudioFrame` and A/V pairing helpers.
 
+## Queue pairing
+
+Video frames can be inserted into a future sync queue by timestamp and quality.
+
 ## Linux synthetic desktop testing
 
 Linux Wayland/PipeWire capture work is tested first through synthetic desktop

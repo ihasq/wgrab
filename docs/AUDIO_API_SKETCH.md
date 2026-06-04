@@ -117,3 +117,7 @@ timestamps from dequeue-time prototype timestamps.
 
 `WgrabAudioFrame` can be paired with `WgpuCaptureFrame` through timestamp
 helpers when both frames provide `WgrabTimestamp`.
+
+## Queue pairing
+
+Audio frames can be inserted into a future sync queue by timestamp and quality.

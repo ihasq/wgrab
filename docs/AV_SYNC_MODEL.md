@@ -181,3 +181,26 @@ buffering.
 - 33 ms for 30 Hz video
 
 These are initial pairing tolerances, not synchronization guarantees.
+
+## Phase 41S queue prototype
+
+wgrab adds a timestamp-only A/V sync queue prototype.
+
+The queue:
+
+- stores video timestamp metadata
+- stores audio timestamp metadata
+- matches the latest video timestamp to the nearest audio timestamp
+- applies a configurable tolerance
+- drops oldest entries on overflow
+
+The default queue capacity keeps 8 video entries and 64 audio entries. The audio
+capacity is larger because audio frames may be produced at a finer granularity
+than video frames.
+
+The queue does not own `WgpuCaptureFrame` or `WgrabAudioFrame`.
+
+This avoids ownership complexity while validating pairing policy.
+
+The queue is a prototype and does not guarantee synchronized playback or capture
+alignment.

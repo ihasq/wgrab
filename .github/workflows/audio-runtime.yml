@@ -71,6 +71,15 @@ jobs:
           cargo run --example av_sync_pairing_smoke 2>&1 | tee av_sync_pairing_smoke.log
           grep "CI_WGRAB_AV_SYNC_PAIRING_OK" av_sync_pairing_smoke.log
 
+      - name: Check A/V sync queue smoke
+        run: cargo check --example av_sync_queue_smoke
+
+      - name: Run A/V sync queue smoke
+        shell: bash
+        run: |
+          cargo run --example av_sync_queue_smoke 2>&1 | tee av_sync_queue_smoke.log
+          grep "CI_WGRAB_AV_SYNC_QUEUE_OK" av_sync_queue_smoke.log
+
       - name: Run audio CPAL probe
         shell: bash
         if: runner.os != 'Windows'
